@@ -13,6 +13,10 @@
 
 @interface UpshotReact : RCTEventEmitter <RCTBridgeModule, BrandKinesisDelegate, UNUserNotificationCenterDelegate>
 
+//@property(nonatomic, strong) UIView *adsView;
+
++ (UIView *)getAdView;
+
 + (void)didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
 
 + (void)didReceiveRemoteNotification:(NSDictionary *)notification;

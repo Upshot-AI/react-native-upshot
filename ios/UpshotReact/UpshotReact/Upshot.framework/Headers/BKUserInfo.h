@@ -124,6 +124,7 @@ typedef NS_ENUM(NSUInteger, BKMaritalStatus){
 @property (nonatomic, strong, nullable) NSNumber      * pushOptout;
 @property (nonatomic, strong, nullable) NSNumber      * dataOptout;
 @property (nonatomic, strong, nullable) NSNumber      * ipOptout;
+@property (nonatomic, strong, nullable) NSNumber      * processingOptout;
 
 @property (nonatomic, strong, nullable) NSNumber      * notificationStatus;
 

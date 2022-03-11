@@ -68,7 +68,9 @@ typedef NS_ENUM(NSUInteger, BKEventSubType){
     BKEventSessionInterrupted    = 101,
     BKEventSessionCompleted      = 102,
     BKEventAttribution           = 104,
-
+    BKEventAppInstall            = 105,
+    BKEventAppLaunch             = 106,
+    
     /*Pageview*/
     BKEventPageViewNative        = 112,
     BKEventPageViewWeb           = 113,
@@ -103,8 +105,7 @@ typedef NS_ENUM(NSUInteger, BKEventSubType){
     BKEventBannerDisplayed       = 137,
     BKEventBannerUnitClicked     = 138,
 
-    BKSEventInAppPurchase        = 139,
-        
+    BKSEventInAppPurchase        = 139,        
 };
 
 

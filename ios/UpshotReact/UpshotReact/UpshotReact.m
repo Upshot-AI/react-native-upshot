@@ -14,6 +14,9 @@
 
 @implementation UpshotReact
 
+static UIView *_adsView = nil;
+
+
 RCT_EXPORT_MODULE();
 
 #pragma mark SupportedEvents
@@ -24,18 +27,22 @@ RCT_EXPORT_MODULE();
            @"UpshotActivityDidAppear",
            @"UpshotActivityWillAppear",
            @"UpshotActivityDidDismiss",
+           @"UpshotActivityError",
            @"UpshotAuthStatus",
            @"UpshotPushToken",
-           @"UpshotPushPayload"];
+           @"UpshotPushPayload",
+           @"UpshotCampaignDetailsLoaded",
+           @"UpshotCarouselPushClick",
+           @"UpshotAdReady"];
 }
-
-
 
 #pragma mark Initialize Upshot
  
 RCT_EXPORT_METHOD(initializeUpshot) {
     
     [[BrandKinesis sharedInstance] initializeWithDelegate:self];
+    UpshotCustomization *customization = [[UpshotCustomization alloc] init];
+    [[BKUIPreferences preferences] setDelegate:customization];
 }
 
 RCT_EXPORT_METHOD(initializeUpshotUsingOptions:(NSString *_Nonnull)options) {
@@ -55,6 +62,8 @@ RCT_EXPORT_METHOD(initializeUpshotUsingOptions:(NSString *_Nonnull)options) {
         [initOptions setValue:[NSNumber numberWithBool:[json[@"bkExceptionHandler"] boolValue]] forKey:BKExceptionHandler];
     }
     [[BrandKinesis sharedInstance] initializeWithOptions:initOptions delegate:self];
+    UpshotCustomization *customization = [[UpshotCustomization alloc] init];
+    [[BKUIPreferences preferences] setDelegate:customization];
 }
 
 #pragma mark Terminate
@@ -324,6 +333,11 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
++ (UIView *)getAdView {
+    
+    return _adsView;
+}
+
 #pragma mark Upshot Internal Methods
 
 + (void)didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
@@ -377,6 +391,7 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
  
     [[BrandKinesis sharedInstance] handlePushNotificationWithParams:response withCompletionBlock:nil];
 }
+
 - (void)buildUserInfoForParams:(NSDictionary *)dict completionBlock:(void(^)(BOOL success,  NSError * _Nullable error))block {
   
   if (dict == nil || dict.allKeys.count < 1) {
@@ -446,7 +461,15 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
 
 - (void)brandKinesisActivity:(BKActivityType)activityType performedActionWithParams:(NSDictionary *)params {
     
-      [self sendEventWithName:@"UpshotDeepLink" body:@{@"deepLink": params[@"deepLink"]}];
+    NSString *deeplinkValue = params[@"deepLink"];
+    NSDictionary *deeplinkKeyValue = params[@"deepLink_keyValue"];
+    if (deeplinkValue != nil) {
+        [self sendEventWithName:@"UpshotDeepLink" body:@{@"deepLink": params[@"deepLink"]}];
+    }
+    
+    if (deeplinkKeyValue != nil && [deeplinkKeyValue allKeys].count > 0) {
+        [self sendEventWithName:@"UpshotDeepLink" body:@{@"deepLink_keyValue": [UpshotUtility convertJsonObjToJsonString:deeplinkKeyValue]}];
+    }    
 }
 
 - (void)brandKinesisActivityDidAppear:(BrandKinesis *)brandKinesis forActivityType:(BKActivityType)activityType {
@@ -457,6 +480,17 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
 - (void)brandKinesisActivityDidDismiss:(BrandKinesis *)brandKinesis forActivityType:(BKActivityType)activityType {
     
     [self sendEventWithName:@"UpshotActivityDidDismiss" body:@{@"activityType": [NSNumber numberWithInteger:activityType]}];
+}
+
+- (void)brandkinesisErrorLoadingActivity:(BrandKinesis *)brandkinesis withError:(NSError *)error {
+    
+    [self sendEventWithName:@"UpshotActivityError" body:@{@"error": error.localizedDescription ? error.localizedDescription : @""}];
+}
+
+- (void)brandKinesisDidReceiveView:(UIView *)adsView forTag:(NSString *)tag {
+    
+    _adsView = adsView;
+    [self sendEventWithName:@"UpshotAdReady" body:@{@"Tag": tag ? tag : @""}];
 }
 
 - (void)applicationDidRegisterWithDeviceToken:(NSNotification *)notification {

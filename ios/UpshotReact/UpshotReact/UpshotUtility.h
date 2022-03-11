@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 @import UIKit;
+@import Upshot;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,6 +25,18 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSString *)getInfoTypeForKey:(NSString *)key;
 
 + (NSString *)getBadgesData:(NSDictionary *)badgesPayload;
+
++ (NSDictionary *)getObjectForKey:(NSString *)key withFileName:(NSString *)fileName;
+
++ (NSString *)validateString:(NSString *)value;
+
++ (UIColor *)colorFromHex:(NSString *)hexString;
+
++ (void)customizeLabel:(UILabel *)label withData:(NSDictionary *)data;
+
++ (void)customizeButton:(UIButton *)button withData:(NSDictionary *)data;
+
++ (void)customizeColor:(BKBGColor *)color withData:(NSString *)colorStr;
 
 @end
 

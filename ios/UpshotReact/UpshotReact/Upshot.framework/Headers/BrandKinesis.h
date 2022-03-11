@@ -4,7 +4,7 @@
 //
 //  Created by [x]cube LABS on 20/08/14.
 //  Copyright (c) 2014 [x]cube LABS. All rights reserved.
-//  Upshot Version 1.6.1
+//  Upshot Version 1.6.3
 
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
@@ -38,10 +38,7 @@ typedef void(^_Nullable BrandKinesisActivityWillAppear)(BOOL willAppear, BKActiv
 typedef void(^_Nullable BrandKinesisActivityDidAppear)(BOOL didAppear, BKActivityType activityType);
 typedef void(^_Nullable BrandKinesisActivityDidDismiss)(BOOL didDismiss, BKActivityType activityType);
 
-typedef void(^_Nullable BrandKinesisReferralDetail)( NSDictionary * _Nullable details,  NSError * _Nullable error);
-
 typedef void(^_Nullable BrandKinesisCompletionBlock)(NSError * _Nullable error);
-typedef void(^_Nullable BrandKinesisPushCompletionBlock)(BOOL status, NSError * _Nullable error);
 typedef void(^_Nullable BrandKinesisFetchCompletion)(id _Nullable responseObject, NSError * _Nullable error );
 typedef void(^_Nullable BrandKinesisUserStateCompletion)(BOOL status, NSError * _Nullable error);
 typedef void(^_Nullable BrandKinesisRewardsCompletionBlock)(NSDictionary * _Nullable response, NSString * _Nullable errorMessage);
@@ -99,32 +96,6 @@ BK_EXTERN NSString *_Null_unspecified const BKIAPItemsPurchasedTotal;
  */
 BK_EXTERN NSString *_Null_unspecified const BKIAPItemPurchasedState;
 
-//Push API Key's
-BK_EXTERN NSString *_Null_unspecified const BKPushUserId;
-BK_EXTERN NSString *_Null_unspecified const BKPushAppuid;
-BK_EXTERN NSString *_Null_unspecified const BKPushEmailId;
-BK_EXTERN NSString *_Null_unspecified const BKPushTitle;
-BK_EXTERN NSString *_Null_unspecified const BKPushSubTitle;
-BK_EXTERN NSString *_Null_unspecified const BKPushmessage;
-BK_EXTERN NSString *_Null_unspecified const BKPushSoundName;
-BK_EXTERN NSString *_Null_unspecified const BKPushCategory;
-BK_EXTERN NSString *_Null_unspecified const BKPushAttachmentUrl;
-BK_EXTERN NSString *_Null_unspecified const BKPushAttachmentType;
-BK_EXTERN NSString *_Null_unspecified const BKPushDeeplink;
-BK_EXTERN NSString *_Null_unspecified const BKPushBadge;
-BK_EXTERN NSString *_Null_unspecified const BKEnhancedPush;
-BK_EXTERN NSString *_Null_unspecified const BKPushUserInfo;
-BK_EXTERN NSString *_Null_unspecified const BKPushPayload;
-BK_EXTERN NSString *_Null_unspecified const BKPushtag;
-BK_EXTERN NSString *_Null_unspecified const BKPushValidtill;
-BK_EXTERN NSString *_Null_unspecified const BKPushSandbox;
-BK_EXTERN NSString *_Null_unspecified const BKPushkey;
-BK_EXTERN NSString *_Null_unspecified const BKPushKeyType;
-BK_EXTERN NSString *_Null_unspecified const BKPushValueType;
-BK_EXTERN NSString *_Null_unspecified const BKPushValueUrl;
-BK_EXTERN NSString *_Null_unspecified const BKPushAppId;
-BK_EXTERN NSString *_Null_unspecified const BKPushAccountId;
-
 BK_EXTERN NSString *_Null_unspecified const BKAttributionSource;
 BK_EXTERN NSString *_Null_unspecified const BKUTM_Source;
 BK_EXTERN NSString *_Null_unspecified const BKUTM_Medium;
@@ -139,6 +110,8 @@ BK_EXTERN NSString *_Null_unspecified const BKUTM_Campaign;
  By Default 10 seconds
  */
 @property (nonatomic, assign) NSTimeInterval dispatchInterval;
+
+@property (nonatomic, assign) NSTimeInterval campaignUpdateInterval;
 
 
 /*!
@@ -354,10 +327,6 @@ BK_EXTERN NSString *_Null_unspecified const BKUTM_Campaign;
  */
 - (void)terminate;
 
-/*!
- 
- */
-- (void)sendPushDetails:(nonnull NSDictionary *)pushDetails withCompletionBlock:(BrandKinesisPushCompletionBlock)block;
 
 - (void)disableUser:(BOOL)shouldDisable completion:(BrandKinesisUserStateCompletion)block;
 
@@ -377,6 +346,9 @@ BK_EXTERN NSString *_Null_unspecified const BKUTM_Campaign;
                        redeemAmout:(NSInteger)redeemValue
                                tag:(NSString *_Nonnull)tag
                withCompletionblock:(BrandKinesisRewardsCompletionBlock)completionBlock;
+
+- (void)showEnhancedPushNotification:(UIViewController * _Nonnull)controller withContent:(UNNotification * _Nonnull)notification;
+
 
 @end
 
@@ -403,8 +375,12 @@ BK_EXTERN NSString *_Null_unspecified const BKUTM_Campaign;
 - (void)brandKinesisActivity:(BKActivityType)activityType
    performedActionWithParams:(nonnull NSDictionary *)params;
 
+- (void)brandkinesisCampaignDetailsLoaded;
+
 
 - (nonnull NSArray *)brandKinesisExludeActivitiesForShare;
+
+- (void)brandKinesisCarouselPushClickPayload:(NSDictionary *_Nonnull)payload;
 
 
 /*!

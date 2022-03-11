@@ -32,10 +32,12 @@ function processAggregates(aggregates, aggregateDef, localAggMap) {
 
 function processEvent(eventString) {
    
-    $BK$.processEvent(eventString, function(ruleId,ruleName,notification,keywords,timer) {
+    $BK$.processEvent(eventString, function(ruleId,ruleName,notification,keywords,timer,pageName) {
 
         if (typeof notification !== 'undefined') {
             liveRuleEngine.executedRuleForNotificationWithRuleId(notification, ruleId);
+        } else if(typeof pageName !== 'undefined') {
+            liveRuleEngine.executePageViewSpentTimeWithScreenName(timer,pageName);
         } else if(typeof timer !== 'undefined') {
             liveRuleEngine.startRuleExecutionStatusCheckTimerWithDuration(timer);
         } else {

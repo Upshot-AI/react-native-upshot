@@ -63,11 +63,6 @@ typedef NS_ENUM (NSInteger, BKActivityLabelType) {
     BKActivityOptionLabel,
 
     /*!
-     Label For seperator in opitons in Survey, Opinion_poll And Trivia view
-     */
-    BKActivitySeparatorLabel,
-
-    /*!
      Label For description in Survey And Trivia view
      */
     BKActivityDescriptionLabel,
@@ -171,6 +166,10 @@ typedef NS_ENUM (NSInteger, BKActivityLabelType) {
      Label for Activity TriviaResults in Trivia view
      */
     BKActivityTriviaTabularGradeLabel,
+    
+    BKActivityTriviaGraphGradeLabel,
+    
+    BKActivityTriviaGraphCountLabel,
 };
 
 /*!
@@ -286,20 +285,11 @@ typedef NS_ENUM(NSInteger, BKActivityColorType) {
      */
     BKActivityPercentageColor,
     
-    BKActivityNPSUnSelectedBGColor,
-    
-    BKActivityNPSSelectedBGColor,
-    
-    BKActivityNPSSelectedTextColor,
-    
-    BKActivityNPSUnSelectedTextColor,
-    
-    BKActivityNPSDefaultBorderColor,
-    
-    BKActivityNPSSelectedBorderColor,
-    
     BKActivityOptionDefaultBorderColor,
+    
     BKActivityOptionSelectedBorderColor,
+    
+    BKActivityTriviaGradeHighlightColor
 
 };
 

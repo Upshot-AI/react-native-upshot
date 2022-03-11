@@ -164,7 +164,7 @@ public class UpshotApplication extends Application implements BKAppStatusUtil.BK
         bkInstance.setBrandkinesisCallback(new BrandKinesisCallback() {
             @Override
             public void onActivityError(int i) {
-
+                UpshotModule.upshotActivityError(i);
             }
             @Override
             public void brandkinesisCampaignDetailsLoaded() {
@@ -203,7 +203,7 @@ public class UpshotApplication extends Application implements BKAppStatusUtil.BK
 
             @Override
             public void getBannerView(View view, String s) {
-
+                UpshotModule.upshotAdViewReceived(view, s);
             }
 
             @Override

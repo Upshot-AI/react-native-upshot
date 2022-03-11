@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.social_media_url = "https://twitter.com/upshot_ai"
   s.license    = { :type => "MIT", :file => "LICENSE" }
   s.authors      = { "Your Name" => "yourname@email.com" }
-  s.platforms    = { :ios => "8.0" }
+  s.platforms    = { :ios => "9.0" }
   s.source       = { :git => "https://github.com/github_account/react-native-upshot.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,swift}"

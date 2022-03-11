@@ -84,6 +84,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     private static final String TAG = UpshotModule.class.getSimpleName();
     public static ReactApplicationContext reactContext;
     private static String pushClickPayload = "";
+    private static View adsView = null;
 
     public UpshotModule(final ReactApplicationContext reactContext) {
         super(reactContext);
@@ -350,8 +351,9 @@ public class UpshotModule extends ReactContextBaseJavaModule {
         }
         bkInstance.getActivity(reactContext.getApplicationContext(), type, tagName, new BKActivityCallback() {
             @Override
-            public void onActivityError(final int i) {
+            public void onActivityError(final int i) {                
 
+                upshotActivityError(i);
             }
 
             @Override
@@ -360,8 +362,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
             }
 
             @Override
-            public void onActivityDestroyed(final BKActivityTypes bkActivityTypes) {
-
+            public void onActivityDestroyed(BKActivityTypes bkActivityTypes) {
                 upshotActivityDestroyed(bkActivityTypes);
             }
 
@@ -379,8 +380,8 @@ public class UpshotModule extends ReactContextBaseJavaModule {
         final BrandKinesis bkInstance = BrandKinesis.getBKInstance();
         bkInstance.getActivity(activityId, new BKActivityCallback() {
             @Override
-            public void onActivityError(int i) {
-
+            public void onActivityError(int i) {                  
+                upshotActivityError(i);
             }
 
             @Override
@@ -730,6 +731,18 @@ public class UpshotModule extends ReactContextBaseJavaModule {
         emitDeviceEvent("UpshotAuthStatus", payload);
     }
 
+    public static void upshotAdViewReceived(View adView, String adTag) {        
+        WritableMap payload = Arguments.createMap();
+        payload.putString("Tag", adTag);
+        emitDeviceEvent("UpshotAdReady", payload);
+        adsView = adView;
+    }
+
+    public static View getAdsView() {
+        return adsView;
+    }
+
+
     private static void fetchTokenFromFirebaseSdk() {
 
         try {
@@ -771,7 +784,20 @@ public class UpshotModule extends ReactContextBaseJavaModule {
 
         WritableMap payload = Arguments.createMap();
         payload.putInt("activityType", bkActivityTypes.getValue());
+        //add activity payload
         emitDeviceEvent("UpshotActivityDidDismiss", payload);
+    }
+
+    public static void upshotActivityError(int error) {
+
+         String errorMessage = "";
+        if (error == -1) {
+            errorMessage = "No Activity Found";
+        }
+
+        WritableMap payload = Arguments.createMap();
+        payload.putString("error", errorMessage);
+        emitDeviceEvent("UpshotActivityError", payload);
     }
 
     public static void upshotCampaignDetailsLoaded() {

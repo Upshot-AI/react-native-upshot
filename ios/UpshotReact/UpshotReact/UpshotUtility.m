@@ -140,4 +140,96 @@
     NSString *jsonString = [UpshotUtility convertJsonObjToJsonString:badges];
     return jsonString;
 }
+
++ (NSDictionary *)getObjectForKey:(NSString *)key withFileName:(NSString *)fileName {
+    
+    NSString *filePath =  [[NSBundle mainBundle] pathForResource:fileName ofType:@"json"];
+    if (filePath != nil) {
+        
+        NSData *jsonData = [NSData dataWithContentsOfFile:filePath];
+        if (jsonData != nil) {
+            NSDictionary *response = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableLeaves error:nil];
+            
+            if (response != nil && [response isKindOfClass:[NSDictionary class]]) {
+                return response[key];
+            }
+            return nil;
+        }
+        return nil;
+    }
+    return  nil;
+}
+
++ (NSString *)validateString:(NSString *)value {
+    
+    return value ? value : @"";
+}
+
++ (UIColor *)colorFromHex:(NSString *)hexString {
+    
+    unsigned rgbValue = 0;
+    if (![hexString length] || [hexString isEqualToString:@""]) {
+        
+        return nil;
+    }
+    NSScanner *scanner = [NSScanner scannerWithString:hexString];
+    [scanner setScanLocation:1];
+    [scanner scanHexInt:&rgbValue];
+    return [UIColor colorWithRed:((rgbValue & 0XFF0000) >> 16)/255.0 green:((rgbValue & 0XFF00) >> 8)/255.0 blue:(rgbValue & 0XFF)/255.0 alpha:1.0];
+}
+
++ (void)customizeLabel:(UILabel *)label withData:(NSDictionary *)data {
+    
+    if (data != nil && [data isKindOfClass:[NSDictionary class]]) {
+        CGFloat size = [data[@"size"] floatValue];
+        UIColor *textColor = [self colorFromHex:[self validateString:data[@"color"]]];
+        UIFont *font = [UIFont fontWithName:[self validateString:data[@"font_name"]] size:size];
+        
+        if (textColor != nil) {
+            [label setTextColor:textColor];
+        }
+        if (font != nil) {
+            [label setFont:font];
+        }
+    }
+}
+
++ (void)customizeButton:(UIButton *)button withData:(NSDictionary *)data {
+    
+    if (data != nil && [data isKindOfClass:[NSDictionary class]]) {
+        
+        CGFloat size = [data[@"size"] floatValue];
+        UIColor *textColor = [self colorFromHex:[self validateString:data[@"color"]]];
+        UIColor *bgColor = [self colorFromHex:[self validateString:data[@"bgcolor"]]];
+        UIFont *font = [UIFont fontWithName:[self validateString:data[@"font_name"]] size:size];
+        UIImage *image = [UIImage imageNamed:[self validateString:data[@"image"]]];
+        
+        if (textColor != nil) {
+            [button setTitleColor:textColor forState:UIControlStateNormal];
+            [button setTitleColor:textColor forState:UIControlStateSelected];
+            [button setTitleColor:textColor forState:UIControlStateHighlighted];
+        }
+        if (font != nil) {
+            [button.titleLabel setFont:font];
+        }
+        if (bgColor != nil) {
+            [button setBackgroundColor:bgColor];
+        }
+        
+        if (image != nil) {
+            [button setImage:image forState:UIControlStateNormal];
+            [button setImage:image forState:UIControlStateSelected];
+            [button setImage:image forState:UIControlStateHighlighted];
+        }
+    }
+}
+
++ (void)customizeColor:(BKBGColor *)color withData:(NSString *)colorStr {
+    
+    UIColor *clr = [UpshotUtility colorFromHex:[UpshotUtility validateString:colorStr]];
+    if (clr != nil) {
+        [color setBackgroundColor:clr];
+    }
+}
+
 @end

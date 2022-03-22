@@ -31,7 +31,6 @@ public class UpshotPushAction extends BroadcastReceiver {
             }
             action = bundle.getString("actionData");
             appData = intent.getStringExtra("appData");
-            String action = bundle.getString("action");
                        
             Class mainActivity = null;
             String packageName = context.getPackageName();

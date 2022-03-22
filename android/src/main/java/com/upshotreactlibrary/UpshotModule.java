@@ -769,7 +769,20 @@ public class UpshotModule extends ReactContextBaseJavaModule {
                                               final Map<String, Object> map) {
 
         WritableMap payload = Arguments.createMap();
-        payload.putString("deepLink", map.get("deepLink").toString());
+        Boolean isValidJsonObj = false;
+        try {
+            JSONObject obj = new JSONObject(map.get("deepLink").toString());
+            isValidJsonObj = true;
+        } catch (JSONException e) {
+            isValidJsonObj = false;
+            e.printStackTrace();
+        }
+
+        if (!isValidJsonObj) {
+            payload.putString("deepLink", map.get("deepLink").toString());
+        } else  {
+            payload.putString("deepLink_keyValue", map.get("deepLink").toString());
+        }        
         emitDeviceEvent("UpshotDeepLink", payload);
     }
 

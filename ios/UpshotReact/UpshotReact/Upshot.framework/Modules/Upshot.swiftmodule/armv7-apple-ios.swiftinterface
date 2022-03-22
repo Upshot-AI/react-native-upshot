@@ -1,5 +1,5 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.5.2 (swiftlang-1300.0.47.5 clang-1300.0.29.30)
+// swift-compiler-version: Apple Swift version 5.4.2 (swiftlang-1205.0.28.2 clang-1205.0.19.57)
 // swift-module-flags: -target armv7-apple-ios9.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name Upshot
 import Dispatch
 import Foundation
@@ -11,51 +11,50 @@ import SystemConfiguration
 import UIKit
 @_exported import Upshot
 import WebKit
-import _Concurrency
-@objc @_inheritsConvenienceInitializers @_Concurrency.MainActor(unsafe) open class TriviaPieView : UIKit.UIView {
-  @_Concurrency.MainActor(unsafe) @objc override dynamic open var frame: CoreGraphics.CGRect {
-    @_Concurrency.MainActor(unsafe) @objc get
-    @_Concurrency.MainActor(unsafe) @objc set
+@objc @_inheritsConvenienceInitializers open class TriviaPieView : UIKit.UIView {
+  @objc override dynamic open var frame: CoreGraphics.CGRect {
+    @objc get
+    @objc set
   }
-  @_Concurrency.MainActor(unsafe) @objc override dynamic public init(frame: CoreGraphics.CGRect)
-  @_Concurrency.MainActor(unsafe) @objc required dynamic public init?(coder: Foundation.NSCoder)
+  @objc override dynamic public init(frame: CoreGraphics.CGRect)
+  @objc required dynamic public init?(coder: Foundation.NSCoder)
   @objc deinit
 }
-extension Upshot.TriviaPieView : Upshot.BKPieChartDelegate, Upshot.BKPieChartDataSource {
+extension TriviaPieView : Upshot.BKPieChartDelegate, Upshot.BKPieChartDataSource {
 }
-extension Upshot.TriviaPieView {
-  @_Concurrency.MainActor(unsafe) @objc dynamic public func numberOfSlices(in pieChart: Upshot.BKPieChart!) -> Swift.UInt
-  @_Concurrency.MainActor(unsafe) @objc dynamic public func pieChart(_ pieChart: Upshot.BKPieChart!, valueForSliceAt index: Swift.UInt) -> CoreGraphics.CGFloat
-  @_Concurrency.MainActor(unsafe) @objc dynamic public func pieChart(_ pieChart: Upshot.BKPieChart!, textForSliceAt index: Swift.UInt) -> Swift.String!
-  @_Concurrency.MainActor(unsafe) @objc dynamic public func pieChart(_ pieChart: Upshot.BKPieChart!, colorForSliceAt index: Swift.UInt) -> UIKit.UIColor!
+extension TriviaPieView {
+  @objc dynamic public func numberOfSlices(in pieChart: Upshot.BKPieChart!) -> Swift.UInt
+  @objc dynamic public func pieChart(_ pieChart: Upshot.BKPieChart!, valueForSliceAt index: Swift.UInt) -> CoreGraphics.CGFloat
+  @objc dynamic public func pieChart(_ pieChart: Upshot.BKPieChart!, textForSliceAt index: Swift.UInt) -> Swift.String!
+  @objc dynamic public func pieChart(_ pieChart: Upshot.BKPieChart!, colorForSliceAt index: Swift.UInt) -> UIKit.UIColor!
 }
-extension UIKit.UIImageView {
-  @objc @_Concurrency.MainActor(unsafe) dynamic open func load(url: Foundation.URL, completion: @escaping (UIKit.UIImage) -> Swift.Void)
+extension UIImageView {
+  @objc dynamic open func load(url: Foundation.URL, completion: @escaping (UIKit.UIImage) -> Swift.Void)
 }
 public protocol URLConvertible {
   func asURL() throws -> Foundation.URL
 }
-extension Swift.String : Upshot.URLConvertible {
+extension String : Upshot.URLConvertible {
   public func asURL() throws -> Foundation.URL
 }
-extension Foundation.URL : Upshot.URLConvertible {
+extension URL : Upshot.URLConvertible {
   public func asURL() throws -> Foundation.URL
 }
-extension Foundation.URLComponents : Upshot.URLConvertible {
+extension URLComponents : Upshot.URLConvertible {
   public func asURL() throws -> Foundation.URL
 }
 public protocol URLRequestConvertible {
   func asURLRequest() throws -> Foundation.URLRequest
 }
-extension Upshot.URLRequestConvertible {
+extension URLRequestConvertible {
   public var urlRequest: Foundation.URLRequest? {
     get
   }
 }
-extension Foundation.URLRequest : Upshot.URLRequestConvertible {
+extension URLRequest : Upshot.URLRequestConvertible {
   public func asURLRequest() throws -> Foundation.URLRequest
 }
-extension Foundation.URLRequest {
+extension URLRequest {
   public init(url: Upshot.URLConvertible, method: Upshot.HTTPMethod, headers: Upshot.HTTPHeaders? = nil) throws
 }
 @discardableResult
@@ -160,7 +159,7 @@ public struct DataResponse<Value> {
   }
   public init(request: Foundation.URLRequest?, response: Foundation.HTTPURLResponse?, data: Foundation.Data?, result: Upshot.Result<Value>, timeline: Upshot.Timeline = Timeline())
 }
-extension Upshot.DataResponse : Swift.CustomStringConvertible, Swift.CustomDebugStringConvertible {
+extension DataResponse : Swift.CustomStringConvertible, Swift.CustomDebugStringConvertible {
   public var description: Swift.String {
     get
   }
@@ -168,7 +167,7 @@ extension Upshot.DataResponse : Swift.CustomStringConvertible, Swift.CustomDebug
     get
   }
 }
-extension Upshot.DataResponse {
+extension DataResponse {
   public func map<T>(_ transform: (Value) -> T) -> Upshot.DataResponse<T>
   public func flatMap<T>(_ transform: (Value) throws -> T) -> Upshot.DataResponse<T>
 }
@@ -198,7 +197,7 @@ public struct DownloadResponse<Value> {
   }
   public init(request: Foundation.URLRequest?, response: Foundation.HTTPURLResponse?, temporaryURL: Foundation.URL?, destinationURL: Foundation.URL?, resumeData: Foundation.Data?, result: Upshot.Result<Value>, timeline: Upshot.Timeline = Timeline())
 }
-extension Upshot.DownloadResponse : Swift.CustomStringConvertible, Swift.CustomDebugStringConvertible {
+extension DownloadResponse : Swift.CustomStringConvertible, Swift.CustomDebugStringConvertible {
   public var description: Swift.String {
     get
   }
@@ -206,40 +205,40 @@ extension Upshot.DownloadResponse : Swift.CustomStringConvertible, Swift.CustomD
     get
   }
 }
-extension Upshot.DownloadResponse {
+extension DownloadResponse {
   public func map<T>(_ transform: (Value) -> T) -> Upshot.DownloadResponse<T>
   public func flatMap<T>(_ transform: (Value) throws -> T) -> Upshot.DownloadResponse<T>
 }
 @available(iOS 10.0, macOS 10.12, tvOS 10.0, *)
-extension Upshot.DefaultDataResponse {
+extension DefaultDataResponse {
   public var metrics: Foundation.URLSessionTaskMetrics? {
     get
   }
 }
 @available(iOS 10.0, macOS 10.12, tvOS 10.0, *)
-extension Upshot.DataResponse {
+extension DataResponse {
   public var metrics: Foundation.URLSessionTaskMetrics? {
     get
   }
 }
 @available(iOS 10.0, macOS 10.12, tvOS 10.0, *)
-extension Upshot.DefaultDownloadResponse {
+extension DefaultDownloadResponse {
   public var metrics: Foundation.URLSessionTaskMetrics? {
     get
   }
 }
 @available(iOS 10.0, macOS 10.12, tvOS 10.0, *)
-extension Upshot.DownloadResponse {
+extension DownloadResponse {
   public var metrics: Foundation.URLSessionTaskMetrics? {
     get
   }
 }
-@objc @_inheritsConvenienceInitializers @_Concurrency.MainActor(unsafe) public class CustomActionViewController : Upshot.BKBaseViewController {
-  @_Concurrency.MainActor(unsafe) @objc override dynamic public func viewDidLoad()
-  @_Concurrency.MainActor(unsafe) @objc override dynamic public func viewDidAppear(_ animated: Swift.Bool)
-  @_Concurrency.MainActor(unsafe) @objc override dynamic public func viewWillTransition(to size: CoreGraphics.CGSize, with coordinator: UIKit.UIViewControllerTransitionCoordinator)
-  @_Concurrency.MainActor(unsafe) @objc override dynamic public init(nibName nibNameOrNil: Swift.String?, bundle nibBundleOrNil: Foundation.Bundle?)
-  @_Concurrency.MainActor(unsafe) @objc required dynamic public init?(coder: Foundation.NSCoder)
+@objc @_inheritsConvenienceInitializers public class CustomActionViewController : Upshot.BKBaseViewController {
+  @objc override dynamic public func viewDidLoad()
+  @objc override dynamic public func viewDidAppear(_ animated: Swift.Bool)
+  @objc override dynamic public func viewWillTransition(to size: CoreGraphics.CGSize, with coordinator: UIKit.UIViewControllerTransitionCoordinator)
+  @objc override dynamic public init(nibName nibNameOrNil: Swift.String?, bundle nibBundleOrNil: Foundation.Bundle?)
+  @objc required dynamic public init?(coder: Foundation.NSCoder)
   @objc deinit
 }
 public protocol DataResponseSerializerProtocol {
@@ -260,66 +259,66 @@ public struct DownloadResponseSerializer<Value> : Upshot.DownloadResponseSeriali
   public var serializeResponse: (Foundation.URLRequest?, Foundation.HTTPURLResponse?, Foundation.URL?, Swift.Error?) -> Upshot.Result<Value>
   public init(serializeResponse: @escaping (Foundation.URLRequest?, Foundation.HTTPURLResponse?, Foundation.URL?, Swift.Error?) -> Upshot.Result<Value>)
 }
-extension Upshot.DataRequest {
+extension DataRequest {
   @discardableResult
   public func response(queue: Dispatch.DispatchQueue? = nil, completionHandler: @escaping (Upshot.DefaultDataResponse) -> Swift.Void) -> Self
   @discardableResult
   public func response<T>(queue: Dispatch.DispatchQueue? = nil, responseSerializer: T, completionHandler: @escaping (Upshot.DataResponse<T.SerializedObject>) -> Swift.Void) -> Self where T : Upshot.DataResponseSerializerProtocol
 }
-extension Upshot.DownloadRequest {
+extension DownloadRequest {
   @discardableResult
   public func response(queue: Dispatch.DispatchQueue? = nil, completionHandler: @escaping (Upshot.DefaultDownloadResponse) -> Swift.Void) -> Self
   @discardableResult
   public func response<T>(queue: Dispatch.DispatchQueue? = nil, responseSerializer: T, completionHandler: @escaping (Upshot.DownloadResponse<T.SerializedObject>) -> Swift.Void) -> Self where T : Upshot.DownloadResponseSerializerProtocol
 }
-extension Upshot.Request {
+extension Request {
   public static func serializeResponseData(response: Foundation.HTTPURLResponse?, data: Foundation.Data?, error: Swift.Error?) -> Upshot.Result<Foundation.Data>
 }
-extension Upshot.DataRequest {
+extension DataRequest {
   public static func dataResponseSerializer() -> Upshot.DataResponseSerializer<Foundation.Data>
   @discardableResult
   public func responseData(queue: Dispatch.DispatchQueue? = nil, completionHandler: @escaping (Upshot.DataResponse<Foundation.Data>) -> Swift.Void) -> Self
 }
-extension Upshot.DownloadRequest {
+extension DownloadRequest {
   public static func dataResponseSerializer() -> Upshot.DownloadResponseSerializer<Foundation.Data>
   @discardableResult
   public func responseData(queue: Dispatch.DispatchQueue? = nil, completionHandler: @escaping (Upshot.DownloadResponse<Foundation.Data>) -> Swift.Void) -> Self
 }
-extension Upshot.Request {
+extension Request {
   public static func serializeResponseString(encoding: Swift.String.Encoding?, response: Foundation.HTTPURLResponse?, data: Foundation.Data?, error: Swift.Error?) -> Upshot.Result<Swift.String>
 }
-extension Upshot.DataRequest {
+extension DataRequest {
   public static func stringResponseSerializer(encoding: Swift.String.Encoding? = nil) -> Upshot.DataResponseSerializer<Swift.String>
   @discardableResult
   public func responseString(queue: Dispatch.DispatchQueue? = nil, encoding: Swift.String.Encoding? = nil, completionHandler: @escaping (Upshot.DataResponse<Swift.String>) -> Swift.Void) -> Self
 }
-extension Upshot.DownloadRequest {
+extension DownloadRequest {
   public static func stringResponseSerializer(encoding: Swift.String.Encoding? = nil) -> Upshot.DownloadResponseSerializer<Swift.String>
   @discardableResult
   public func responseString(queue: Dispatch.DispatchQueue? = nil, encoding: Swift.String.Encoding? = nil, completionHandler: @escaping (Upshot.DownloadResponse<Swift.String>) -> Swift.Void) -> Self
 }
-extension Upshot.Request {
+extension Request {
   public static func serializeResponseJSON(options: Foundation.JSONSerialization.ReadingOptions, response: Foundation.HTTPURLResponse?, data: Foundation.Data?, error: Swift.Error?) -> Upshot.Result<Any>
 }
-extension Upshot.DataRequest {
+extension DataRequest {
   public static func jsonResponseSerializer(options: Foundation.JSONSerialization.ReadingOptions = .allowFragments) -> Upshot.DataResponseSerializer<Any>
   @discardableResult
   public func responseJSON(queue: Dispatch.DispatchQueue? = nil, options: Foundation.JSONSerialization.ReadingOptions = .allowFragments, completionHandler: @escaping (Upshot.DataResponse<Any>) -> Swift.Void) -> Self
 }
-extension Upshot.DownloadRequest {
+extension DownloadRequest {
   public static func jsonResponseSerializer(options: Foundation.JSONSerialization.ReadingOptions = .allowFragments) -> Upshot.DownloadResponseSerializer<Any>
   @discardableResult
   public func responseJSON(queue: Dispatch.DispatchQueue? = nil, options: Foundation.JSONSerialization.ReadingOptions = .allowFragments, completionHandler: @escaping (Upshot.DownloadResponse<Any>) -> Swift.Void) -> Self
 }
-extension Upshot.Request {
+extension Request {
   public static func serializeResponsePropertyList(options: Foundation.PropertyListSerialization.ReadOptions, response: Foundation.HTTPURLResponse?, data: Foundation.Data?, error: Swift.Error?) -> Upshot.Result<Any>
 }
-extension Upshot.DataRequest {
+extension DataRequest {
   public static func propertyListResponseSerializer(options: Foundation.PropertyListSerialization.ReadOptions = []) -> Upshot.DataResponseSerializer<Any>
   @discardableResult
   public func responsePropertyList(queue: Dispatch.DispatchQueue? = nil, options: Foundation.PropertyListSerialization.ReadOptions = [], completionHandler: @escaping (Upshot.DataResponse<Any>) -> Swift.Void) -> Self
 }
-extension Upshot.DownloadRequest {
+extension DownloadRequest {
   public static func propertyListResponseSerializer(options: Foundation.PropertyListSerialization.ReadOptions = []) -> Upshot.DownloadResponseSerializer<Any>
   @discardableResult
   public func responsePropertyList(queue: Dispatch.DispatchQueue? = nil, options: Foundation.PropertyListSerialization.ReadOptions = [], completionHandler: @escaping (Upshot.DownloadResponse<Any>) -> Swift.Void) -> Self
@@ -330,6 +329,7 @@ extension Upshot.DownloadRequest {
     get
   }
   public var error: Swift.Error?
+  @objc override dynamic public init()
   @objc deinit
 }
 public enum Result<Value> {
@@ -348,17 +348,17 @@ public enum Result<Value> {
     get
   }
 }
-extension Upshot.Result : Swift.CustomStringConvertible {
+extension Result : Swift.CustomStringConvertible {
   public var description: Swift.String {
     get
   }
 }
-extension Upshot.Result : Swift.CustomDebugStringConvertible {
+extension Result : Swift.CustomDebugStringConvertible {
   public var debugDescription: Swift.String {
     get
   }
 }
-extension Upshot.Result {
+extension Result {
   public init(value: () throws -> Value)
   public func unwrap() throws -> Value
   public func map<T>(_ transform: (Value) -> T) -> Upshot.Result<T>
@@ -374,28 +374,29 @@ extension Upshot.Result {
   @discardableResult
   public func ifFailure(_ closure: () -> Swift.Void) -> Upshot.Result<Value>
 }
-@objc @_inheritsConvenienceInitializers @_Concurrency.MainActor(unsafe) open class MiniGameController : Upshot.BKBaseViewController {
-  @_Concurrency.MainActor(unsafe) @objc override dynamic open func viewDidLoad()
-  @_Concurrency.MainActor(unsafe) @objc override dynamic open func viewDidAppear(_ animated: Swift.Bool)
-  @_Concurrency.MainActor(unsafe) @objc override dynamic open func viewDidDisappear(_ animated: Swift.Bool)
-  @_Concurrency.MainActor(unsafe) @objc override dynamic open func viewWillTransition(to size: CoreGraphics.CGSize, with coordinator: UIKit.UIViewControllerTransitionCoordinator)
-  @_Concurrency.MainActor(unsafe) @objc override dynamic public init(nibName nibNameOrNil: Swift.String?, bundle nibBundleOrNil: Foundation.Bundle?)
-  @_Concurrency.MainActor(unsafe) @objc required dynamic public init?(coder: Foundation.NSCoder)
+@objc @_inheritsConvenienceInitializers open class MiniGameController : Upshot.BKBaseViewController {
+  @objc override dynamic open func viewDidLoad()
+  @objc override dynamic open func viewDidAppear(_ animated: Swift.Bool)
+  @objc override dynamic open func viewDidDisappear(_ animated: Swift.Bool)
+  @objc override dynamic open func viewWillTransition(to size: CoreGraphics.CGSize, with coordinator: UIKit.UIViewControllerTransitionCoordinator)
+  @objc override dynamic public init(nibName nibNameOrNil: Swift.String?, bundle nibBundleOrNil: Foundation.Bundle?)
+  @objc required dynamic public init?(coder: Foundation.NSCoder)
   @objc deinit
 }
-extension Upshot.MiniGameController : WebKit.WKScriptMessageHandler {
-  @_Concurrency.MainActor(unsafe) @objc dynamic public func userContentController(_ userContentController: WebKit.WKUserContentController, didReceive message: WebKit.WKScriptMessage)
+extension MiniGameController : WebKit.WKScriptMessageHandler {
+  @objc dynamic public func userContentController(_ userContentController: WebKit.WKUserContentController, didReceive message: WebKit.WKScriptMessage)
 }
-extension Upshot.MiniGameController : WebKit.WKNavigationDelegate {
-  @_Concurrency.MainActor(unsafe) @objc dynamic public func webView(_ webView: WebKit.WKWebView, didFinish navigation: WebKit.WKNavigation!)
-  @_Concurrency.MainActor(unsafe) @objc dynamic public func webViewWebContentProcessDidTerminate(_ webView: WebKit.WKWebView)
-  @_Concurrency.MainActor(unsafe) @objc dynamic public func webView(_ webView: WebKit.WKWebView, didFail navigation: WebKit.WKNavigation!, withError error: Swift.Error)
-  @_Concurrency.MainActor(unsafe) @objc dynamic public func webView(_ webView: WebKit.WKWebView, didStartProvisionalNavigation navigation: WebKit.WKNavigation!)
+extension MiniGameController : WebKit.WKNavigationDelegate {
+  @objc dynamic public func webView(_ webView: WebKit.WKWebView, didFinish navigation: WebKit.WKNavigation!)
+  @objc dynamic public func webViewWebContentProcessDidTerminate(_ webView: WebKit.WKWebView)
+  @objc dynamic public func webView(_ webView: WebKit.WKWebView, didFail navigation: WebKit.WKNavigation!, withError error: Swift.Error)
+  @objc dynamic public func webView(_ webView: WebKit.WKWebView, didStartProvisionalNavigation navigation: WebKit.WKNavigation!)
 }
 @objc open class USTriviaWireframe : ObjectiveC.NSObject {
   @objc public init?(activity: Upshot.BKActivity? = nil, tag: Swift.String? = nil, sessionId: Swift.String? = nil, appuid: Swift.String = "")
   @objc public func make() -> Upshot.USTriviaView?
   @objc deinit
+  @objc override dynamic public init()
 }
 @_hasMissingDesignatedInitializers open class JourneyHandler {
   @discardableResult
@@ -414,12 +415,12 @@ public enum ServerTrustPolicy {
   case pinCertificates(certificates: [Security.SecCertificate], validateCertificateChain: Swift.Bool, validateHost: Swift.Bool)
   case pinPublicKeys(publicKeys: [Security.SecKey], validateCertificateChain: Swift.Bool, validateHost: Swift.Bool)
   case disableEvaluation
-  case customEvaluation((_ serverTrust: Security.SecTrust, _ host: Swift.String) -> Swift.Bool)
+  case customEvaluation((Security.SecTrust, Swift.String) -> Swift.Bool)
   public static func certificates(in bundle: Foundation.Bundle = Bundle.main) -> [Security.SecCertificate]
   public static func publicKeys(in bundle: Foundation.Bundle = Bundle.main) -> [Security.SecKey]
   public func evaluate(_ serverTrust: Security.SecTrust, forHost host: Swift.String) -> Swift.Bool
 }
-extension UIKit.UIImage {
+extension UIImage {
   @objc dynamic open class func gifImageWithData(_ data: Foundation.Data) -> UIKit.UIImage?
   @objc dynamic open class func gifImageWithURL(_ gifUrl: Foundation.URL?) -> UIKit.UIImage?
   open class func gifImageWithName(_ name: Swift.String) -> UIKit.UIImage?
@@ -482,12 +483,12 @@ extension UIKit.UIImage {
   @objc override dynamic open func responds(to selector: ObjectiveC.Selector) -> Swift.Bool
   @objc deinit
 }
-extension Upshot.SessionDelegate : Foundation.URLSessionDelegate {
+extension SessionDelegate : Foundation.URLSessionDelegate {
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, didBecomeInvalidWithError error: Swift.Error?)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, didReceive challenge: Foundation.URLAuthenticationChallenge, completionHandler: @escaping (Foundation.URLSession.AuthChallengeDisposition, Foundation.URLCredential?) -> Swift.Void)
   @objc dynamic open func urlSessionDidFinishEvents(forBackgroundURLSession session: Foundation.URLSession)
 }
-extension Upshot.SessionDelegate : Foundation.URLSessionTaskDelegate {
+extension SessionDelegate : Foundation.URLSessionTaskDelegate {
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, task: Foundation.URLSessionTask, willPerformHTTPRedirection response: Foundation.HTTPURLResponse, newRequest request: Foundation.URLRequest, completionHandler: @escaping (Foundation.URLRequest?) -> Swift.Void)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, task: Foundation.URLSessionTask, didReceive challenge: Foundation.URLAuthenticationChallenge, completionHandler: @escaping (Foundation.URLSession.AuthChallengeDisposition, Foundation.URLCredential?) -> Swift.Void)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, task: Foundation.URLSessionTask, needNewBodyStream completionHandler: @escaping (Foundation.InputStream?) -> Swift.Void)
@@ -496,25 +497,25 @@ extension Upshot.SessionDelegate : Foundation.URLSessionTaskDelegate {
   @objc(URLSession:task:didFinishCollectingMetrics:) dynamic open func urlSession(_ session: Foundation.URLSession, task: Foundation.URLSessionTask, didFinishCollecting metrics: Foundation.URLSessionTaskMetrics)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, task: Foundation.URLSessionTask, didCompleteWithError error: Swift.Error?)
 }
-extension Upshot.SessionDelegate : Foundation.URLSessionDataDelegate {
+extension SessionDelegate : Foundation.URLSessionDataDelegate {
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, dataTask: Foundation.URLSessionDataTask, didReceive response: Foundation.URLResponse, completionHandler: @escaping (Foundation.URLSession.ResponseDisposition) -> Swift.Void)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, dataTask: Foundation.URLSessionDataTask, didBecome downloadTask: Foundation.URLSessionDownloadTask)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, dataTask: Foundation.URLSessionDataTask, didReceive data: Foundation.Data)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, dataTask: Foundation.URLSessionDataTask, willCacheResponse proposedResponse: Foundation.CachedURLResponse, completionHandler: @escaping (Foundation.CachedURLResponse?) -> Swift.Void)
 }
-extension Upshot.SessionDelegate : Foundation.URLSessionDownloadDelegate {
+extension SessionDelegate : Foundation.URLSessionDownloadDelegate {
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, downloadTask: Foundation.URLSessionDownloadTask, didFinishDownloadingTo location: Foundation.URL)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, downloadTask: Foundation.URLSessionDownloadTask, didWriteData bytesWritten: Swift.Int64, totalBytesWritten: Swift.Int64, totalBytesExpectedToWrite: Swift.Int64)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, downloadTask: Foundation.URLSessionDownloadTask, didResumeAtOffset fileOffset: Swift.Int64, expectedTotalBytes: Swift.Int64)
 }
 @available(iOS 9.0, macOS 10.11, tvOS 9.0, *)
-extension Upshot.SessionDelegate : Foundation.URLSessionStreamDelegate {
+extension SessionDelegate : Foundation.URLSessionStreamDelegate {
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, readClosedFor streamTask: Foundation.URLSessionStreamTask)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, writeClosedFor streamTask: Foundation.URLSessionStreamTask)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, betterRouteDiscoveredFor streamTask: Foundation.URLSessionStreamTask)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, streamTask: Foundation.URLSessionStreamTask, didBecome inputStream: Foundation.InputStream, outputStream: Foundation.OutputStream)
 }
-extension Foundation.NSNotification.Name {
+extension NSNotification.Name {
   public struct Task {
     public static let DidResume: Foundation.Notification.Name
     public static let DidSuspend: Foundation.Notification.Name
@@ -522,17 +523,17 @@ extension Foundation.NSNotification.Name {
     public static let DidComplete: Foundation.Notification.Name
   }
 }
-extension Foundation.Notification {
+extension Notification {
   public struct Key {
     public static let Task: Swift.String
   }
 }
 @objc @_inheritsConvenienceInitializers public class RewardsManager : ObjectiveC.NSObject {
   @objc override dynamic public init()
-  @objc public func getRewardsStatus(appuid: Swift.String, completionBlock: @escaping (_ response: Upshot.JSON?, _ errorMessage: Swift.String?) -> Swift.Void)
-  @objc public func getRewardsHistory(appuid: Swift.String, programId: Swift.String, type: Upshot.BKRewardHistoryType, completionBlock: @escaping (_ response: Upshot.JSON?, _ errorMessage: Swift.String?) -> Swift.Void)
-  @objc public func getRewardDetails(appuid: Swift.String, programId: Swift.String, completionBlock: @escaping (_ response: Upshot.JSON?, _ errorMessage: Swift.String?) -> Swift.Void)
-  @objc public func sendRedeemValue(appuid: Swift.String, transactionValue: Swift.Int, redeemValue: Swift.Int, programId: Swift.String, tag: Swift.String, completionBlock: @escaping (_ response: Upshot.JSON?, _ errorMessage: Swift.String?) -> Swift.Void)
+  @objc public func getRewardsStatus(appuid: Swift.String, completionBlock: @escaping (Upshot.JSON?, Swift.String?) -> Swift.Void)
+  @objc public func getRewardsHistory(appuid: Swift.String, programId: Swift.String, type: Upshot.BKRewardHistoryType, completionBlock: @escaping (Upshot.JSON?, Swift.String?) -> Swift.Void)
+  @objc public func getRewardDetails(appuid: Swift.String, programId: Swift.String, completionBlock: @escaping (Upshot.JSON?, Swift.String?) -> Swift.Void)
+  @objc public func sendRedeemValue(appuid: Swift.String, transactionValue: Swift.Int, redeemValue: Swift.Int, programId: Swift.String, tag: Swift.String, completionBlock: @escaping (Upshot.JSON?, Swift.String?) -> Swift.Void)
   @objc deinit
 }
 public enum AFError : Swift.Error {
@@ -578,7 +579,7 @@ public enum AFError : Swift.Error {
   case responseValidationFailed(reason: Upshot.AFError.ResponseValidationFailureReason)
   case responseSerializationFailed(reason: Upshot.AFError.ResponseSerializationFailureReason)
 }
-extension Upshot.AFError {
+extension AFError {
   public var isInvalidURLError: Swift.Bool {
     get
   }
@@ -595,7 +596,7 @@ extension Upshot.AFError {
     get
   }
 }
-extension Upshot.AFError {
+extension AFError {
   public var urlConvertible: Upshot.URLConvertible? {
     get
   }
@@ -618,7 +619,7 @@ extension Upshot.AFError {
     get
   }
 }
-extension Upshot.AFError : Foundation.LocalizedError {
+extension AFError : Foundation.LocalizedError {
   public var errorDescription: Swift.String? {
     get
   }
@@ -634,12 +635,12 @@ public struct Timeline {
   public let totalDuration: Foundation.TimeInterval
   public init(requestStartTime: CoreFoundation.CFAbsoluteTime = 0.0, initialResponseTime: CoreFoundation.CFAbsoluteTime = 0.0, requestCompletedTime: CoreFoundation.CFAbsoluteTime = 0.0, serializationCompletedTime: CoreFoundation.CFAbsoluteTime = 0.0)
 }
-extension Upshot.Timeline : Swift.CustomStringConvertible {
+extension Timeline : Swift.CustomStringConvertible {
   public var description: Swift.String {
     get
   }
 }
-extension Upshot.Timeline : Swift.CustomDebugStringConvertible {
+extension Timeline : Swift.CustomDebugStringConvertible {
   public var debugDescription: Swift.String {
     get
   }
@@ -666,17 +667,17 @@ open class MultipartFormData {
   @objc deinit
 }
 public typealias JSON = [Swift.String : Any]
-@objc @_inheritsConvenienceInitializers @_Concurrency.MainActor(unsafe) open class TriviaBarGraphView : UIKit.UIView {
-  @_Concurrency.MainActor(unsafe) @objc override dynamic open var frame: CoreGraphics.CGRect {
-    @_Concurrency.MainActor(unsafe) @objc get
-    @_Concurrency.MainActor(unsafe) @objc set
+@objc @_inheritsConvenienceInitializers open class TriviaBarGraphView : UIKit.UIView {
+  @objc override dynamic open var frame: CoreGraphics.CGRect {
+    @objc get
+    @objc set
   }
-  @_Concurrency.MainActor(unsafe) @objc override dynamic public init(frame: CoreGraphics.CGRect)
-  @_Concurrency.MainActor(unsafe) @objc required dynamic public init?(coder: Foundation.NSCoder)
+  @objc override dynamic public init(frame: CoreGraphics.CGRect)
+  @objc required dynamic public init?(coder: Foundation.NSCoder)
   @objc deinit
 }
-extension Upshot.USTriviaView {
-  @_Concurrency.MainActor(unsafe) @objc override dynamic open func viewWillTransition(to size: CoreGraphics.CGSize, with coordinator: UIKit.UIViewControllerTransitionCoordinator)
+extension USTriviaView {
+  @objc override dynamic open func viewWillTransition(to size: CoreGraphics.CGSize, with coordinator: UIKit.UIViewControllerTransitionCoordinator)
 }
 @objc @_inheritsConvenienceInitializers open class MiniGameRouter : ObjectiveC.NSObject {
   @objc public static func make(activity: Upshot.BKActivity, sessionId: Swift.String, appuid: Swift.String, tag: Swift.String?, dismissBlock: @escaping (Swift.String?) -> Swift.Void) -> UIKit.UIViewController?
@@ -697,20 +698,20 @@ extension Upshot.USTriviaView {
   @objc override dynamic public init()
   @objc deinit
 }
-@objc @_inheritsConvenienceInitializers @_Concurrency.MainActor(unsafe) open class USTriviaView : Upshot.BKBaseViewController {
+@objc @_inheritsConvenienceInitializers open class USTriviaView : Upshot.BKBaseViewController {
   @objc deinit
-  @_Concurrency.MainActor(unsafe) @objc override dynamic open func viewDidLoad()
-  @_Concurrency.MainActor(unsafe) @objc override dynamic open func viewDidAppear(_ animated: Swift.Bool)
-  @_Concurrency.MainActor(unsafe) @objc override dynamic public init(nibName nibNameOrNil: Swift.String?, bundle nibBundleOrNil: Foundation.Bundle?)
-  @_Concurrency.MainActor(unsafe) @objc required dynamic public init?(coder: Foundation.NSCoder)
+  @objc override dynamic open func viewDidLoad()
+  @objc override dynamic open func viewDidAppear(_ animated: Swift.Bool)
+  @objc override dynamic public init(nibName nibNameOrNil: Swift.String?, bundle nibBundleOrNil: Foundation.Bundle?)
+  @objc required dynamic public init?(coder: Foundation.NSCoder)
 }
-extension Upshot.USTriviaView : UIKit.UICollectionViewDataSource, UIKit.UICollectionViewDelegateFlowLayout, UIKit.UICollectionViewDelegate {
-  @_Concurrency.MainActor(unsafe) @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, numberOfItemsInSection section: Swift.Int) -> Swift.Int
-  @_Concurrency.MainActor(unsafe) @objc dynamic public func numberOfSections(in collectionView: UIKit.UICollectionView) -> Swift.Int
-  @_Concurrency.MainActor(unsafe) @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, cellForItemAt indexPath: Foundation.IndexPath) -> UIKit.UICollectionViewCell
-  @_Concurrency.MainActor(unsafe) @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, layout collectionViewLayout: UIKit.UICollectionViewLayout, sizeForItemAt indexPath: Foundation.IndexPath) -> CoreGraphics.CGSize
-  @_Concurrency.MainActor(unsafe) @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, layout collectionViewLayout: UIKit.UICollectionViewLayout, minimumLineSpacingForSectionAt section: Swift.Int) -> CoreGraphics.CGFloat
-  @_Concurrency.MainActor(unsafe) @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, layout collectionViewLayout: UIKit.UICollectionViewLayout, insetForSectionAt section: Swift.Int) -> UIKit.UIEdgeInsets
+extension USTriviaView : UIKit.UICollectionViewDataSource, UIKit.UICollectionViewDelegateFlowLayout, UIKit.UICollectionViewDelegate {
+  @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, numberOfItemsInSection section: Swift.Int) -> Swift.Int
+  @objc dynamic public func numberOfSections(in collectionView: UIKit.UICollectionView) -> Swift.Int
+  @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, cellForItemAt indexPath: Foundation.IndexPath) -> UIKit.UICollectionViewCell
+  @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, layout collectionViewLayout: UIKit.UICollectionViewLayout, sizeForItemAt indexPath: Foundation.IndexPath) -> CoreGraphics.CGSize
+  @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, layout collectionViewLayout: UIKit.UICollectionViewLayout, minimumLineSpacingForSectionAt section: Swift.Int) -> CoreGraphics.CGFloat
+  @objc dynamic public func collectionView(_ collectionView: UIKit.UICollectionView, layout collectionViewLayout: UIKit.UICollectionViewLayout, insetForSectionAt section: Swift.Int) -> UIKit.UIEdgeInsets
 }
 @_hasMissingDesignatedInitializers public class NetworkReachabilityManager {
   public enum NetworkReachabilityStatus {
@@ -749,16 +750,16 @@ extension Upshot.USTriviaView : UIKit.UICollectionViewDataSource, UIKit.UICollec
   public func startListening() -> Swift.Bool
   public func stopListening()
 }
-extension Upshot.NetworkReachabilityManager.NetworkReachabilityStatus : Swift.Equatable {
+extension NetworkReachabilityManager.NetworkReachabilityStatus : Swift.Equatable {
 }
 public func == (lhs: Upshot.NetworkReachabilityManager.NetworkReachabilityStatus, rhs: Upshot.NetworkReachabilityManager.NetworkReachabilityStatus) -> Swift.Bool
-extension Upshot.Request {
+extension Request {
   public enum ValidationResult {
     case success
     case failure(Swift.Error)
   }
 }
-extension Upshot.DataRequest {
+extension DataRequest {
   public typealias Validation = (Foundation.URLRequest?, Foundation.HTTPURLResponse, Foundation.Data?) -> Upshot.Request.ValidationResult
   @discardableResult
   public func validate(_ validation: @escaping Upshot.DataRequest.Validation) -> Self
@@ -769,8 +770,8 @@ extension Upshot.DataRequest {
   @discardableResult
   public func validate() -> Self
 }
-extension Upshot.DownloadRequest {
-  public typealias Validation = (_ request: Foundation.URLRequest?, _ response: Foundation.HTTPURLResponse, _ temporaryURL: Foundation.URL?, _ destinationURL: Foundation.URL?) -> Upshot.Request.ValidationResult
+extension DownloadRequest {
+  public typealias Validation = (Foundation.URLRequest?, Foundation.HTTPURLResponse, Foundation.URL?, Foundation.URL?) -> Upshot.Request.ValidationResult
   @discardableResult
   public func validate(_ validation: @escaping Upshot.DownloadRequest.Validation) -> Self
   @discardableResult
@@ -780,13 +781,13 @@ extension Upshot.DownloadRequest {
   @discardableResult
   public func validate() -> Self
 }
-extension UIKit.UIWindow {
-  @_Concurrency.MainActor(unsafe) @objc override dynamic open func motionEnded(_ motion: UIKit.UIEvent.EventSubtype, with event: UIKit.UIEvent?)
+extension UIWindow {
+  @objc override dynamic open func motionEnded(_ motion: UIKit.UIEvent.EventSubtype, with event: UIKit.UIEvent?)
 }
 public protocol RequestAdapter {
   func adapt(_ urlRequest: Foundation.URLRequest) throws -> Foundation.URLRequest
 }
-public typealias RequestRetryCompletion = (_ shouldRetry: Swift.Bool, _ timeDelay: Foundation.TimeInterval) -> Swift.Void
+public typealias RequestRetryCompletion = (Swift.Bool, Foundation.TimeInterval) -> Swift.Void
 public protocol RequestRetrier {
   func should(_ manager: Upshot.SessionManager, retry request: Upshot.Request, with error: Swift.Error, completion: @escaping Upshot.RequestRetryCompletion)
 }
@@ -819,12 +820,12 @@ public typealias HTTPHeaders = [Swift.String : Swift.String]
   open func cancel()
   @objc deinit
 }
-extension Upshot.Request : Swift.CustomStringConvertible {
+extension Request : Swift.CustomStringConvertible {
   open var description: Swift.String {
     get
   }
 }
-extension Upshot.Request : Swift.CustomDebugStringConvertible {
+extension Request : Swift.CustomDebugStringConvertible {
   open var debugDescription: Swift.String {
     get
   }
@@ -852,7 +853,7 @@ extension Upshot.Request : Swift.CustomDebugStringConvertible {
     public typealias Element = Upshot.DownloadRequest.DownloadOptions
     public typealias RawValue = Swift.UInt
   }
-  public typealias DownloadFileDestination = (_ temporaryURL: Foundation.URL, _ response: Foundation.HTTPURLResponse) -> (destinationURL: Foundation.URL, options: Upshot.DownloadRequest.DownloadOptions)
+  public typealias DownloadFileDestination = (Foundation.URL, Foundation.HTTPURLResponse) -> (destinationURL: Foundation.URL, options: Upshot.DownloadRequest.DownloadOptions)
   override open var request: Foundation.URLRequest? {
     get
   }

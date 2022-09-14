@@ -34,11 +34,16 @@ import java.util.Map;
 public class UpshotFirebaseMessagingService extends FirebaseMessagingService {
 
     private final static String TAG = "BKFBaseMessagingService";
+    private Context context;
 
     @Override
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
         UpshotModule.sendRegistrationToServer(token);
+    }
+    
+    public void setContext(Context context) {
+        this.context = context;
     }
 
     @Override
@@ -49,7 +54,9 @@ public class UpshotFirebaseMessagingService extends FirebaseMessagingService {
         for (Map.Entry<String, String> entry : remoteMessage.getData().entrySet()) {
             bundle.putString(entry.getKey(), entry.getValue());
         }
-        Context context = getApplicationContext();
+        if (context == null) {
+            context = getApplicationContext();
+        }
         ApplicationInfo applicationInfo = null;
         String packageName = context.getPackageName();
 
@@ -81,7 +88,7 @@ public class UpshotFirebaseMessagingService extends FirebaseMessagingService {
             if (bkSmallNotificationIconColor != null) {
                 bundle.putInt(BrandKinesis.BK_LOLLIPOP_NOTIFICATION_ICON_BG_COLOR, bkSmallNotificationIconColor);
             }
-            sendPushBundletoBK(bundle, this, allowForeground);
+            sendPushBundletoBK(bundle, context, allowForeground);
         } else {
 
             boolean allow = false;

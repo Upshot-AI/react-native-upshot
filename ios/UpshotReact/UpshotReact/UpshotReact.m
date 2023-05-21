@@ -516,4 +516,9 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
 
     [self sendEventWithName:@"UpshotCampaignDetailsLoaded" body:@{}];
 }
+
+- (dispatch_queue_t)methodQueue {
+  return dispatch_get_main_queue();
+}
+
 @end

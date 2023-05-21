@@ -47,7 +47,7 @@ public class UpshotApplication extends Application implements BKAppStatusUtil.BK
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {            
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             registerChannel();
         }
         BKAppStatusUtil.getInstance().register(this, this);
@@ -62,14 +62,14 @@ public class UpshotApplication extends Application implements BKAppStatusUtil.BK
         return application;
     }
 
-    //BKAppStatusListener Callbacks
+    // BKAppStatusListener Callbacks
     @Override
     public void onAppComesForeground(Activity activity) {
 
         if (initType != null) {
             if (initType == "Config") {
                 initUpshotUsingConfig();
-            } else if(initType == "Options"){
+            } else if (initType == "Options") {
                 if (options != null) {
                     initUpshotUsingOptions(options);
                 }
@@ -87,39 +87,48 @@ public class UpshotApplication extends Application implements BKAppStatusUtil.BK
     public void onAppRemovedFromRecentsList() {
     }
 
-
     @TargetApi(Build.VERSION_CODES.O)
     private void registerChannel() {
-        String notificationsChannelId = "notifications";
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        List<NotificationChannel> channels = notificationManager.getNotificationChannels();
-        NotificationChannel existingChanel = null;
-        int count = 0;
-        for (NotificationChannel channel : channels) {
-            String fullId = channel.getId();
-            if (fullId.contains(notificationsChannelId)) {
-                existingChanel = channel;
-                String[] numbers = extractRegexMatches(fullId, "\\d+");
-                if (numbers.length > 0) {
-                    count = Integer.valueOf(numbers[0]);
+        try {
+            String notificationsChannelId = "notifications";
+            NotificationManager notificationManager = (NotificationManager) getSystemService(
+                    Context.NOTIFICATION_SERVICE);
+            if (notificationManager == null) {
+                return;
+            }
+            List<NotificationChannel> channels = notificationManager.getNotificationChannels();
+            if (channels == null) {
+                return;
+            }
+            NotificationChannel existingChanel = null;
+            int count = 0;
+            for (NotificationChannel channel : channels) {
+                String fullId = channel.getId();
+                if (fullId.contains(notificationsChannelId)) {
+                    existingChanel = channel;
+                    String[] numbers = extractRegexMatches(fullId, "\\d+");
+                    if (numbers.length > 0) {
+                        count = Integer.valueOf(numbers[0]);
+                    }
+                    break;
                 }
-                break;
             }
-        }
-        if (existingChanel != null) {
-            if (existingChanel.getImportance() < NotificationManager.IMPORTANCE_DEFAULT) {
-                notificationManager.deleteNotificationChannel(existingChanel.getId());
+            if (existingChanel != null) {
+                if (existingChanel.getImportance() < NotificationManager.IMPORTANCE_DEFAULT) {
+                    notificationManager.deleteNotificationChannel(existingChanel.getId());
+                }
             }
+
+            String newId = existingChanel == null ? notificationsChannelId + '_' + (count + 1) : existingChanel.getId();
+
+            NotificationChannel channel = new NotificationChannel(
+                    newId, notificationsChannelId, NotificationManager.IMPORTANCE_HIGH);
+            channel.setLightColor(Color.GREEN);
+            channel.setLockscreenVisibility(Notification.VISIBILITY_SECRET);
+            notificationManager.createNotificationChannel(channel);
+        } catch (Exception e) {
+
         }
-
-        String newId = existingChanel == null ? notificationsChannelId+'_'+(count+1) : existingChanel.getId();
-
-        NotificationChannel channel = new NotificationChannel(
-                newId, notificationsChannelId, NotificationManager.IMPORTANCE_HIGH);
-        channel.setLightColor(Color.GREEN);
-        channel.setLockscreenVisibility(Notification.VISIBILITY_SECRET);
-        notificationManager.createNotificationChannel(channel);
     }
 
     public String[] extractRegexMatches(String source, String regex) {
@@ -142,11 +151,12 @@ public class UpshotApplication extends Application implements BKAppStatusUtil.BK
             BrandKinesis.initialiseBrandKinesis(get(), new BKAuthCallback() {
                 @Override
                 public void onAuthenticationError(String errorMsg) {
-                UpshotModule.upshotInitStatus(false, errorMsg);
+                    UpshotModule.upshotInitStatus(false, errorMsg);
                 }
+
                 @Override
                 public void onAuthenticationSuccess() {
-                    UpshotModule.upshotInitStatus(true, ""  );
+                    UpshotModule.upshotInitStatus(true, "");
                 }
             });
         } catch (Exception e) {
@@ -166,11 +176,12 @@ public class UpshotApplication extends Application implements BKAppStatusUtil.BK
             public void onActivityError(int i) {
                 UpshotModule.upshotActivityError(i);
             }
+
             @Override
             public void brandkinesisCampaignDetailsLoaded() {
                 UpshotModule.upshotCampaignDetailsLoaded();
             }
-            
+
             @Override
             public void onActivityCreated(BKActivityTypes bkActivityTypes) {
                 UpshotModule.upshotActivityCreated(bkActivityTypes);
@@ -182,7 +193,8 @@ public class UpshotApplication extends Application implements BKAppStatusUtil.BK
             }
 
             @Override
-            public void brandKinesisActivityPerformedActionWithParams(BKActivityTypes bkActivityTypes, Map<String, Object> map) {
+            public void brandKinesisActivityPerformedActionWithParams(BKActivityTypes bkActivityTypes,
+                    Map<String, Object> map) {
                 UpshotModule.upshotDeeplinkCallback(bkActivityTypes, map);
             }
 
@@ -193,7 +205,7 @@ public class UpshotApplication extends Application implements BKAppStatusUtil.BK
 
             @Override
             public void onAuthenticationSuccess() {
-                UpshotModule.upshotInitStatus(true, ""  );
+                UpshotModule.upshotInitStatus(true, "");
             }
 
             @Override

@@ -47,5 +47,13 @@ const UpshotInitOptions = {
     EnableCrashLog: "bkExceptionHandler"
 }
 
+const UpshotAttribution = {
+    Source: "attributionSource",
+    UTMSource: "utm_source",
+    UTMMedium: "utm_medium",
+    UTMCampaign: "utm_campaign"
+}
 
-export { UpshotActivityType, UpshotGender, UpshotMaritalStatus, UpshotRewardHistory, UpshotInitOptions }
+
+
+export { UpshotActivityType, UpshotGender, UpshotMaritalStatus, UpshotRewardHistory, UpshotInitOptions, UpshotAttribution }

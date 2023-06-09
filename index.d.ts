@@ -111,3 +111,10 @@ export const UpshotRewardHistory = {
     redeem: 3,
     negative: 4
 }
+
+export const UpshotAttribution = {
+    Source: "attributionSource",
+    UTMSource: "utm_source",
+    UTMMedium: "utm_medium",
+    UTMCampaign: "utm_campaign"
+}

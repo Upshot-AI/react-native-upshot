@@ -1,5 +1,5 @@
 import { NativeModules, NativeEventEmitter } from 'react-native';
-import { UpshotActivityType, UpshotGender, UpshotMaritalStatus, UpshotRewardHistory, UpshotInitOptions } from './UpshotConstants'
+import { UpshotActivityType, UpshotGender, UpshotMaritalStatus, UpshotRewardHistory, UpshotInitOptions, UpshotAttribution } from './UpshotConstants'
 
 const UpshotReact = NativeModules.UpshotReact;
 var upshotEmitter = new NativeEventEmitter(UpshotReact)
@@ -339,6 +339,6 @@ var Upshot = {
     }
 };
 
-export { UpshotActivityType, UpshotGender, UpshotMaritalStatus, UpshotRewardHistory, UpshotInitOptions }
+export { UpshotActivityType, UpshotGender, UpshotMaritalStatus, UpshotRewardHistory, UpshotInitOptions, UpshotAttribution }
 
 export default Upshot;

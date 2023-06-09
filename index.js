@@ -1,27 +1,27 @@
-import { NativeModules, NativeEventEmitter} from 'react-native';
-import { UpshotActivityType, UpshotGender, UpshotMaritalStatus, UpshotRewardHistory, UpshotInitOptions} from './UpshotConstants'
+import { NativeModules, NativeEventEmitter } from 'react-native';
+import { UpshotActivityType, UpshotGender, UpshotMaritalStatus, UpshotRewardHistory, UpshotInitOptions } from './UpshotConstants'
 
 const UpshotReact = NativeModules.UpshotReact;
 var upshotEmitter = new NativeEventEmitter(UpshotReact)
 
 
 var Upshot = {
-    
+
     /**
     * initialize Upshot using config file
     * Authentication status will be notified through event listener
     */
 
-    initializeUpshot: function() {
+    initializeUpshot: function () {
         UpshotReact.initializeUpshot();
-    },         
+    },
 
     /**
     * initialize Upshot using options
     * Authentication status will be notified through event listener
     * @param {string} Options - initialize options
     */
-    initializeUpshotUsingOptions: function(Options) {
+    initializeUpshotUsingOptions: function (Options) {
         UpshotReact.initializeUpshotUsingOptions(Options);
     },
 
@@ -29,7 +29,7 @@ var Upshot = {
     * terminate Upshot
     *     
     */
-    terminate: function() {
+    terminate: function () {
         UpshotReact.terminate();
     },
 
@@ -39,7 +39,7 @@ var Upshot = {
     * @param {Int} interval - Min Value 10sec and Max 120sec
     *
     */
-    setDispatchInterval: function(interval) {
+    setDispatchInterval: function (interval) {
         UpshotReact.setDispatchInterval(interval);
     },
 
@@ -49,7 +49,7 @@ var Upshot = {
     * @param {string} ScreenName - the current screen name
     * @param {function(eventId)} callback- on success of event creation will get eventId else null as a callback 
     */
-    createPageViewEvent: function(screenName, callback) {
+    createPageViewEvent: function (screenName, callback) {
         UpshotReact.createPageViewEvent(screenName, callback);
     },
 
@@ -61,8 +61,8 @@ var Upshot = {
     * @param {boolean} isTimed - isTimed true for Timed events
     * @param {function(eventId)} callback - on success of event creation will get eventId else null as a callback 
     */
-    createCustomEvent: function(eventName, payload, isTimed, callback) {
-        UpshotReact.createCustomEvent(eventName, payload, isTimed, callback); 
+    createCustomEvent: function (eventName, payload, isTimed, callback) {
+        UpshotReact.createCustomEvent(eventName, payload, isTimed, callback);
     },
 
     /**
@@ -71,8 +71,8 @@ var Upshot = {
     * @param {string} payload - the payload should be json string
     * @param {string} eventId - eventId to close event 
     */
-   
-    setValueAndClose: function(payload, eventId) {
+
+    setValueAndClose: function (payload, eventId) {
 
         UpshotReact.setValueAndClose(payload, eventId);
     },
@@ -83,7 +83,7 @@ var Upshot = {
     * @param {string} eventId - eventId to close event
     */
 
-    closeEventForId: function(eventId) {
+    closeEventForId: function (eventId) {
 
         UpshotReact.closeEventForId(eventId);
     },
@@ -95,7 +95,7 @@ var Upshot = {
     * @param {function(status)} callback - get the status of dispatch events
     */
 
-    dispatchEventsWithTimedEvents: function(timed, callback) {
+    dispatchEventsWithTimedEvents: function (timed, callback) {
         UpshotReact.dispatchEventsWithTimedEvents(timed, callback);
     },
 
@@ -106,7 +106,7 @@ var Upshot = {
     * @param {string} latitude - latitude
     * @param {string} longitude - longitude
     */
-    createLocationEvent: function(latitude, longitude) {
+    createLocationEvent: function (latitude, longitude) {
         UpshotReact.createLocationEvent(latitude, longitude);
     },
 
@@ -117,18 +117,18 @@ var Upshot = {
     * @param {string} payload - the payload should be json string
     * @param {function(eventId)} callback - on success of event creation will get eventId else null as a callback 
     */
-    createAttributionEvent: function(payload, callback) {
+    createAttributionEvent: function (payload, callback) {
         UpshotReact.createAttributionEvent(payload, callback);
     },
 
-    
+
     /** 
     *  Send user details to upshot
     *  
     * @param {string} userData - userData should be json string
     * @param {function(status)} callback - get the status of profile updation
     */
-    setUserProfile: function(userData, callback) {
+    setUserProfile: function (userData, callback) {
 
         UpshotReact.setUserProfile(userData, callback);
     },
@@ -138,7 +138,7 @@ var Upshot = {
     *      
     * @param {function(response)} callback - get json string as a callback with list of user details
     */
-    getUserDetails: function(callback) {
+    getUserDetails: function (callback) {
 
         UpshotReact.getUserDetails(callback);
     },
@@ -149,7 +149,7 @@ var Upshot = {
     * @param {UpshotActivityType} activityType - enum value get it from UpshotConstants
     * @param {string} tag - requested tag
     */
-    showActivityWithType: function(type, tag) {
+    showActivityWithType: function (type, tag) {
 
         UpshotReact.showActivityWithType(type, tag);
     },
@@ -160,7 +160,7 @@ var Upshot = {
     * @param {string} activityId - activityId given by Upshot
     */
 
-    showActivityWithId: function(activityId) {
+    showActivityWithId: function (activityId) {
 
         UpshotReact.showActivityWithId(activityId);
     },
@@ -169,7 +169,7 @@ var Upshot = {
     *  Remove upshot tutorials
     *          
     */
-    removeTutorials: function() {
+    removeTutorials: function () {
         UpshotReact.removeTutorials();
     },
 
@@ -179,8 +179,8 @@ var Upshot = {
     * @param {function(response)} callback - get json string as a callback with list of campaign details
     */
 
-    fetchInboxInfo: function(callback) {
-        
+    fetchInboxInfo: function (callback) {
+
         UpshotReact.fetchInboxInfo(callback);
     },
 
@@ -189,7 +189,7 @@ var Upshot = {
     *      
     * @param {function(response)} callback - get json string as a callback with list of active and Inactive badges
     */
-    getUserBadges: function(callback) {
+    getUserBadges: function (callback) {
         UpshotReact.getUserBadges(callback);
     },
 
@@ -201,7 +201,7 @@ var Upshot = {
     * 
     * @param {function(status)} callback - get the status of push registration
     */
-    registerForPush: function(callback) {
+    registerForPush: function (callback) {
 
         UpshotReact.registerForPush(callback);
     },
@@ -211,7 +211,7 @@ var Upshot = {
     *  
     * @param {string} token - device token
     */
-    sendDeviceToken: function(token) {
+    sendDeviceToken: function (token) {
 
         UpshotReact.sendDeviceToken(token);
     },
@@ -221,7 +221,7 @@ var Upshot = {
     *  
     * @param {string} pushPayload - push click payload
     */
-    sendPushDataToUpshot: function(pushPayload) {
+    sendPushDataToUpshot: function (pushPayload) {
 
         UpshotReact.sendPushDataToUpshot(pushPayload);
     },
@@ -231,18 +231,18 @@ var Upshot = {
     *  
     * @param {string} pushPayload - push bundle
     */
-    displayNotification: function(pushPayload) {
+    displayNotification: function (pushPayload) {
 
-        UpshotReact.displayNotification(pushPayload);   
+        UpshotReact.displayNotification(pushPayload);
     },
-    
+
     /** 
     *  Disable / delete user as per GDPR
     *  
     * @param {boolean} shouldDisable - shouldDisable true for delete account and false for enable
     * @param {function(status)} callback - get the status of diable account status
     */
-    disableUser: function(shouldDisable, callback) {
+    disableUser: function (shouldDisable, callback) {
 
         UpshotReact.disableUser(shouldDisable, callback);
     },
@@ -252,7 +252,7 @@ var Upshot = {
     *      
     * @param {function(userId)} callback - get userId generated by Upshot
     */
-    getUserId: function(callback) {
+    getUserId: function (callback) {
         UpshotReact.getUserId(callback);
     },
 
@@ -261,21 +261,21 @@ var Upshot = {
     *      
     * @param {function(version)} callback - get Upshot sdk version
     */
-    getSDKVersion: function(callback) {
+    getSDKVersion: function (callback) {
 
         UpshotReact.getSDKVersion(callback);
     },
 
-    
+
     /** 
     *  Get list of active reward program
     *      
     * @param {function(response)} successCallback - response is in json string
     * @param {function(error)} failureCallback - will get error in case of any failure
     */
-    getRewardsList: function(successCallback, failureCallback) {
+    getRewardsList: function (successCallback, failureCallback) {
 
-        UpshotReact.getRewardsList(successCallback, failureCallback);        
+        UpshotReact.getRewardsList(successCallback, failureCallback);
     },
 
     /** 
@@ -285,7 +285,7 @@ var Upshot = {
     * @param {function(response)} successCallback - response is in json string
     * @param {function(error)} failureCallback - will get error in case of any failure
     */
-    getRewardHistoryForProgram: function(programId, historyType, successCallback, failureCallback) {
+    getRewardHistoryForProgram: function (programId, historyType, successCallback, failureCallback) {
 
         UpshotReact.getRewardHistoryForProgram(programId, historyType, successCallback, failureCallback);
     },
@@ -296,7 +296,7 @@ var Upshot = {
     * @param {function(response)} successCallback - response is in json string
     * @param {function(error)} failureCallback - will get error in case of any failure
     */
-    getRewardRulesforProgram: function(programId, successCallback, failurecallback) {
+    getRewardRulesforProgram: function (programId, successCallback, failurecallback) {
 
         UpshotReact.getRewardRulesforProgram(programId, successCallback, failurecallback);
     },
@@ -311,12 +311,12 @@ var Upshot = {
     * @param {function(response)} successCallback - response is in json string
     * @param {function(error)} failureCallback - will get error in case of any failure
     */
-    redeemRewardsForProgram: function(programId, transactionValue, redeemValue, tag, successCallback, failurecallback) {
+    redeemRewardsForProgram: function (programId, transactionValue, redeemValue, tag, successCallback, failurecallback) {
 
-        UpshotReact.redeemRewardsForProgram(programId, transactionValue, redeemValue, tag, successCallback, failurecallback);        
-    },  
-    
-    getPushClickPayload:function(callback) {
+        UpshotReact.redeemRewardsForProgram(programId, transactionValue, redeemValue, tag, successCallback, failurecallback);
+    },
+
+    getPushClickPayload: function (callback) {
         UpshotReact.getPushClickPayload(callback)
     },
 
@@ -326,13 +326,19 @@ var Upshot = {
     * @param {string} eventName - the Upshot event name
     * @param {function(event)} your event handler
     */
-   addListener: function(eventName, handler) {
-    if (upshotEmitter) {
-        upshotEmitter.addListener(eventName, handler);
+    addListener: function (eventName, handler) {
+        if (upshotEmitter) {
+            upshotEmitter.addListener(eventName, handler);
+        }
+    },
+
+    removeEventListener: function (eventName) {
+        if (upshotEmitter) {
+            upshotEmitter.removeAllListeners(eventName)
+        }
     }
-},
 };
 
-export { UpshotActivityType, UpshotGender, UpshotMaritalStatus, UpshotRewardHistory, UpshotInitOptions}
+export { UpshotActivityType, UpshotGender, UpshotMaritalStatus, UpshotRewardHistory, UpshotInitOptions }
 
 export default Upshot;

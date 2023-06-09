@@ -1,7 +1,7 @@
 const UpshotActivityType = {
     any: -1,
     survey: 0,
-    rating: 1,    
+    rating: 1,
     fullscreenAd: 3,
     opinionPoll: 5,
     tutorials: 7,
@@ -44,8 +44,8 @@ const UpshotInitOptions = {
     OwnerId: "bkApplicationOwnerID",
     ExternalStorage: "bkStorageAppMemory",
     EnableLocation: "bkFetchLocation",
-    EnableCrashLog: "bkExceptionHandler"    
+    EnableCrashLog: "bkExceptionHandler"
 }
 
 
-export { UpshotActivityType, UpshotGender, UpshotMaritalStatus, UpshotRewardHistory, UpshotInitOptions}
+export { UpshotActivityType, UpshotGender, UpshotMaritalStatus, UpshotRewardHistory, UpshotInitOptions }

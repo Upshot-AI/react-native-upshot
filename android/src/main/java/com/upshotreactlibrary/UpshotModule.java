@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.telecom.Call;
 import android.text.TextUtils;
 import android.util.Log;
@@ -343,33 +344,38 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     @ReactMethod
     private void showActivityWithType(final int activityType,  final String tagName) {
 
-        final BrandKinesis bkInstance = BrandKinesis.getBKInstance();        
-
-        BKActivityTypes type = BKActivityTypes.parse(activityType);
-        if (activityType == -1) {
-            type = BKActivityTypes.ACTIVITY_ANY;
-        }
-        bkInstance.getActivity(reactContext.getApplicationContext(), type, tagName, new BKActivityCallback() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
-            public void onActivityError(final int i) {                
+            public void run() {
+                final BrandKinesis bkInstance = BrandKinesis.getBKInstance();
 
-                upshotActivityError(i);
-            }
+                BKActivityTypes type = BKActivityTypes.parse(activityType);
+                if (activityType == -1) {
+                    type = BKActivityTypes.ACTIVITY_ANY;
+                }
+                bkInstance.getActivity(reactContext.getApplicationContext(), type, tagName, new BKActivityCallback() {
+                    @Override
+                    public void onActivityError(final int i) {
 
-            @Override
-            public void onActivityCreated(final BKActivityTypes bkActivityTypes) {
-                upshotActivityCreated(bkActivityTypes);
-            }
+                        upshotActivityError(i);
+                    }
 
-            @Override
-            public void onActivityDestroyed(BKActivityTypes bkActivityTypes) {
-                upshotActivityDestroyed(bkActivityTypes);
-            }
+                    @Override
+                    public void onActivityCreated(final BKActivityTypes bkActivityTypes) {
+                        upshotActivityCreated(bkActivityTypes);
+                    }
 
-            @Override
-            public void brandKinesisActivityPerformedActionWithParams(final BKActivityTypes bkActivityTypes,
-                                                                      final Map<String, Object> map) {
-                upshotDeeplinkCallback(bkActivityTypes, map);
+                    @Override
+                    public void onActivityDestroyed(BKActivityTypes bkActivityTypes) {
+                        upshotActivityDestroyed(bkActivityTypes);
+                    }
+
+                    @Override
+                    public void brandKinesisActivityPerformedActionWithParams(final BKActivityTypes bkActivityTypes,
+                                                                              final Map<String, Object> map) {
+                        upshotDeeplinkCallback(bkActivityTypes, map);
+                    }
+                });
             }
         });
     }
@@ -377,26 +383,31 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     @ReactMethod
     private void showActivityWithId(final  String activityId) {
 
-        final BrandKinesis bkInstance = BrandKinesis.getBKInstance();
-        bkInstance.getActivity(activityId, new BKActivityCallback() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
-            public void onActivityError(int i) {                  
-                upshotActivityError(i);
-            }
+            public void run() {
+                final BrandKinesis bkInstance = BrandKinesis.getBKInstance();
+                bkInstance.getActivity(activityId, new BKActivityCallback() {
+                    @Override
+                    public void onActivityError(int i) {
+                        upshotActivityError(i);
+                    }
 
-            @Override
-            public void onActivityCreated(BKActivityTypes bkActivityTypes) {
-                upshotActivityCreated(bkActivityTypes);
-            }
+                    @Override
+                    public void onActivityCreated(BKActivityTypes bkActivityTypes) {
+                        upshotActivityCreated(bkActivityTypes);
+                    }
 
-            @Override
-            public void onActivityDestroyed(BKActivityTypes bkActivityTypes) {
-                upshotActivityDestroyed(bkActivityTypes);
-            }
+                    @Override
+                    public void onActivityDestroyed(BKActivityTypes bkActivityTypes) {
+                        upshotActivityDestroyed(bkActivityTypes);
+                    }
 
-            @Override
-            public void brandKinesisActivityPerformedActionWithParams(BKActivityTypes bkActivityTypes, Map<String, Object> map) {
-                upshotDeeplinkCallback(bkActivityTypes, map);
+                    @Override
+                    public void brandKinesisActivityPerformedActionWithParams(BKActivityTypes bkActivityTypes, Map<String, Object> map) {
+                        upshotDeeplinkCallback(bkActivityTypes, map);
+                    }
+                });
             }
         });
     }

@@ -320,6 +320,44 @@ var Upshot = {
         UpshotReact.getPushClickPayload(callback)
     },
 
+    /** 
+    * Fetch PushNotifications List 
+    * @param {Int} limit - Fetch number of notifications based on limit
+    * @param {Boolean} loadMore - Enable load more notifications     
+    * @param {function(response)} successCallback - response is in json string
+    * @param {function(error)} failureCallback - will get error in case of any failure
+    */
+    getNotificationList: function (limit, loadMore, successCallback, failurecallback) {
+        UpshotReact.getNotificationList(limit, loadMore, successCallback, failurecallback)
+    },
+
+    /** 
+    * Fetch Unread Notification Count 
+    * @param {Int} limit - Fetch number of notifications based on limit
+    * @param {Int} InboxType - Only PushNotifications / Only InApp / Both the notifications     
+    * @param {function(count)} callback - Will get Unread notification count.  
+    */
+    getUnreadNotificationsCount: function (limit, inboxType, callback) {
+        UpshotReact.getUnreadNotificationsCount(limit, inboxType, callback)
+    },
+
+    /** 
+    * Show Notifications Screen 
+    * @param {string} Options - InboxScreen Configuration options    
+    */
+    showInboxScreen: function (options) {
+        UpshotReact.showInboxScreen(options)
+    },
+
+    /** 
+    * Fetch Streaks Data     
+    * @param {function(response)} successCallback - response is in json string
+    * @param {function(error)} failureCallback - will get error in case of any failure
+    */
+    getStreaksData: function (successCallback, failurecallback) {
+        UpshotReact.getStreaksData(successCallback, failurecallback)
+    },
+
     /**
     * Add Upshot event listener
     * supported events UpshotAuthStatus, UpshotActivityDidAppear, UpshotActivityDidDismiss, UpshotDeepLink, UpshotPushToken, UpshotPushPayload

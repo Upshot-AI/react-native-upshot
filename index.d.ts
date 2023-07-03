@@ -58,6 +58,14 @@ export function redeemRewardsForProgram(programId: String, transactionValue: num
 
 export function getPushClickPayload(callback: Callback): void;
 
+export function getNotificationList(limit: Int, loadMore: Boolean, successCallback: Callback, failureCallback: Callback): void;
+
+export function getUnreadNotificationsCount(limit: Int, loadMore: Boolean, callback: Callback): void;
+
+export function showInboxScreen(options: string): void;
+
+export function getStreaksData(successCallback: Callback, failureCallback: Callback): void;
+
 export function addListener(eventName: string, handler: Function): void;
 
 export function removeEventListener(eventName: string): void;

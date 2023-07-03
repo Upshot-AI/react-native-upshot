@@ -232,6 +232,48 @@ RCT_EXPORT_METHOD(sendPushDataToUpshot:(NSString *)pushDetails) {
     [self updatePushResponse:payload];
 }
 
+RCT_EXPORT_METHOD(getNotificationList:(NSInteger)limit enable:(BOOL)loadMore response:(RCTResponseSenderBlock)successCallback error:(RCTResponseSenderBlock)failureCallback) {
+    
+    [[BrandKinesis sharedInstance] getNotificationsWith:limit loadmore:loadMore onCompletion:^(NSDictionary * _Nullable response, NSString * _Nullable errorMessage) {
+        
+        if(errorMessage != nil) {
+            successCallback(@[errorMessage]);
+        } else {
+            failureCallback(@[response]);
+        }
+    }];
+}
+
+RCT_EXPORT_METHOD(getUnreadNotificationsCount:(NSInteger)limit type:(NSInteger)inboxType response:(RCTResponseSenderBlock)callback) {
+    
+    BKInboxMessageType type = (BKInboxMessageType)inboxType;
+    [[BrandKinesis sharedInstance] getUnreadNotificationsCount:limit notificationType:type onCompletion:^(NSInteger pushCount) {
+        callback(@[[NSNumber numberWithInteger:pushCount]]);
+    }];
+}
+
+RCT_EXPORT_METHOD(showInboxScreen:(NSString *_Nonnull)options) {
+    
+    NSDictionary *json = [UpshotUtility convertJsonStringToJson:options];
+    [[BrandKinesis sharedInstance] showInboxController:json];
+    
+}
+
+#pragma mark Streaks
+
+RCT_EXPORT_METHOD(getStreaksData:(RCTResponseSenderBlock)successCallback error:(RCTResponseSenderBlock)errorCallback) {
+    
+    [[BrandKinesis sharedInstance] getStreaksDataWithCompletionBlock:^(NSDictionary * _Nullable response, NSString * _Nullable errorMessage) {
+            
+        if(errorMessage != nil) {
+            successCallback(@[errorMessage]);
+        } else {
+             NSString *jsonString = [UpshotUtility convertJsonObjToJsonString:response];
+            errorCallback(@[jsonString]);            
+        }
+    }];
+}
+
 #pragma mark GDPR
 
 RCT_EXPORT_METHOD(disableUser:(BOOL)shouldDisable callback:(RCTResponseSenderBlock)callback) {

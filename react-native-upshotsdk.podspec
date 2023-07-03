@@ -21,8 +21,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency "React"
-  
-  s.dependency "Upshot-iOS-SDK"
+  s.vendored_frameworks="ios/UpshotReact/Frameworks/Upshot.xcframework"
 end
 
 

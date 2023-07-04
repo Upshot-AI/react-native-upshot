@@ -60,9 +60,9 @@ export function getPushClickPayload(callback: Callback): void;
 
 export function getNotificationList(limit: Int, loadMore: Boolean, successCallback: Callback, failureCallback: Callback): void;
 
-export function getUnreadNotificationsCount(limit: Int, loadMore: Boolean, callback: Callback): void;
+export function getUnreadNotificationsCount(limit: Int, inboxType: Int, callback: Callback): void;
 
-export function showInboxScreen(options: string): void;
+export function showInboxNotificationScreen(options: string): void;
 
 export function getStreaksData(successCallback: Callback, failureCallback: Callback): void;
 
@@ -125,4 +125,13 @@ export const UpshotAttribution = {
     UTMSource: "utm_source",
     UTMMedium: "utm_medium",
     UTMCampaign: "utm_campaign"
+}
+
+export const UpshotInboxConfigOptions = {
+    Type: "BKInboxType",
+    ShowReadNotifications: "BKShowReadNotifications",
+    EnableLoadMore: "BKEnableLoadMore",
+    PushLimit: "BKPushFetchLimit",
+    DisplayMsgCount: "BKDisplayMsgCount",
+    DisplayTime: "BKDisplayTime"
 }

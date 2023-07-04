@@ -345,7 +345,7 @@ var Upshot = {
     * Show Notifications Screen 
     * @param {string} Options - InboxScreen Configuration options    
     */
-    showInboxScreen: function (options) {
+    showInboxNotificationScreen: function (options) {
         UpshotReact.showInboxScreen(options)
     },
 

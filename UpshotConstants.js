@@ -54,6 +54,14 @@ const UpshotAttribution = {
     UTMCampaign: "utm_campaign"
 }
 
+const UpshotInboxConfigOptions = {
+    Type: "BKInboxType",
+    ShowReadNotifications: "BKShowReadNotifications",
+    EnableLoadMore: "BKEnableLoadMore",
+    PushLimit: "BKPushFetchLimit",
+    DisplayMsgCount: "BKDisplayMsgCount",
+    DisplayTime: "BKDisplayTime"
+}
 
 
-export { UpshotActivityType, UpshotGender, UpshotMaritalStatus, UpshotRewardHistory, UpshotInitOptions, UpshotAttribution }
+export { UpshotActivityType, UpshotGender, UpshotMaritalStatus, UpshotRewardHistory, UpshotInitOptions, UpshotAttribution, UpshotInboxConfigOptions }

@@ -252,7 +252,7 @@ RCT_EXPORT_METHOD(getUnreadNotificationsCount:(NSInteger)limit type:(NSInteger)i
     }];
 }
 
-RCT_EXPORT_METHOD(showInboxScreen:(NSString *_Nonnull)options) {
+RCT_EXPORT_METHOD(showInboxNotificationScreen:(NSString *_Nonnull)options) {
     
     NSDictionary *json = [UpshotUtility convertJsonStringToJson:options];
     [[BrandKinesis sharedInstance] showInboxController:json];

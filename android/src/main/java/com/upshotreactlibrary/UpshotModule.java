@@ -38,10 +38,13 @@ import com.brandkinesis.callback.BKAuthCallback;
 import com.brandkinesis.callback.BKBadgeAccessListener;
 import com.brandkinesis.callback.BKDispatchCallback;
 import com.brandkinesis.callback.BKInboxAccessListener;
+import com.brandkinesis.callback.BKInboxActivityCallback;
 import com.brandkinesis.callback.BKPushCompletionBlock;
 import com.brandkinesis.callback.BKUserInfoCallback;
 import com.brandkinesis.callback.BrandKinesisCallback;
 import com.brandkinesis.callback.BrandKinesisUserStateCompletion;
+import com.brandkinesis.pushnotifications.BKNotificationsCountResponseListener;
+import com.brandkinesis.pushnotifications.BKNotificationsResponseListener;
 import com.brandkinesis.rewards.BKRewardsResponseListener;
 import com.brandkinesis.utils.BKUtilLogger;
 import com.facebook.react.BuildConfig;
@@ -241,7 +244,9 @@ public class UpshotModule extends ReactContextBaseJavaModule {
                 callback.invoke(eventId);
             }
         } catch (final Exception e) {
-
+            if (BuildConfig.DEBUG) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -574,7 +579,9 @@ public class UpshotModule extends ReactContextBaseJavaModule {
             bkInstance.handlePushNotification(reactContext.getApplicationContext(),
                     jsonToBundle(new JSONObject(pushData)));
         } catch (JSONException e) {
-
+            if (BuildConfig.DEBUG) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -620,11 +627,16 @@ public class UpshotModule extends ReactContextBaseJavaModule {
                     bundle.putInt(BrandKinesis.BK_LOLLIPOP_NOTIFICATION_ICON_BG_COLOR, bkSmallNotificationIconColor);
                 }
             } catch (PackageManager.NameNotFoundException e) {
+                if (BuildConfig.DEBUG) {
+                    e.printStackTrace();
+                }
             }
 
             bkInstance.buildEnhancedPushNotification(context, bundle, allowPushForeground);
         } catch (JSONException e) {
-
+            if (BuildConfig.DEBUG) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -659,10 +671,15 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    private void showInboxScreen(final String options) {
+    private void showInboxNotificationScreen(final String options) {
         try {
+
+            JSONObject jsonObject = new JSONObject(options);
+            jsonObject.put("bkInboxType", jsonObject.getInt("BKInboxType"));
+            jsonObject.put("bkShowReadNotifications", jsonObject.getBoolean("BKShowReadNotifications"));
+
             BrandKinesis.getBKInstance().showInboxActivity(reactContext.getApplicationContext(),
-                    jsonToBundle(new JSONObject(options)), new BKInboxActivityCallback() {
+                    jsonToBundle(jsonObject), new BKInboxActivityCallback() {
                         @Override
                         public void brandKinesisInboxActivityPresented() {
 
@@ -674,7 +691,9 @@ public class UpshotModule extends ReactContextBaseJavaModule {
                         }
                     });
         } catch (JSONException e) {
-            throw new RuntimeException(e);
+            if (BuildConfig.DEBUG) {
+                e.printStackTrace();
+            }
         }
         ;
     }
@@ -949,7 +968,9 @@ public class UpshotModule extends ReactContextBaseJavaModule {
             try {
                 json.put(key, JSONObject.wrap(bundle.get(key)));
             } catch (JSONException e) {
-
+                if (BuildConfig.DEBUG) {
+                    e.printStackTrace();
+                }
             }
         }
         return json.toString();

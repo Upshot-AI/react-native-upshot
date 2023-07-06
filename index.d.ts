@@ -9,14 +9,14 @@ declare namespace Upshot {
     function initializeUpshot(): void;
     function initializeUpshotUsingOptions(Options: string): void;
     function terminate(): void;
-    function setDispatchInterval(interval: Int): void;
+    function setDispatchInterval(interval: number): void;
     function createPageViewEvent(screenName: any, callback: any): void;
-    function createCustomEvent(eventName: string, payload: string, isTimed: boolean, callback: (arg0: eventId) => any): void;
+    function createCustomEvent(eventName: string, payload: string, isTimed: boolean, callback: (arg0: string) => any): void;
     function setValueAndClose(payload: string, eventId: string): void;
     function closeEventForId(eventId: string): void;
     function dispatchEventsWithTimedEvents(timed: boolean, callback: (arg0: string) => any): void;
     function createLocationEvent(latitude: string, longitude: string): void;
-    function createAttributionEvent(payload: string, callback: (arg0: eventId) => any): void;
+    function createAttributionEvent(payload: string, callback: (arg0: string) => any): void;
     function setUserProfile(userData: string, callback: (arg0: string) => any): void;
     function getUserDetails(callback: (arg0: response) => any): void;
     function showActivityWithType(type: any, tag: string): void;

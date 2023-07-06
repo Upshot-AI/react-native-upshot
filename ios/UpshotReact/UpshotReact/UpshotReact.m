@@ -239,7 +239,12 @@ RCT_EXPORT_METHOD(getNotificationList:(NSInteger)limit enable:(BOOL)loadMore res
         if(errorMessage == nil) {
             NSArray *data = response[@"data"];
             if (data != nil) {
-                successCallback(@[data]);
+                NSString *jsonString = [UpshotUtility convertJsonObjToJsonString:data];
+                if(jsonString != nil) {
+                    successCallback(@[jsonString]);
+                } else {
+                    failureCallback(@[@"Something went wrong"]);
+                }
             } else {
                 failureCallback(@[@"Something went wrong"]);
             }

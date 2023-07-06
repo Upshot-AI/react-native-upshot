@@ -1,5 +1,5 @@
 import { NativeModules, NativeEventEmitter } from 'react-native';
-import { UpshotActivityType, UpshotGender, UpshotMaritalStatus, UpshotRewardHistory, UpshotInitOptions, UpshotAttribution } from './UpshotConstants'
+import { UpshotActivityType, UpshotGender, UpshotMaritalStatus, UpshotRewardHistory, UpshotInitOptions, UpshotAttribution, UpshotInboxConfigOptions } from './UpshotConstants'
 
 const UpshotReact = NativeModules.UpshotReact;
 var upshotEmitter = new NativeEventEmitter(UpshotReact)
@@ -19,10 +19,10 @@ var Upshot = {
     /**
     * initialize Upshot using options
     * Authentication status will be notified through event listener
-    * @param {string} Options - initialize options
+    * @param {string} options - initialize options
     */
-    initializeUpshotUsingOptions: function (Options) {
-        UpshotReact.initializeUpshotUsingOptions(Options);
+    initializeUpshotUsingOptions: function (options) {
+        UpshotReact.initializeUpshotUsingOptions(options);
     },
 
     /** 
@@ -36,7 +36,7 @@ var Upshot = {
     /**
     * Set Dispatch Interval / Frequency
     *  
-    * @param {Int} interval - Min Value 10sec and Max 120sec
+    * @param {number} interval - Min Value 10sec and Max 120sec
     *
     */
     setDispatchInterval: function (interval) {
@@ -47,7 +47,7 @@ var Upshot = {
     * Create PageView / ScreenView event
     *  
     * @param {string} ScreenName - the current screen name
-    * @param {function(eventId)} callback- on success of event creation will get eventId else null as a callback 
+    * @param {function(string)} callback- on success of event creation will get eventId else null as a callback 
     */
     createPageViewEvent: function (screenName, callback) {
         UpshotReact.createPageViewEvent(screenName, callback);
@@ -58,8 +58,8 @@ var Upshot = {
     *  
     * @param {string} eventName - custom event name
     * @param {string} payload - the payload should be json string
-    * @param {boolean} isTimed - isTimed true for Timed events
-    * @param {function(eventId)} callback - on success of event creation will get eventId else null as a callback 
+    * @param {Boolean} isTimed - isTimed true for Timed events
+    * @param {function(string)} callback - on success of event creation will get eventId else null as a callback 
     */
     createCustomEvent: function (eventName, payload, isTimed, callback) {
         UpshotReact.createCustomEvent(eventName, payload, isTimed, callback);
@@ -91,8 +91,8 @@ var Upshot = {
     /** 
     *  Dispatch all events to server
     *  
-    * @param {boolean} timed - timed is true will send all events to server including timed events
-    * @param {function(status)} callback - get the status of dispatch events
+    * @param {Boolean} timed - timed is true will send all events to server including timed events
+    * @param {function(Boolean)} callback - get the status of dispatch events
     */
 
     dispatchEventsWithTimedEvents: function (timed, callback) {
@@ -115,7 +115,7 @@ var Upshot = {
     *  Create attribution event 
     *  
     * @param {string} payload - the payload should be json string
-    * @param {function(eventId)} callback - on success of event creation will get eventId else null as a callback 
+    * @param {function(string)} callback - on success of event creation will get eventId else null as a callback 
     */
     createAttributionEvent: function (payload, callback) {
         UpshotReact.createAttributionEvent(payload, callback);
@@ -126,7 +126,7 @@ var Upshot = {
     *  Send user details to upshot
     *  
     * @param {string} userData - userData should be json string
-    * @param {function(status)} callback - get the status of profile updation
+    * @param {function(Boolean)} callback - get the status of profile updation
     */
     setUserProfile: function (userData, callback) {
 
@@ -136,7 +136,7 @@ var Upshot = {
     /** 
     *  get list of user details from Upshot
     *      
-    * @param {function(response)} callback - get json string as a callback with list of user details
+    * @param {function(string)} callback - get json string as a callback with list of user details
     */
     getUserDetails: function (callback) {
 
@@ -176,7 +176,7 @@ var Upshot = {
     /** 
     *  get list of campaign data from Upshot
     *      
-    * @param {function(response)} callback - get json string as a callback with list of campaign details
+    * @param {function(string)} callback - get json string as a callback with list of campaign details
     */
 
     fetchInboxInfo: function (callback) {
@@ -187,7 +187,7 @@ var Upshot = {
     /** 
     *  get list of user badges from Upshot
     *      
-    * @param {function(response)} callback - get json string as a callback with list of active and Inactive badges
+    * @param {function(string)} callback - get json string as a callback with list of active and Inactive badges
     */
     getUserBadges: function (callback) {
         UpshotReact.getUserBadges(callback);
@@ -199,7 +199,7 @@ var Upshot = {
     *  register for push
     *  requires for only ios
     * 
-    * @param {function(status)} callback - get the status of push registration
+    * @param {function(Boolean)} callback - get the status of push registration
     */
     registerForPush: function (callback) {
 
@@ -240,7 +240,7 @@ var Upshot = {
     *  Disable / delete user as per GDPR
     *  
     * @param {boolean} shouldDisable - shouldDisable true for delete account and false for enable
-    * @param {function(status)} callback - get the status of diable account status
+    * @param {function(Boolean)} callback - get the status of diable account status
     */
     disableUser: function (shouldDisable, callback) {
 
@@ -250,7 +250,7 @@ var Upshot = {
     /** 
     *  Get upshot userId
     *      
-    * @param {function(userId)} callback - get userId generated by Upshot
+    * @param {function(string)} callback - get userId generated by Upshot
     */
     getUserId: function (callback) {
         UpshotReact.getUserId(callback);
@@ -259,7 +259,7 @@ var Upshot = {
     /** 
     *  Get Upshot SDk version
     *      
-    * @param {function(version)} callback - get Upshot sdk version
+    * @param {function(string)} callback - get Upshot sdk version
     */
     getSDKVersion: function (callback) {
 
@@ -270,7 +270,7 @@ var Upshot = {
     /** 
     *  Get list of active reward program
     *      
-    * @param {function(response)} successCallback - response is in json string
+    * @param {function(string)} successCallback - response is in json string
     * @param {function(error)} failureCallback - will get error in case of any failure
     */
     getRewardsList: function (successCallback, failureCallback) {
@@ -282,8 +282,8 @@ var Upshot = {
     *  Get history of reward for a given programId
     * @param {string} programId - reward programId
     * @param {Int} historyType - reward history type
-    * @param {function(response)} successCallback - response is in json string
-    * @param {function(error)} failureCallback - will get error in case of any failure
+    * @param {function(string)} successCallback - response is in json string
+    * @param {function(string)} failureCallback - will get error in case of any failure
     */
     getRewardHistoryForProgram: function (programId, historyType, successCallback, failureCallback) {
 
@@ -293,8 +293,8 @@ var Upshot = {
     /** 
     *  Get history of reward for a given programId
     * @param {string} programId - reward programId    
-    * @param {function(response)} successCallback - response is in json string
-    * @param {function(error)} failureCallback - will get error in case of any failure
+    * @param {function(string)} successCallback - response is in json string
+    * @param {function(string)} failureCallback - will get error in case of any failure
     */
     getRewardRulesforProgram: function (programId, successCallback, failurecallback) {
 
@@ -308,8 +308,8 @@ var Upshot = {
     * @param {Int} transactionValue - transactionValue
     * @param {Int} redeemValue - redeem amount
     * @param {string} tag - tag to redeem
-    * @param {function(response)} successCallback - response is in json string
-    * @param {function(error)} failureCallback - will get error in case of any failure
+    * @param {function(string)} successCallback - response is in json string
+    * @param {function(string)} failureCallback - will get error in case of any failure
     */
     redeemRewardsForProgram: function (programId, transactionValue, redeemValue, tag, successCallback, failurecallback) {
 
@@ -322,10 +322,10 @@ var Upshot = {
 
     /** 
     * Fetch PushNotifications List 
-    * @param {Int} limit - Fetch number of notifications based on limit
+    * @param {number} limit - Fetch number of notifications based on limit
     * @param {Boolean} loadMore - Enable load more notifications     
-    * @param {function(response)} successCallback - response is in json string
-    * @param {function(error)} failureCallback - will get error in case of any failure
+    * @param {function(string)} successCallback - response is in json string
+    * @param {function(string)} failureCallback - will get error in case of any failure
     */
     getNotificationList: function (limit, loadMore, successCallback, failurecallback) {
         UpshotReact.getNotificationList(limit, loadMore, successCallback, failurecallback)
@@ -333,9 +333,9 @@ var Upshot = {
 
     /** 
     * Fetch Unread Notification Count 
-    * @param {Int} limit - Fetch number of notifications based on limit
-    * @param {Int} InboxType - Only PushNotifications / Only InApp / Both the notifications     
-    * @param {function(count)} callback - Will get Unread notification count.  
+    * @param {number} limit - Fetch number of notifications based on limit
+    * @param {number} InboxType - Only PushNotifications / Only InApp / Both the notifications     
+    * @param {function(number)} callback - Will get Unread notification count.  
     */
     getUnreadNotificationsCount: function (limit, inboxType, callback) {
         UpshotReact.getUnreadNotificationsCount(limit, inboxType, callback)
@@ -351,8 +351,8 @@ var Upshot = {
 
     /** 
     * Fetch Streaks Data     
-    * @param {function(response)} successCallback - response is in json string
-    * @param {function(error)} failureCallback - will get error in case of any failure
+    * @param {function(string)} successCallback - response is in json string
+    * @param {function(string)} failureCallback - will get error in case of any failure
     */
     getStreaksData: function (successCallback, failurecallback) {
         UpshotReact.getStreaksData(successCallback, failurecallback)
@@ -377,6 +377,6 @@ var Upshot = {
     }
 };
 
-export { UpshotActivityType, UpshotGender, UpshotMaritalStatus, UpshotRewardHistory, UpshotInitOptions, UpshotAttribution }
+export { UpshotActivityType, UpshotGender, UpshotMaritalStatus, UpshotRewardHistory, UpshotInitOptions, UpshotAttribution, UpshotInboxConfigOptions }
 
 export default Upshot;

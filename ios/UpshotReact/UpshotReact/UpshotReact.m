@@ -234,12 +234,17 @@ RCT_EXPORT_METHOD(sendPushDataToUpshot:(NSString *)pushDetails) {
 
 RCT_EXPORT_METHOD(getNotificationList:(NSInteger)limit enable:(BOOL)loadMore response:(RCTResponseSenderBlock)successCallback error:(RCTResponseSenderBlock)failureCallback) {
     
-    [[BrandKinesis sharedInstance] getNotificationsWith:limit loadmore:loadMore onCompletion:^(NSDictionary * _Nullable response, NSString * _Nullable errorMessage) {
+   [[BrandKinesis sharedInstance] getNotificationsWith:limit loadmore:loadMore onCompletion:^(NSDictionary * _Nullable response, NSString * _Nullable errorMessage) {
         
-        if(errorMessage != nil) {
-            successCallback(@[errorMessage]);
+        if(errorMessage == nil) {
+            NSArray *data = response[@"data"];
+            if (data != nil) {
+                successCallback(@[data]);
+            } else {
+                failureCallback(@[@"Something went wrong"]);
+            }
         } else {
-            failureCallback(@[response]);
+            failureCallback(@[errorMessage]);
         }
     }];
 }
@@ -263,13 +268,13 @@ RCT_EXPORT_METHOD(showInboxNotificationScreen:(NSString *_Nonnull)options) {
 
 RCT_EXPORT_METHOD(getStreaksData:(RCTResponseSenderBlock)successCallback error:(RCTResponseSenderBlock)errorCallback) {
     
-    [[BrandKinesis sharedInstance] getStreaksDataWithCompletionBlock:^(NSDictionary * _Nullable response, NSString * _Nullable errorMessage) {
+     [[BrandKinesis sharedInstance] getStreaksDataWithCompletionBlock:^(NSDictionary * _Nullable response, NSString * _Nullable errorMessage) {
             
         if(errorMessage != nil) {
-            successCallback(@[errorMessage]);
+            errorCallback(@[errorMessage]);
         } else {
              NSString *jsonString = [UpshotUtility convertJsonObjToJsonString:response];
-            errorCallback(@[jsonString]);            
+            successCallback(@[jsonString]);            
         }
     }];
 }

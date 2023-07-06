@@ -1,137 +1,46 @@
-export function initializeUpshot(): void;
-
-export function initializeUpshotUsingOptions(options: String): void;
-
-export function terminate(): void;
-
-export function setDispatchInterval(interval: number): void;
-
-export function createPageViewEvent(screenName: String, callback: Callback): void;
-
-export function createCustomEvent(eventName: String, payload: String, isTimed: boolean, callback: Callback): void;
-
-export function setValueAndClose(payload: String, eventId: String): void;
-
-export function closeEventForId(eventId: String): void;
-
-export function dispatchEventsWithTimedEvents(timed: boolean, callback: Callback): void;
-
-export function createLocationEvent(latitude: String, longitude: String): void;
-
-export function createAttributionEvent(payload: String, callback: Callback): void;
-
-export function setUserProfile(userData: String, callback: Callback): void;
-
-export function getUserDetails(callback: Callback): void;
-
-export function showActivityWithType(type: UpshotActivityType, tag: String): void;
-
-export function showActivityWithId(activityId: String): void;
-
-export function removeTutorials(): void;
-
-export function fetchInboxInfo(callback: Callback): void;
-
-export function getUserBadges(callback: Callback): void;
-
-export function registerForPush(callback: Callback): void;
-
-export function sendDeviceToken(token: String): void;
-
-export function sendPushDataToUpshot(pushPayload: String): void;
-
-export function displayNotification(pushPayload: String): void;
-
-export function disableUser(shouldDisable: boolean, callback: Callback): void;
-
-export function getUserId(callback: Callback): void;
-
-export function getSDKVersion(callback: Callback): void;
-
-export function getRewardsList(successCallback: Callback, failureCallback: Callback): void;
-
-export function getRewardHistoryForProgram(programId: String, historyType: number, successCallback: Callback, failureCallback: Callback): void;
-
-export function getRewardRulesforProgram(programId: String, successCallback: Callback, failurecallback: Callback): void;
-
-export function redeemRewardsForProgram(programId: String, transactionValue: number, redeemValue: number, tag: String, successCallback: Callback, failurecallback: Callback): void;
-
-export function getPushClickPayload(callback: Callback): void;
-
-export function getNotificationList(limit: Int, loadMore: Boolean, successCallback: Callback, failureCallback: Callback): void;
-
-export function getUnreadNotificationsCount(limit: Int, inboxType: Int, callback: Callback): void;
-
-export function showInboxNotificationScreen(options: string): void;
-
-export function getStreaksData(successCallback: Callback, failureCallback: Callback): void;
-
-export function addListener(eventName: string, handler: Function): void;
-
-export function removeEventListener(eventName: string): void;
-
-
-export const UpshotInitOptions = {
-    AppId: "bkApplicationID",
-    OwnerId: "bkApplicationOwnerID",
-    ExternalStorage: "bkStorageAppMemory",
-    EnableLocation: "bkFetchLocation",
-    EnableCrashLog: "bkExceptionHandler"
+export default Upshot;
+import { UpshotActivityType } from './UpshotConstants';
+import { UpshotGender } from './UpshotConstants';
+import { UpshotMaritalStatus } from './UpshotConstants';
+import { UpshotRewardHistory } from './UpshotConstants';
+import { UpshotInitOptions } from './UpshotConstants';
+import { UpshotAttribution } from './UpshotConstants';
+declare namespace Upshot {
+    function initializeUpshot(): void;
+    function initializeUpshotUsingOptions(Options: string): void;
+    function terminate(): void;
+    function setDispatchInterval(interval: Int): void;
+    function createPageViewEvent(screenName: any, callback: any): void;
+    function createCustomEvent(eventName: string, payload: string, isTimed: boolean, callback: (arg0: eventId) => any): void;
+    function setValueAndClose(payload: string, eventId: string): void;
+    function closeEventForId(eventId: string): void;
+    function dispatchEventsWithTimedEvents(timed: boolean, callback: (arg0: string) => any): void;
+    function createLocationEvent(latitude: string, longitude: string): void;
+    function createAttributionEvent(payload: string, callback: (arg0: eventId) => any): void;
+    function setUserProfile(userData: string, callback: (arg0: string) => any): void;
+    function getUserDetails(callback: (arg0: response) => any): void;
+    function showActivityWithType(type: any, tag: string): void;
+    function showActivityWithId(activityId: string): void;
+    function removeTutorials(): void;
+    function fetchInboxInfo(callback: (arg0: response) => any): void;
+    function getUserBadges(callback: (arg0: response) => any): void;
+    function registerForPush(callback: (arg0: string) => any): void;
+    function sendDeviceToken(token: string): void;
+    function sendPushDataToUpshot(pushPayload: string): void;
+    function displayNotification(pushPayload: string): void;
+    function disableUser(shouldDisable: boolean, callback: (arg0: string) => any): void;
+    function getUserId(callback: (arg0: userId) => any): void;
+    function getSDKVersion(callback: (arg0: version) => any): void;
+    function getRewardsList(successCallback: (arg0: response) => any, failureCallback: (arg0: error) => any): void;
+    function getRewardHistoryForProgram(programId: string, historyType: Int, successCallback: (arg0: response) => any, failureCallback: (arg0: error) => any): void;
+    function getRewardRulesforProgram(programId: string, successCallback: (arg0: response) => any, failurecallback: any): void;
+    function redeemRewardsForProgram(programId: string, transactionValue: Int, redeemValue: Int, tag: string, successCallback: (arg0: response) => any, failurecallback: any): void;
+    function getPushClickPayload(callback: any): void;
+    function getNotificationList(limit: Int, loadMore: boolean, successCallback: (arg0: response) => any, failurecallback: any): void;
+    function getUnreadNotificationsCount(limit: Int, inboxType: any, callback: (arg0: count) => any): void;
+    function showInboxNotificationScreen(options: any): void;
+    function getStreaksData(successCallback: (arg0: response) => any, failurecallback: any): void;
+    function addListener(eventName: string, handler: any): void;
+    function removeEventListener(eventName: any): void;
 }
-
-export const UpshotActivityType = {
-    any: -1,
-    survey: 0,
-    rating: 1,
-    fullscreenAd: 3,
-    opinionPoll: 5,
-    tutorials: 7,
-    inAppMessage: 8,
-    badges: 9,
-    screenTips: 10,
-    trivia: 11,
-    customActions: 12,
-    miniGame: 13
-}
-
-export const UpshotGender = {
-
-    male: 1,
-    female: 2,
-    other: 3,
-    reset: 4
-}
-
-export const UpshotMaritalStatus = {
-
-    single: 1,
-    engaged: 2,
-    married: 3,
-    widow: 4,
-    divorced: 5,
-    Reset: 6,
-}
-
-export const UpshotRewardHistory = {
-    entire: 0,
-    earn: 1,
-    expiry: 2,
-    redeem: 3,
-    negative: 4
-}
-
-export const UpshotAttribution = {
-    Source: "attributionSource",
-    UTMSource: "utm_source",
-    UTMMedium: "utm_medium",
-    UTMCampaign: "utm_campaign"
-}
-
-export const UpshotInboxConfigOptions = {
-    Type: "BKInboxType",
-    ShowReadNotifications: "BKShowReadNotifications",
-    EnableLoadMore: "BKEnableLoadMore",
-    PushLimit: "BKPushFetchLimit",
-    DisplayMsgCount: "BKDisplayMsgCount",
-    DisplayTime: "BKDisplayTime"
-}
+export { UpshotActivityType, UpshotGender, UpshotMaritalStatus, UpshotRewardHistory, UpshotInitOptions, UpshotAttribution };

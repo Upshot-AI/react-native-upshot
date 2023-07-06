@@ -24,7 +24,8 @@
   "readmeFilename": "README.md",
   "devDependencies": {
     "react": "^16.8.3",
-    "react-native": "^0.62.3"
+    "react-native": "^0.62.3",
+    "typescript": "^5.1.6"
   },
   "dependencies": {
     "user": "0.0.0"

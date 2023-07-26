@@ -700,10 +700,10 @@ public class UpshotModule extends ReactContextBaseJavaModule {
 
     /* Streaks */
     @ReactMethod
-    private void getStreaksData(final Callback callback) {
+    private void getStreaksData(final Callback successCallback, final Callback failCallback) {
 
         String streakData = BrandKinesis.getBKInstance().getStreakData();
-        callback.invoke(streakData);
+        successCallback.invoke(streakData);
     }
 
     /* GDPR */

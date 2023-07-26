@@ -275,10 +275,12 @@ RCT_EXPORT_METHOD(getStreaksData:(RCTResponseSenderBlock)successCallback error:(
     
      [[BrandKinesis sharedInstance] getStreaksDataWithCompletionBlock:^(NSDictionary * _Nullable response, NSString * _Nullable errorMessage) {
             
+            NSArray *data = response[@"data"];
+            NSDictionary *jsonResponse = @{@"streakData": data};
         if(errorMessage != nil) {
             errorCallback(@[errorMessage]);
         } else {
-             NSString *jsonString = [UpshotUtility convertJsonObjToJsonString:response];
+             NSString *jsonString = [UpshotUtility convertJsonObjToJsonString:jsonResponse];
             successCallback(@[jsonString]);            
         }
     }];

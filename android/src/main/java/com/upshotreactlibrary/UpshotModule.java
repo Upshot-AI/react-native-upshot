@@ -81,7 +81,7 @@ import java.util.Set;
 
 import static com.facebook.react.bridge.UiThreadUtil.runOnUiThread;
 
-public class UpshotModule extends ReactContextBaseJavaModule implements ActivityEventListener {
+public class UpshotModule extends ReactContextBaseJavaModule {
 
     public static final String REACT_CLASS = "UpshotReact";
     private static final String TAG = UpshotModule.class.getSimpleName();
@@ -92,7 +92,6 @@ public class UpshotModule extends ReactContextBaseJavaModule implements Activity
     public UpshotModule(final ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
-        reactContext.addActivityEventListener(this);
     }
 
     @Override

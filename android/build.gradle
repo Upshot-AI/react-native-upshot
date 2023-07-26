@@ -75,7 +75,7 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'  // From node_modules
     implementation "com.google.firebase:firebase-messaging:${safeExtGet('firebaseMessagingVersion', '21.1.0')}"
-    implementation 'com.github.Upshot-AI:upshot-android-sdk:v1.6.8x'
+    implementation 'com.github.Upshot-AI:upshot-android-sdk:1.6.8'
     // compileOnly files('libs/BrandKinesis.aar')
 }
 

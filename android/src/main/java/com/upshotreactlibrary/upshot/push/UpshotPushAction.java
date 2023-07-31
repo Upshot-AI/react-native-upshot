@@ -5,17 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.brandkinesis.BrandKinesis;
-import com.brandkinesis.utils.BKUtilLogger;
+import com.facebook.react.ReactInstanceEventListener;
+import com.facebook.react.ReactInstanceManager;
 import com.upshotreactlibrary.UpshotModule;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.bridge.ReactContext;
 import android.os.Handler;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Created by PurpleTalk on 7/6/16.
@@ -23,10 +20,9 @@ import org.json.JSONObject;
 public class UpshotPushAction extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, Intent intent) {
-        Log.e("Bundle BKPushAction", "" + intent.getExtras());
         String action = "";
         String appData = "";
-        String bk = "";
+
         final Bundle bundle = intent.getExtras();
         if (bundle != null) {
 
@@ -35,19 +31,27 @@ public class UpshotPushAction extends BroadcastReceiver {
 
                 ReactApplication reactApplication = (ReactApplication) context.getApplicationContext();
                 if (reactApplication != null) {
-                    ReactContext reactContext = reactApplication.getReactNativeHost().getReactInstanceManager()
-                            .getCurrentReactContext();
-                    if (reactContext != null) {
-                        UpshotModule.sendPushClickPayload(UpshotModule.bundleToJsonString(bundle));
-                    }
+                    ReactInstanceManager reactInstanceManager = reactApplication.getReactNativeHost().getReactInstanceManager();
+                    reactInstanceManager.addReactInstanceEventListener(new ReactInstanceEventListener() {
+                        @Override
+                        public void onReactContextInitialized(ReactContext reactContext) {
+                            UpshotModule.sendPushClickPayload(UpshotModule.bundleToJsonString(bundle));
+                        }
+                    });
+
                 } else {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            ReactContext reactContext = reactApplication.getReactNativeHost().getReactInstanceManager()
-                                    .getCurrentReactContext();
-                            if (reactContext != null) {
-                                UpshotModule.sendPushClickPayload(UpshotModule.bundleToJsonString(bundle));
+                            ReactApplication reactApplication = (ReactApplication) context.getApplicationContext();
+                            if (reactApplication != null) {
+                                ReactInstanceManager reactInstanceManager = reactApplication.getReactNativeHost().getReactInstanceManager();
+                                reactInstanceManager.addReactInstanceEventListener(new ReactInstanceEventListener() {
+                                    @Override
+                                    public void onReactContextInitialized(ReactContext reactContext) {
+                                        UpshotModule.sendPushClickPayload(UpshotModule.bundleToJsonString(bundle));
+                                    }
+                                });
                             }
                         }
                     }, 1000);

@@ -15,6 +15,10 @@
 
 //@property(nonatomic, strong) UIView *adsView;
 
+@property (nonatomic, strong) NSDictionary *pushPayload;
+@property (nonatomic, strong) NSString *pushToken;
+
+
 + (UIView *)getAdView;
 
 + (void)didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;

@@ -19,6 +19,13 @@ static UIView *_adsView = nil;
 
 RCT_EXPORT_MODULE();
 
+#pragma mark SetBridge
+- (void)setBridge:(RCTBridge *)bridge {
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivePushNotifcationWithResponse:) name:@"UpshotDidReceivePushResponse" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidRegisterWithDeviceToken:) name:@"UpshotDidReceiveDeviceToken" object:nil];
+}
+
 #pragma mark SupportedEvents
 
 - (NSArray<NSString *> *)supportedEvents {
@@ -377,14 +384,34 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
 
 - (void)startObserving {
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidRegisterWithDeviceToken:) name:@"UpshotDidReceiveDeviceToken" object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivePushNotifcationWithResponse:) name:@"UpshotDidReceivePushResponse" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidRegisterWithDeviceToken:) name:@"UpshotDidReceiveDeviceToken" object:nil];
+//
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivePushNotifcationWithResponse:) name:@"UpshotDidReceivePushResponse" object:nil];
+    [self sendPushClickCallback];
+    [self sendPushTokenCallback];
 }
 
 - (void)stopObserving {
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)sendPushClickCallback {
+    
+    if(self.pushPayload != nil && self.pushPayload.allKeys.count > 0) {
+        [self updatePushResponse:self.pushPayload];
+        [self sendEventWithName:@"UpshotPushPayload" body:@{@"payload": [UpshotUtility convertJsonObjToJsonString:self.pushPayload]}];
+        self.pushPayload = @{};
+    }
+}
+
+- (void)sendPushTokenCallback {
+    
+    if(self.pushToken != nil && self.pushToken.length > 0) {
+        [self updateDeviceToken:self.pushToken];
+        [self sendEventWithName:@"UpshotPushToken" body:@{@"token": self.pushToken}];
+        self.pushToken = @"";
+    }
 }
 
 + (UIView *)getAdView {

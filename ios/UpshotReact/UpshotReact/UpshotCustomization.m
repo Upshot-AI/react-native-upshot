@@ -157,7 +157,7 @@
                 
                 UIImage *checkbox_def = [UIImage imageNamed:[UpshotUtility validateString:t_imageData[@"checkbox_def"]]];
                 UIImage *checkbox_sel = [UIImage imageNamed:[UpshotUtility validateString:t_imageData[@"checkbox_sel"]]];
-                
+                [imageView setContentMode:UIViewContentModeScaleAspectFit];
                 switch (activityImage) {
                     case BKActivityBackgroundImage:
                         if (bgImage != nil) {

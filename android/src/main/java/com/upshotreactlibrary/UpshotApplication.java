@@ -7,23 +7,32 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
+import com.brandkinesis.BKUIPrefComponents;
 import com.brandkinesis.BrandKinesis;
 import com.brandkinesis.activitymanager.BKActivityTypes;
 import com.brandkinesis.callback.BKAuthCallback;
 import com.brandkinesis.callback.BrandKinesisCallback;
 import com.brandkinesis.utils.BKAppStatusUtil;
+import com.upshotreactlibrary.upshot.customization.UpshotOpinionPollCustomization;
+import com.upshotreactlibrary.upshot.customization.UpshotRatingCustomization;
+import com.upshotreactlibrary.upshot.customization.UpshotSurveyCustomization;
+import com.upshotreactlibrary.upshot.customization.UpshotTriviaCustomization;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

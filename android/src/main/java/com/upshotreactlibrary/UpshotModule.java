@@ -557,7 +557,9 @@ public class UpshotModule extends ReactContextBaseJavaModule {
         userInfo.putString(BKUserInfo.BKExternalIds.GCM, token);
 
         final BrandKinesis bkInstance = BrandKinesis.getBKInstance();
-
+        if (bkInstance == null || token == null || token.isEmpty()) {
+            return null;
+        }
         bkInstance.setUserInfoBundle(userInfo, new BKUserInfoCallback() {
             @Override
             public void onUserInfoUploaded(final boolean uploadSuccess) {

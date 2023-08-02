@@ -135,7 +135,8 @@ public class UpshotRatingCustomization extends UpshotCustomization {
     }
 
     @Override
-    public void customizeBGColor(BKUIPrefComponents.BKBGColors color, BKUIPrefComponents.BKActivityColorTypes colorType) {
+    public void customizeBGColor(BKUIPrefComponents.BKBGColors color,
+            BKUIPrefComponents.BKActivityColorTypes colorType) {
         super.customizeBGColor(color, colorType);
 
         if (mJsonObject != null) {
@@ -171,7 +172,8 @@ public class UpshotRatingCustomization extends UpshotCustomization {
     }
 
     @Override
-    public void customizeRating(List<Bitmap> selectedRatingList, List<Bitmap> unselectedRatingList, BKUIPrefComponents.BKActivityRatingTypes ratingType) {
+    public void customizeRating(List<Bitmap> selectedRatingList, List<Bitmap> unselectedRatingList,
+            BKUIPrefComponents.BKActivityRatingTypes ratingType) {
         super.customizeRating(selectedRatingList, unselectedRatingList, ratingType);
 
         if (mJsonObject != null) {
@@ -194,19 +196,29 @@ public class UpshotRatingCustomization extends UpshotCustomization {
                         break;
 
                     case BKACTIVITY_EMOJI_RATING:
-                        Bitmap veryBad_def = getBitmap(getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_vbad_def")));
-                        Bitmap bad_def = getBitmap(getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_bad_def")));
-                        Bitmap avg_def = getBitmap(getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_avg_def")));
-                        Bitmap good_def = getBitmap(getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_good_def")));
-                        Bitmap vGood_def = getBitmap(getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_Vgood_def")));
+                        Bitmap veryBad_def = getBitmap(
+                                getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_vbad_def")));
+                        Bitmap bad_def = getBitmap(
+                                getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_bad_def")));
+                        Bitmap avg_def = getBitmap(
+                                getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_avg_def")));
+                        Bitmap good_def = getBitmap(
+                                getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_good_def")));
+                        Bitmap vGood_def = getBitmap(
+                                getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_Vgood_def")));
 
-                        Bitmap veryBad_sel = getBitmap(getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_vbad_sel")));
-                        Bitmap bad_sel = getBitmap(getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_bad_sel")));
-                        Bitmap avg_sel = getBitmap(getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_avg_sel")));
-                        Bitmap good_sel = getBitmap(getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_good_sel")));
-                        Bitmap vGood_sel = getBitmap(getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_Vgood_sel")));
+                        Bitmap veryBad_sel = getBitmap(
+                                getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_vbad_sel")));
+                        Bitmap bad_sel = getBitmap(
+                                getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_bad_sel")));
+                        Bitmap avg_sel = getBitmap(
+                                getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_avg_sel")));
+                        Bitmap good_sel = getBitmap(
+                                getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_good_sel")));
+                        Bitmap vGood_sel = getBitmap(
+                                getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_Vgood_sel")));
 
-                        if(veryBad_sel != null && veryBad_def != null &&
+                        if (veryBad_sel != null && veryBad_def != null &&
                                 bad_def != null && bad_sel != null &&
                                 avg_sel != null && avg_def != null &&
                                 good_sel != null && good_def != null &&
@@ -244,10 +256,37 @@ public class UpshotRatingCustomization extends UpshotCustomization {
 
                 switch (imageType) {
                     case BACTIVITY_RATING_LIKE_BUTTON:
-                            imageView.setImageResource(R.drawable.rating_like_selector);
+                        StateListDrawable states = new StateListDrawable();
+                        states.addState(new int[] { android.R.attr.state_pressed },
+                                mContext.getDrawable(
+                                        getIdentifier(mContext, validateJsonString(jImageBg, "like_sel"))));
+                        states.addState(new int[] { android.R.attr.state_focused },
+                                mContext.getDrawable(
+                                        getIdentifier(mContext, validateJsonString(jImageBg, "like_sel"))));
+                        states.addState(new int[] { android.R.attr.state_selected },
+                                mContext.getDrawable(
+                                        getIdentifier(mContext, validateJsonString(jImageBg, "like_sel"))));
+                        states.addState(new int[] {},
+                                mContext.getDrawable(
+                                        getIdentifier(mContext, validateJsonString(jImageBg, "like_def"))));
+                        imageView.setImageDrawable(states);
                         break;
-                    case BACTIVITY_RATING_DISLIKE_BUTTON:
-                        imageView.setImageResource(R.drawable.rating_dislike_selector);
+                    case BACTIVITY_RATING_DISLIKE_BUTTON: {
+                        StateListDrawable dislike_states = new StateListDrawable();
+                        dislike_states.addState(new int[] { android.R.attr.state_pressed },
+                                mContext.getDrawable(
+                                        getIdentifier(mContext, validateJsonString(jImageBg, "disLike_sel"))));
+                        dislike_states.addState(new int[] { android.R.attr.state_focused },
+                                mContext.getDrawable(
+                                        getIdentifier(mContext, validateJsonString(jImageBg, "disLike_sel"))));
+                        dislike_states.addState(new int[] { android.R.attr.state_selected },
+                                mContext.getDrawable(
+                                        getIdentifier(mContext, validateJsonString(jImageBg, "disLike_sel"))));
+                        dislike_states.addState(new int[] {},
+                                mContext.getDrawable(
+                                        getIdentifier(mContext, validateJsonString(jImageBg, "disLike_def"))));
+                        imageView.setImageDrawable(dislike_states);
+                    }
                         break;
                     case BKACTIVITY_PORTRAIT_LOGO:
                         String bgData = validateJsonString(jImageBg, "logo");
@@ -266,8 +305,7 @@ public class UpshotRatingCustomization extends UpshotCustomization {
     }
 
     @Override
-    public void customizeSeekBar(BKUIPrefComponents.BKActivitySeekBarTypes seekBarTypes, SeekBar
-            seekBar) {
+    public void customizeSeekBar(BKUIPrefComponents.BKActivitySeekBarTypes seekBarTypes, SeekBar seekBar) {
         super.customizeSeekBar(seekBarTypes, seekBar);
 
         if (mJsonObject != null) {
@@ -285,8 +323,9 @@ public class UpshotRatingCustomization extends UpshotCustomization {
                     if (maxColor != null && !maxColor.isEmpty()) {
                         seekBar.setProgressTintList(ColorStateList.valueOf(Color.parseColor(maxColor)));
                     }
-                    bitmapDrawable = ContextCompat.getDrawable(mContext, getIdentifier(mContext, validateJsonString(sliderJsonObject, "thumb_image")));
-                    if(bitmapDrawable != null) {
+                    bitmapDrawable = ContextCompat.getDrawable(mContext,
+                            getIdentifier(mContext, validateJsonString(sliderJsonObject, "thumb_image")));
+                    if (bitmapDrawable != null) {
                         seekBar.setThumb(bitmapDrawable);
                     }
                 }
@@ -295,6 +334,7 @@ public class UpshotRatingCustomization extends UpshotCustomization {
             }
         }
     }
+
     @Override
     public void customizeEditText(BKUIPrefComponents.BKActivityEditTextTypes EditTextType, EditText editText) {
         super.customizeEditText(EditTextType, editText);
@@ -310,9 +350,9 @@ public class UpshotRatingCustomization extends UpshotCustomization {
                         GradientDrawable gd = new GradientDrawable();
                         String borderColor = validateJsonString(inputFieldJsonObject, "border_color");
                         if (borderColor != null && !borderColor.isEmpty()) {
-                            gd.setStroke(3,Color.parseColor(borderColor));
+                            gd.setStroke(3, Color.parseColor(borderColor));
                         }
-                        gd.setCornerRadius( 8 );
+                        gd.setCornerRadius(8);
                         gd.setColor(Color.TRANSPARENT);
                         editText.setBackground(gd);
                         applyEditTextProperties(mContext, inputFieldJsonObject, editText);
@@ -325,7 +365,8 @@ public class UpshotRatingCustomization extends UpshotCustomization {
     }
 
     @Override
-    public void customizeRelativeLayout(BKUIPrefComponents.BKActivityRelativeLayoutTypes relativeLayoutTypes, RelativeLayout relativeLayout, boolean isFullScreen) {
+    public void customizeRelativeLayout(BKUIPrefComponents.BKActivityRelativeLayoutTypes relativeLayoutTypes,
+            RelativeLayout relativeLayout, boolean isFullScreen) {
         super.customizeRelativeLayout(relativeLayoutTypes, relativeLayout, isFullScreen);
         if (mJsonObject != null) {
 

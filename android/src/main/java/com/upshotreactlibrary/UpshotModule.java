@@ -558,7 +558,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
 
         final BrandKinesis bkInstance = BrandKinesis.getBKInstance();
         if (bkInstance == null || token == null || token.isEmpty()) {
-            return null;
+            return;
         }
         bkInstance.setUserInfoBundle(userInfo, new BKUserInfoCallback() {
             @Override

@@ -24,6 +24,7 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
 
     private Context mContext;
     private JSONObject mJsonObject = null;
+
     public UpshotOpinionPollCustomization(Context context) {
         mContext = context;
         try {
@@ -32,6 +33,7 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
             e.printStackTrace();
         }
     }
+
     public void customizeRadioButton(BKUIPrefComponents.BKUICheckBox checkBox, boolean isCheckBox) {
         super.customizeRadioButton(checkBox, isCheckBox);
         if (mJsonObject != null) {
@@ -39,10 +41,12 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
                 JSONObject imageJsonObject = (JSONObject) mJsonObject.get("image");
                 Bitmap check_select, default_select;
 
-                check_select = BitmapFactory.decodeResource(mContext.getResources(), getIdentifier(mContext, validateJsonString(imageJsonObject, "radio_sel")));
+                check_select = BitmapFactory.decodeResource(mContext.getResources(),
+                        getIdentifier(mContext, validateJsonString(imageJsonObject, "radio_sel")));
                 checkBox.setSelectedCheckBox(check_select);
 
-                default_select = BitmapFactory.decodeResource(mContext.getResources(), getIdentifier(mContext, validateJsonString(imageJsonObject, "radio_def")));
+                default_select = BitmapFactory.decodeResource(mContext.getResources(),
+                        getIdentifier(mContext, validateJsonString(imageJsonObject, "radio_def")));
                 checkBox.setUnselectedCheckBox(default_select);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -103,7 +107,9 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
                         applyTextViewProperties(mContext, option, textView);
                         break;
                     case BKACTIVITY_LEGEND_TV:
-                        JSONObject graph_legends = (JSONObject) label_textJsonObject.get("graph_legends");
+                        JSONObject graphJsonObject = (JSONObject) mJsonObject.get("graph");
+
+                        JSONObject graph_legends = (JSONObject) graphJsonObject.get("legends");
                         applyTextViewProperties(mContext, graph_legends, textView);
                         break;
                     case BKACTIVITY_LEADER_BOARD_BAR_RESPONSES_TV:
@@ -121,8 +127,10 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
             }
         }
     }
+
     @Override
-    public void customizeBGColor(BKUIPrefComponents.BKBGColors color, BKUIPrefComponents.BKActivityColorTypes colorType) {
+    public void customizeBGColor(BKUIPrefComponents.BKBGColors color,
+            BKUIPrefComponents.BKActivityColorTypes colorType) {
         super.customizeBGColor(color, colorType);
 
         if (mJsonObject != null) {
@@ -149,12 +157,26 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
                         String headerBG = validateJsonString(jsonObject, "headerBG");
                         color.setColor(Color.parseColor(headerBG));
                         break;
-                    case BKACTIVITY_XAXIS_COLOR:
-                    case BKACTIVITY_XAXIS_TEXT_COLOR_COLOR:
-                    case BKACTIVITY_YAXIS_TEXT_COLOR_COLOR:
+                    case BKACTIVITY_XAXIS_TEXT_COLOR_COLOR: {
+                        String percentageText = validateJsonString(jsonObject, "xAxis_Header");
+                        if (percentageText != null && !percentageText.isEmpty()) {
+                            color.setColor(Color.parseColor(percentageText));
+                        }
+                    }
+                        break;
+                    case BKACTIVITY_YAXIS_TEXT_COLOR_COLOR: {
+                        String percentageText = validateJsonString(jsonObject, "yAxis_Header");
+                        if (percentageText != null && !percentageText.isEmpty()) {
+                            color.setColor(Color.parseColor(percentageText));
+                        }
+                    }
+                        break;
                     case BKACTIVITY_YAXIS_COLOR:
-                        String percentageText = validateJsonString(jsonObject, "percentageText");
-                        color.setColor(Color.parseColor(percentageText));
+                    case BKACTIVITY_XAXIS_COLOR:
+                        String barGraphLine = validateJsonString(jsonObject, "yAxis");
+                        if (barGraphLine != null && !barGraphLine.isEmpty()) {
+                            color.setColor(Color.parseColor(barGraphLine));
+                        }
                         break;
                 }
             } catch (Exception e) {
@@ -186,7 +208,8 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
     }
 
     @Override
-    public void customizeRelativeLayout(BKUIPrefComponents.BKActivityRelativeLayoutTypes relativeLayoutTypes, RelativeLayout relativeLayout, boolean isFullScreen) {
+    public void customizeRelativeLayout(BKUIPrefComponents.BKActivityRelativeLayoutTypes relativeLayoutTypes,
+            RelativeLayout relativeLayout, boolean isFullScreen) {
         super.customizeRelativeLayout(relativeLayoutTypes, relativeLayout, isFullScreen);
         if (mJsonObject != null) {
 

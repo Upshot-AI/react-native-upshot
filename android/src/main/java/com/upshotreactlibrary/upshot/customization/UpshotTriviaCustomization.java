@@ -37,6 +37,7 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
             e.printStackTrace();
         }
     }
+
     public void customizeRadioButton(BKUICheckBox checkBox, boolean isCheckBox) {
 
         if (mJsonObject != null) {
@@ -45,17 +46,21 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                 JSONObject imageJsonObject = (JSONObject) mJsonObject.get("image");
                 Bitmap check_select, default_select;
                 if (isCheckBox) {
-                    check_select = BitmapFactory.decodeResource(mContext.getResources(), getIdentifier(mContext, validateJsonString(imageJsonObject, "checkbox_sel")));
+                    check_select = BitmapFactory.decodeResource(mContext.getResources(),
+                            getIdentifier(mContext, validateJsonString(imageJsonObject, "checkbox_sel")));
                     if (check_select != null) {
                         checkBox.setSelectedCheckBox(check_select);
                     }
-                    default_select = BitmapFactory.decodeResource(mContext.getResources(), getIdentifier(mContext, validateJsonString(imageJsonObject, "checkbox_def")));
+                    default_select = BitmapFactory.decodeResource(mContext.getResources(),
+                            getIdentifier(mContext, validateJsonString(imageJsonObject, "checkbox_def")));
                     if (default_select != null) {
                         checkBox.setUnselectedCheckBox(default_select);
                     }
                 } else {
-                    check_select = BitmapFactory.decodeResource(mContext.getResources(), getIdentifier(mContext, validateJsonString(imageJsonObject, "radio_sel")));
-                    default_select = BitmapFactory.decodeResource(mContext.getResources(), getIdentifier(mContext, validateJsonString(imageJsonObject, "radio_def")));
+                    check_select = BitmapFactory.decodeResource(mContext.getResources(),
+                            getIdentifier(mContext, validateJsonString(imageJsonObject, "radio_sel")));
+                    default_select = BitmapFactory.decodeResource(mContext.getResources(),
+                            getIdentifier(mContext, validateJsonString(imageJsonObject, "radio_def")));
                     if (check_select != null) {
                         checkBox.setSelectedCheckBox(check_select);
                     }
@@ -69,6 +74,7 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
         }
     }
 
+    /** customizeButton is used to customize Buttons */
     @Override
     public void customizeButton(Button button, BKActivityButtonTypes buttonType) {
         super.customizeButton(button, buttonType);
@@ -100,13 +106,17 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
             }
         }
     }
+
+    /**
+     * customizeRelativeLayout is used to customize Background Color and BG Image
+     */
     @Override
-    public void customizeRelativeLayout(BKUIPrefComponents.BKActivityRelativeLayoutTypes relativeLayoutTypes, RelativeLayout relativeLayout, boolean isFullScreen) {
+    public void customizeRelativeLayout(BKUIPrefComponents.BKActivityRelativeLayoutTypes relativeLayoutTypes,
+            RelativeLayout relativeLayout, boolean isFullScreen) {
         super.customizeRelativeLayout(relativeLayoutTypes, relativeLayout, isFullScreen);
 
         if (mJsonObject != null) {
             try {
-                JSONObject jImageBg = (JSONObject) mJsonObject.get("image");
                 JSONObject colorJsonObject = (JSONObject) mJsonObject.get("color");
                 if (colorJsonObject != null) {
                     String bgColor = validateJsonString(colorJsonObject, "background");
@@ -116,6 +126,7 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                 }
                 switch (relativeLayoutTypes) {
                     case BKACTIVITY_BACKGROUND_IMAGE:
+                        JSONObject jImageBg = (JSONObject) mJsonObject.get("image");
                         String bgData = validateJsonString(jImageBg, "background");
                         applyRelativeLayoutProperties(mContext, bgData, relativeLayout);
                         break;
@@ -146,7 +157,8 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
     }
 
     @Override
-    public void customizeForLinearLayout(LinearLayout linearLayout, BKUIPrefComponents.BKActivityLinearLayoutTypes linearLayoutTypes) {
+    public void customizeForLinearLayout(LinearLayout linearLayout,
+            BKUIPrefComponents.BKActivityLinearLayoutTypes linearLayoutTypes) {
         super.customizeForLinearLayout(linearLayout, linearLayoutTypes);
         switch (linearLayoutTypes) {
             case BKACTIVITY_BACKGROUND_IMAGE:
@@ -229,16 +241,23 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                         }
                         break;
 
-                    case BKACTIVITY_XAXIS_TEXT_COLOR_COLOR:
-                    case BKACTIVITY_YAXIS_TEXT_COLOR_COLOR:
-                        String percentageText = validateJsonString(jsonObject, "percentageText");
+                    case BKACTIVITY_XAXIS_TEXT_COLOR_COLOR: {
+                        String percentageText = validateJsonString(jsonObject, "xAxis_Header");
                         if (percentageText != null && !percentageText.isEmpty()) {
                             color.setColor(Color.parseColor(percentageText));
                         }
+                    }
+                        break;
+                    case BKACTIVITY_YAXIS_TEXT_COLOR_COLOR: {
+                        String percentageText = validateJsonString(jsonObject, "yAxis_Header");
+                        if (percentageText != null && !percentageText.isEmpty()) {
+                            color.setColor(Color.parseColor(percentageText));
+                        }
+                    }
                         break;
                     case BKACTIVITY_YAXIS_COLOR:
                     case BKACTIVITY_XAXIS_COLOR:
-                        String barGraphLine = validateJsonString(jsonObject, "barGraphLine");
+                        String barGraphLine = validateJsonString(jsonObject, "yAxis");
                         if (barGraphLine != null && !barGraphLine.isEmpty()) {
                             color.setColor(Color.parseColor(barGraphLine));
                         }
@@ -267,7 +286,7 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                         break;
                     case BKACTIVITY_TRIVIA_DESC_TV:
                         JSONObject desc = (JSONObject) label_textJsonObject.get("desc");
-                        applyTextViewProperties(mContext, desc, textView);
+                        // applyTextViewProperties(mContext, desc, textView);
                         break;
                     case BKACTIVITY_QUESTION_TV:
                         JSONObject question = (JSONObject) label_textJsonObject.get("question");
@@ -305,7 +324,7 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                         applyTextViewProperties(mContext, option_yourGrade, textView);
                         break;
                     case BKACTIVITY_LEADER_BOARD_SCORE_VALUE_TV:
-                        case BKACTIVITY_SCORE_TV:
+                    case BKACTIVITY_SCORE_TV:
                         JSONObject option_score = (JSONObject) label_textJsonObject.get("score");
                         applyTextViewProperties(mContext, option_score, textView);
                         break;
@@ -313,9 +332,23 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                         JSONObject option_result = (JSONObject) label_textJsonObject.get("result");
                         applyTextViewProperties(mContext, option_result, textView);
                         break;
-                    case BKACTIVITY_LEADER_BOARD_BAR_RESPONSES_TV:
-                    case BKACTIVITY_TRIVIA_GRADE_HEADER_TABLE_TV:
+                    case BKACTIVITY_TRIVIA_GRADE_HEADER_TABLE_TV: {
+                        JSONObject leaderBoardJsonObject = (JSONObject) mJsonObject.get("leaderBoard");
+
+                        JSONObject tabularResponseHeader = (JSONObject) leaderBoardJsonObject
+                                .get("tabular_grade_header");
+                        applyTextViewProperties(mContext, tabularResponseHeader, textView);
+                    }
+                        break;
                     case BKACTIVITY_TRIVIA_RESPONSE_HEADER_TABLE_TV:
+                        JSONObject leaderBoardJsonObject = (JSONObject) mJsonObject.get("leaderBoard");
+
+                        JSONObject tabularResponseHeader = (JSONObject) leaderBoardJsonObject
+                                .get("tabular_response_header");
+                        applyTextViewProperties(mContext, tabularResponseHeader, textView);
+                        break;
+                    case BKACTIVITY_LEADER_BOARD_BAR_RESPONSES_TV:
+
                         JSONObject option_userText = (JSONObject) label_textJsonObject.get("graph_users_text");
                         applyTextViewProperties(mContext, option_userText, textView);
                         break;
@@ -323,6 +356,13 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                         JSONObject option_optionsText = (JSONObject) label_textJsonObject.get("graph_options_text");
                         applyTextViewProperties(mContext, option_optionsText, textView);
                         break;
+                    case BKACTIVITY_LEGEND_TV:
+                        JSONObject graphJsonObject = (JSONObject) mJsonObject.get("graph");
+
+                        JSONObject graph_legends = (JSONObject) graphJsonObject.get("legends");
+                        applyTextViewProperties(mContext, graph_legends, textView);
+                        break;
+
                 }
 
             } catch (Exception e) {
@@ -342,8 +382,8 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                 switch (graphType) {
                     case BKACTIVITY_BAR_GRAPH:
                         colorsList.clear();
-                        JSONArray jsonArray = buttonJsonObject.getJSONArray("barcolors");
-                        if(jsonArray.length() == 5) {
+                        JSONArray jsonArray = buttonJsonObject.getJSONArray("bar");
+                        if (jsonArray.length() == 5) {
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 colorsList.add(Color.parseColor(jsonArray.getString(i)));
                             }
@@ -351,8 +391,8 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                         break;
                     case BKACTIVITY_PIE_GRAPH:
                         colorsList.clear();
-                        JSONArray piecolors = buttonJsonObject.getJSONArray("piecolors");
-                        if(piecolors.length() == 5) {
+                        JSONArray piecolors = buttonJsonObject.getJSONArray("pie");
+                        if (piecolors.length() == 5) {
                             for (int i = 0; i < piecolors.length(); i++) {
                                 colorsList.add(Color.parseColor(piecolors.getString(i)));
                             }
@@ -365,6 +405,7 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
         }
     }
 
+    /** customizeImageView is used to customize Logo */
     @Override
     public void customizeImageView(ImageView imageView, BKUIPrefComponents.BKActivityImageViewType imageType) {
         super.customizeImageView(imageView, imageType);
@@ -384,4 +425,3 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
         }
     }
 }
-

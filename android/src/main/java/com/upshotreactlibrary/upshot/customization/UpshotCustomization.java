@@ -1,13 +1,19 @@
 package com.upshotreactlibrary.upshot.customization;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -25,6 +31,7 @@ import com.brandkinesis.BKUIPrefComponents.BKActivityRatingTypes;
 import com.brandkinesis.BKUIPrefComponents.BKActivityTextViewTypes;
 import com.brandkinesis.BKUIPrefComponents.BKBGColors;
 import com.brandkinesis.activitymanager.BKActivityTypes;
+import com.upshotreactlibrary.BuildConfig;
 import com.upshotreactlibrary.UpshotApplication;
 
 import java.io.IOException;
@@ -33,6 +40,8 @@ import java.util.List;
 
 import static com.brandkinesis.BKUIPrefComponents.BKActivityImageButtonTypes;
 import static com.brandkinesis.BKUIPrefComponents.BKUICheckBox;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -111,9 +120,9 @@ public class UpshotCustomization {
             int resourceId = getIdentifier(context, bgImage);
             if (resourceId > 0) {
                 if (view instanceof ImageButton) {
-                    ((ImageButton)view).setImageResource(resourceId);
-                }else if (view instanceof ImageView) {
-                    ((ImageView)view).setImageResource(resourceId);
+                    ((ImageButton) view).setImageResource(resourceId);
+                } else if (view instanceof ImageView) {
+                    ((ImageView) view).setImageResource(resourceId);
                 }
             }
         }
@@ -140,8 +149,8 @@ public class UpshotCustomization {
         applyFontAttribute(context, textView, jsonObject);
         applyTextSizeAttribute(context, textView, jsonObject);
         applyTextColorAttribute(context, textView, jsonObject);
-        applyBgColorAttribute(context, textView, jsonObject);
-        applyBgImageAttribute(context, textView, jsonObject);
+        // applyBgColorAttribute(context, textView, jsonObject);
+        // applyBgImageAttribute(context, textView, jsonObject);
     }
 
     private void applyBgImageAttribute(Context context, View view, JSONObject jsonObject) {
@@ -151,7 +160,6 @@ public class UpshotCustomization {
 
     private void setBgToView(Context context, String bgImage, View view) {
         if (!TextUtils.isEmpty(bgImage)) {
-
             int resourceId = getIdentifier(context, bgImage);
             if (resourceId > 0) {
                 view.setBackgroundResource(resourceId);
@@ -170,13 +178,61 @@ public class UpshotCustomization {
         return 0;
     }
 
+    public void applyBorderRadiusToButton(Button button, int bgColor, int borderColor) {
+
+        ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+            @SuppressLint("NewApi")
+            @Override
+            public void onGlobalLayout() {
+                ViewGroup.LayoutParams layoutParams = (ViewGroup.LayoutParams) button.getLayoutParams();
+                layoutParams.height = button.getHeight() - 7;
+                button.setLayoutParams(layoutParams);
+                button.setBackground(generateDrawableRectangle(bgColor, borderColor, true));
+
+                // remove this layout listener - as it will run every time the view updates
+                if (button.getViewTreeObserver().isAlive()) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        button.getViewTreeObserver()
+                                .removeOnGlobalLayoutListener(this);
+                    } else {
+                        button.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    }
+                }
+            }
+        };
+        button.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
+    }
+
+    private Drawable generateDrawableRectangle(int backgroundColor, int borderColor, boolean generateWithBorder) {
+        // Default state
+        GradientDrawable background = new GradientDrawable();
+        background.setShape(GradientDrawable.RECTANGLE);
+        background.setColor(backgroundColor);
+        if (generateWithBorder) {
+            background.setStroke(2, borderColor);
+        }
+        return background;
+    }
+
     private void applyBgColorAttribute(Context context, View view, JSONObject jsonObject) {
         String bgcolor = validateJsonString(jsonObject, "bgcolor");
-        if (!TextUtils.isEmpty(bgcolor)) {
+        String borderColor = validateJsonString(jsonObject, "border_color");
+
+        if (!TextUtils.isEmpty(borderColor)) {
             try {
-                view.setBackgroundColor(Color.parseColor(bgcolor));
+                if (view instanceof Button) {
+                    applyBorderRadiusToButton((Button) view, Color.parseColor(bgcolor), Color.parseColor(borderColor));
+                }
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+        } else {
+            if (!TextUtils.isEmpty(bgcolor)) {
+                try {
+                    view.setBackgroundColor(Color.parseColor(bgcolor));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -209,18 +265,47 @@ public class UpshotCustomization {
         }
     }
 
+    public static int getFontIdWithFontName(Context context, String fontName, String packageName) {
+        int font = 0;
+        try {
+            font = context.getResources().getIdentifier(fontName, "font", packageName);
+        } catch (Exception e) {
+            if (BuildConfig.DEBUG) {
+                e.printStackTrace();
+            }
+        }
+        return font;
+    }
+
     private void applyFontAttribute(Context context, View view, JSONObject jsonObject) {
         String font_name = validateJsonString(jsonObject, "font_name");
         if (!TextUtils.isEmpty(font_name)) {
+            Typeface typeface = null;
+
             try {
-                Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/" + font_name);
+                typeface = Typeface.createFromAsset(context.getAssets(), "fonts/" + font_name);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            if (typeface == null) {
+                try {
+                    typeface = ResourcesCompat.getFont(context,
+                            getFontIdWithFontName(context, font_name, context.getPackageName()));
+                } catch (Exception e) {
+                    if (BuildConfig.DEBUG) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            if (typeface != null) {
                 if (view instanceof Button) {
                     ((Button) view).setTypeface(typeface);
                 } else if (view instanceof TextView) {
                     ((TextView) view).setTypeface(typeface);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }
@@ -229,7 +314,8 @@ public class UpshotCustomization {
 
     }
 
-    public void customizeRelativeLayout(BKUIPrefComponents.BKActivityRelativeLayoutTypes relativeLayoutTypes, RelativeLayout relativeLayout, boolean isFullScreen) {
+    public void customizeRelativeLayout(BKUIPrefComponents.BKActivityRelativeLayoutTypes relativeLayoutTypes,
+            RelativeLayout relativeLayout, boolean isFullScreen) {
 
     }
 
@@ -237,7 +323,8 @@ public class UpshotCustomization {
 
     }
 
-    public void customizeRating(List<Bitmap> selectedRatingList, List<Bitmap> unselectedRatingList, BKActivityRatingTypes ratingType) {
+    public void customizeRating(List<Bitmap> selectedRatingList, List<Bitmap> unselectedRatingList,
+            BKActivityRatingTypes ratingType) {
 
     }
 
@@ -269,11 +356,12 @@ public class UpshotCustomization {
 
     }
 
-    public void customizeForLinearLayout(LinearLayout linearLayout, BKUIPrefComponents.BKActivityLinearLayoutTypes linearLayoutTypes){
+    public void customizeForLinearLayout(LinearLayout linearLayout,
+            BKUIPrefComponents.BKActivityLinearLayoutTypes linearLayoutTypes) {
 
     }
 
-    public void customizeForOptionsSeparatorView(View view){
+    public void customizeForOptionsSeparatorView(View view) {
 
     }
 }

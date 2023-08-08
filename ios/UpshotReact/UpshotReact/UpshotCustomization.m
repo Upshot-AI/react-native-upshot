@@ -25,6 +25,7 @@
 
 - (void)preferencesForUIImageView:(UIImageView *)imageView ofActivity:(BKActivityType)activityType andType:(BKActivityImageType)activityImage {
     
+    [imageView setContentMode:UIViewContentModeScaleAspectFit];
     switch (activityType) {
         case BKActivityTypeSurvey: {
             
@@ -45,6 +46,7 @@
                     case BKActivityBackgroundImage:
                         if (bgImage != nil) {
                             [imageView setImage:bgImage];
+                            [imageView setContentMode:UIViewContentModeScaleToFill];
                         }
                         break;
                     case BKActivityRadioImage:
@@ -90,6 +92,7 @@
                     case BKActivityBackgroundImage:
                         if (bgImage != nil) {
                             [imageView setImage:bgImage];
+                            [imageView setContentMode:UIViewContentModeScaleToFill];
                         }
                         break;
                     case BKActivityPortraitLogo:
@@ -120,6 +123,7 @@
                     case BKActivityBackgroundImage:
                         if (bgImage != nil) {
                             [imageView setImage:bgImage];
+                            [imageView setContentMode:UIViewContentModeScaleToFill];
                         }
                         break;
                     case BKActivityRadioImage:
@@ -162,6 +166,7 @@
                     case BKActivityBackgroundImage:
                         if (bgImage != nil) {
                             [imageView setImage:bgImage];
+                            [imageView setContentMode:UIViewContentModeScaleToFill];
                         }
                         break;
                     case BKActivityRadioImage:
@@ -209,14 +214,26 @@
     
     if (sliderData != nil && [sliderData isKindOfClass:[NSDictionary class]]) {
         
-        UIImage *minTrackImage = [[UIImage imageNamed:[UpshotUtility validateString:sliderData[@"min_image"]]] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 4, 0, 0) resizingMode:UIImageResizingModeStretch];
+        UIImage *minTrackImage = [UIImage imageNamed:[UpshotUtility validateString:sliderData[@"min_image"]]];
 
-        UIImage *maxTrackImage = [[UIImage imageNamed:[UpshotUtility validateString:sliderData[@"max_image"]]] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 5) resizingMode:UIImageResizingModeStretch];
+        UIImage *maxTrackImage = [UIImage imageNamed:[UpshotUtility validateString:sliderData[@"max_image"]]];
 
         UIImage *thumbImage = [UIImage imageNamed:[UpshotUtility validateString:sliderData[@"thumb_image"]]];
+        
+        UIColor *minColor = [UpshotUtility colorFromHex:sliderData[@"min_color"]];
+        UIColor *maxColor = [UpshotUtility colorFromHex:sliderData[@"max_color"]];
+        
+        if(minColor != nil) {
+            [slider setMinimumTrackTintColor:minColor];
+        }
+        
+        if(maxColor != nil) {
+            [slider setMaximumTrackTintColor:maxColor];
+        }
 
         if (thumbImage != nil) {
             [slider setThumbImage:thumbImage forState:UIControlStateNormal];
+            [slider setThumbImage:thumbImage forState:UIControlStateHighlighted];
         }
         if (minTrackImage != nil) {
             [slider setMinimumTrackImage:minTrackImage forState:UIControlStateNormal];
@@ -240,8 +257,8 @@
     BOOL colorsAssigned = NO;
     
     if (pollColorData != nil && [pollColorData isKindOfClass:[NSDictionary class]]) {
-        NSArray *poll_barColors = pollColorData[@"barcolors"];
-        NSArray *poll_pieColors = pollColorData[@"piecolors"];
+        NSArray *poll_barColors = pollColorData[@"bar"];
+        NSArray *poll_pieColors = pollColorData[@"pie"];
         
         if (graphType == BKActivityBarGraph && poll_barColors != nil && poll_barColors.count > 4) {
             
@@ -277,8 +294,8 @@
     if (!colorsAssigned) {
         if (triviaColorData != nil && [triviaColorData isKindOfClass:[NSDictionary class]]) {
             
-            NSArray *trivia_barColors = triviaColorData[@"barcolors"];
-            NSArray *trivia_pieColors = triviaColorData[@"piecolors"];
+            NSArray *trivia_barColors = triviaColorData[@"bar"];
+            NSArray *trivia_pieColors = triviaColorData[@"pie"];
             
             if (graphType == BKActivityBarGraph && trivia_barColors != nil && trivia_barColors.count > 4) {
                 
@@ -319,6 +336,7 @@
         case BKActivityTypeSurvey: {
             
             NSDictionary *s_labelData = [UpshotUtility getObjectForKey:@"label_text" withFileName:kUpshotSurveyTheme];
+            NSDictionary *slider_labelData = [UpshotUtility getObjectForKey:@"slider" withFileName:kUpshotSurveyTheme];
             
             switch (activityLabel) {
                 case BKActivityHeaderLabel:
@@ -337,19 +355,19 @@
                     [UpshotUtility customizeLabel:label withData:s_labelData[@"thankyou"]];
                     break;
                 case BKActivitySliderMaxValueLabel:
-                    [UpshotUtility customizeLabel:label withData:s_labelData[@"slider_maxScore"]];
+                    [UpshotUtility customizeLabel:label withData:slider_labelData[@"slider_maxScore"]];
                     break;
                 case BKActivitySliderMinValueLabel:
-                    [UpshotUtility customizeLabel:label withData:s_labelData[@"slider_minScore"]];
+                    [UpshotUtility customizeLabel:label withData:slider_labelData[@"slider_minScore"]];
                     break;
                 case BKActivitySliderScoreLabel:
-                    [UpshotUtility customizeLabel:label withData:s_labelData[@"slider_score"]];
+                    [UpshotUtility customizeLabel:label withData:slider_labelData[@"slider_score"]];
                     break;
                 case BKActivityMaxValueTitleLabel:
-                    [UpshotUtility customizeLabel:label withData:s_labelData[@"slider_maxText"]];
+                    [UpshotUtility customizeLabel:label withData:slider_labelData[@"slider_maxText"]];
                     break;
                 case BKActivityMinValueTitleLabel:
-                    [UpshotUtility customizeLabel:label withData:s_labelData[@"slider_minText"]];
+                    [UpshotUtility customizeLabel:label withData:slider_labelData[@"slider_minText"]];
                     break;
                 default:
                     break;
@@ -359,6 +377,7 @@
         case BKActivityTypeRating: {
             
             NSDictionary *r_labelData = [UpshotUtility getObjectForKey:@"label_text" withFileName:kUpshotRatingTheme];
+            NSDictionary *slider_Data = [UpshotUtility getObjectForKey:@"slider" withFileName:kUpshotRatingTheme];
             
             switch (activityLabel) {
                 case BKActivityHeaderLabel:
@@ -371,19 +390,19 @@
                     [UpshotUtility customizeLabel:label withData:r_labelData[@"thankyou"]];
                     break;
                 case BKActivitySliderMaxValueLabel:
-                    [UpshotUtility customizeLabel:label withData:r_labelData[@"slider_maxScore"]];
+                    [UpshotUtility customizeLabel:label withData:slider_Data[@"slider_maxScore"]];
                     break;
                 case BKActivitySliderMinValueLabel:
-                    [UpshotUtility customizeLabel:label withData:r_labelData[@"slider_minScore"]];
+                    [UpshotUtility customizeLabel:label withData:slider_Data[@"slider_minScore"]];
                     break;
                 case BKActivitySliderScoreLabel:
-                    [UpshotUtility customizeLabel:label withData:r_labelData[@"slider_score"]];
+                    [UpshotUtility customizeLabel:label withData:slider_Data[@"slider_score"]];
                     break;
                 case BKActivityMaxValueTitleLabel:
-                    [UpshotUtility customizeLabel:label withData:r_labelData[@"slider_maxText"]];
+                    [UpshotUtility customizeLabel:label withData:slider_Data[@"slider_maxText"]];
                     break;
                 case BKActivityMinValueTitleLabel:
-                    [UpshotUtility customizeLabel:label withData:r_labelData[@"slider_minText"]];
+                    [UpshotUtility customizeLabel:label withData:slider_Data[@"slider_minText"]];
                     break;
                 case BKActivityThankyouAppStoreHint:
                     [UpshotUtility customizeLabel:label withData:r_labelData[@"appStoreHint"]];
@@ -396,6 +415,7 @@
         case BKActivityTypeOpinionPoll:{
             
             NSDictionary *p_labelData = [UpshotUtility getObjectForKey:@"label_text" withFileName:kUpshotPollTheme];
+            NSDictionary *graphData = [UpshotUtility getObjectForKey:@"graph" withFileName:kUpshotPollTheme];
             
             switch (activityLabel) {
                 case BKActivityQuestionLabel:
@@ -407,14 +427,27 @@
                 case BKActivityOptionLabel:
                     [UpshotUtility customizeLabel:label withData:p_labelData[@"option"]];
                     break;
-                case BKActivityLegendLabel:
-                    [UpshotUtility customizeLabel:label withData:p_labelData[@"graph_legends"]];
+                case BKActivityLegendLabel: {
+                    NSString *legendColor = graphData[@"legends"];
+                    if([legendColor length] > 0) {
+                        label.textColor = [UpshotUtility colorFromHex:legendColor];
+                    }
+                }
                     break;
-                case BKActivityBarGraphUserLabel:
-                    [UpshotUtility customizeLabel:label withData:p_labelData[@"graph_users_text"]];
+                case BKActivityBarGraphUserLabel: {
+                    NSString *yAxisColor = graphData[@"yAxis_Header"];
+                    if([yAxisColor length] > 0) {
+                        label.textColor = [UpshotUtility colorFromHex:yAxisColor];
+                    }
+                }
                     break;
-                case BKActivityBarGraphOptionsLabel:
-                    [UpshotUtility customizeLabel:label withData:p_labelData[@"graph_options_text"]];
+                case BKActivityBarGraphOptionsLabel: {
+                    
+                    NSString *xAxis_Header = graphData[@"xAxis_Header"];
+                    if([xAxis_Header length] > 0) {
+                        label.textColor = [UpshotUtility colorFromHex:xAxis_Header];
+                    }
+                }                    
                     break;
                 default:
                     break;
@@ -424,6 +457,8 @@
         case BKActivityTypeTrivia: {
             
             NSDictionary *t_labelData = [UpshotUtility getObjectForKey:@"label_text" withFileName:kUpshotTriviaTheme];
+            NSDictionary *leaderBoard_lData = [UpshotUtility getObjectForKey:@"leaderBoard" withFileName:kUpshotTriviaTheme];
+            NSDictionary *graphData = [UpshotUtility getObjectForKey:@"graph" withFileName:kUpshotTriviaTheme];
             
             switch (activityLabel) {
                 case BKActivityHeaderLabel:
@@ -441,41 +476,59 @@
                 case BKActivityThankyouLabel:
                     [UpshotUtility customizeLabel:label withData:t_labelData[@"thankyou"]];
                     break;
-                case BKActivityTriviaGraphGradeLabel:
-                    [UpshotUtility customizeLabel:label withData:t_labelData[@"graph_grade_text"]];
-                    break;
-                case BKActivityTriviaGraphCountLabel:
-                    [UpshotUtility customizeLabel:label withData:t_labelData[@"graph_res_count"]];
-                    break;
-                case BKActivityYourScoreLabel:
-                    [UpshotUtility customizeLabel:label withData:t_labelData[@"yourScore"]];
-                    break;
-                case BKActivityTriviaResultsLabel:
-                    [UpshotUtility customizeLabel:label withData:t_labelData[@"result"]];
-                    break;
-                case BKActivityYourGradeLabel:
-                    [UpshotUtility customizeLabel:label withData:t_labelData[@"yourGrade"]];
-                    break;
-                case BKActivityUserGradeLabel:
-                    [UpshotUtility customizeLabel:label withData:t_labelData[@"userGrade"]];
-                    break;
-                case BKActivityUserScoreLabel:
-                    [UpshotUtility customizeLabel:label withData:t_labelData[@"userScore"]];
-                    break;
-                case BKActivityTriviaTabularResponsesLabel:
-                    [UpshotUtility customizeLabel:label withData:t_labelData[@"tabular_response"]];
-                    break;
-                case BKActivityTriviaTabularGradeLabel:
-                    [UpshotUtility customizeLabel:label withData:t_labelData[@"tabular_grade"]];
-                    break;
                 case BKActivityScoreLabel:
                     [UpshotUtility customizeLabel:label withData:t_labelData[@"score"]];
                     break;
-                case BKActivityBarGraphUserLabel:
-                    [UpshotUtility customizeLabel:label withData:t_labelData[@"graph_users_text"]];
+                                    
+                case BKActivityYourScoreLabel:
+                    [UpshotUtility customizeLabel:label withData:leaderBoard_lData[@"yourScore"]];
                     break;
-                case BKActivityBarGraphOptionsLabel:
-                    [UpshotUtility customizeLabel:label withData:t_labelData[@"graph_options_text"]];
+                case BKActivityTriviaResultsLabel:
+                    [UpshotUtility customizeLabel:label withData:leaderBoard_lData[@"result"]];
+                    break;
+                case BKActivityYourGradeLabel:
+                    [UpshotUtility customizeLabel:label withData:leaderBoard_lData[@"yourGrade"]];
+                    break;
+                case BKActivityUserGradeLabel:
+                    [UpshotUtility customizeLabel:label withData:leaderBoard_lData[@"userGrade"]];
+                    break;
+                case BKActivityUserScoreLabel:
+                    [UpshotUtility customizeLabel:label withData:leaderBoard_lData[@"userScore"]];
+                    break;
+                case BKActivityTriviaTabularResponsesLabel:
+                    [UpshotUtility customizeLabel:label withData:leaderBoard_lData[@"tabular_response_header"]];
+                    break;
+                case BKActivityTriviaTabularGradeLabel:
+                    [UpshotUtility customizeLabel:label withData:leaderBoard_lData[@"tabular_grade_header"]];
+                    break;
+                case BKActivityTriviaGraphGradeLabel:
+                    [UpshotUtility customizeLabel:label withData:leaderBoard_lData[@"tabular_grade_range"]];
+                    break;
+                case BKActivityTriviaGraphCountLabel:
+                    [UpshotUtility customizeLabel:label withData:leaderBoard_lData[@"tabular_response_count"]];
+                    break;
+                case BKActivityLegendLabel: {
+                    NSString *legendColor = graphData[@"legends"];
+                    if([legendColor length] > 0) {
+                        label.textColor = [UpshotUtility colorFromHex:legendColor];
+                    }
+                }
+                    break;
+                case BKActivityBarGraphUserLabel: {
+                    
+                    NSString *xAxis_Header = graphData[@"yAxis_Header"];
+                    if([xAxis_Header length] > 0) {
+                        label.textColor = [UpshotUtility colorFromHex:xAxis_Header];
+                    }
+                }
+                    break;
+                case BKActivityBarGraphOptionsLabel: {
+                    
+                    NSString *xAxis_Header = graphData[@"xAxis_Header"];
+                    if([xAxis_Header length] > 0) {
+                        label.textColor = [UpshotUtility colorFromHex:xAxis_Header];
+                    }
+                }
                     break;
                 default:
                     break;
@@ -494,29 +547,31 @@ CommentField
  */
 
 - (void)preferencesForTextView:(UITextView *)textView ofActivity:(BKActivityType)activityType andType:(BKActivityViewType)viewType {
-    NSDictionary *labelData = [UpshotUtility getObjectForKey:@"label_text" withFileName:kUpshotSurveyTheme];
+    
+    NSDictionary *feedbackBoxData = [UpshotUtility getObjectForKey:@"feedbackBox" withFileName:kUpshotSurveyTheme];
     if (activityType == BKActivityTypeRating) {
-        labelData = [UpshotUtility getObjectForKey:@"label_text" withFileName:kUpshotRatingTheme];
+        feedbackBoxData = [UpshotUtility getObjectForKey:@"feedbackBox" withFileName:kUpshotRatingTheme];
     }
     
-    if (labelData != nil && [labelData isKindOfClass:[NSDictionary class]]) {
+    if (feedbackBoxData != nil && [feedbackBoxData isKindOfClass:[NSDictionary class]] && viewType == BKActivityFreeFormText) {
         
-        NSDictionary *data = labelData[@"feedback_box"];
-        if (data != nil) {
-            UIColor *textcolor = [UpshotUtility colorFromHex:[UpshotUtility validateString:data[@"color"]]];
-            UIColor *border_color = [UpshotUtility colorFromHex:[UpshotUtility validateString:data[@"border_color"]]];
-            CGFloat size = [data[@"size"] floatValue];
-            UIFont *font = [UIFont fontWithName:[UpshotUtility validateString:data[@"font_name"]] size:size];
-            
-            if (textcolor != nil) {
-                [textView setTextColor:textcolor];
-            }
-            if (font != nil) {
-                [textView setFont:font];
-            }
-            if (border_color != nil) {
-                textView.layer.borderColor = border_color.CGColor;
-            }
+        UIColor *textcolor = [UpshotUtility colorFromHex:[UpshotUtility validateString:feedbackBoxData[@"color"]]];
+        UIColor *border_color = [UpshotUtility colorFromHex:[UpshotUtility validateString:feedbackBoxData[@"border_color"]]];
+        UIColor *bgcolor = [UpshotUtility colorFromHex:[UpshotUtility validateString:feedbackBoxData[@"bgcolor"]]];
+        CGFloat size = [feedbackBoxData[@"size"] floatValue];
+        UIFont *font = [UIFont fontWithName:[UpshotUtility validateString:feedbackBoxData[@"font_name"]] size:size];
+        
+        if (textcolor != nil) {
+            [textView setTextColor:textcolor];
+        }
+        if (bgcolor != nil) {
+            [textView setBackgroundColor:bgcolor];
+        }
+        if (font != nil) {
+            [textView setFont:font];
+        }
+        if (border_color != nil) {
+            textView.layer.borderColor = border_color.CGColor;
         }
     }
 }
@@ -625,7 +680,6 @@ CommentField
                     break;
                 case BKActivityNextButton:
                     [UpshotUtility customizeButton:button withData:t_buttonData[@"next"]];
-
                     break;
                 case BKActivityPreviousButton:
                     [UpshotUtility customizeButton:button withData:t_buttonData[@"prev"]];
@@ -652,34 +706,39 @@ CommentField
  */
 
 - (void)preferencesForTextField:(UITextField *)textField ofActivity:(BKActivityType)activityType andType:(BKActivityViewType)viewType {
-
-    NSDictionary *labelData = [UpshotUtility getObjectForKey:@"label_text" withFileName:kUpshotSurveyTheme];
+    
+    NSDictionary *feedbackBoxData = [UpshotUtility getObjectForKey:@"feedbackBox" withFileName:kUpshotSurveyTheme];
     if (activityType == BKActivityTypeRating) {
-        labelData = [UpshotUtility getObjectForKey:@"label_text" withFileName:kUpshotRatingTheme];
+        feedbackBoxData = [UpshotUtility getObjectForKey:@"feedbackBox" withFileName:kUpshotRatingTheme];
     }
     
-    if (labelData != nil && [labelData isKindOfClass:[NSDictionary class]]) {
+    
+    if (feedbackBoxData != nil && [feedbackBoxData isKindOfClass:[NSDictionary class]]) {
         
-        NSDictionary *data = labelData[@"feedback_box"];
-        if (data != nil) {
-            UIColor *textcolor = [UpshotUtility colorFromHex:[UpshotUtility validateString:data[@"color"]]];
-            UIColor *border_color = [UpshotUtility colorFromHex:[UpshotUtility validateString:data[@"border_color"]]];
-            CGFloat size = [data[@"size"] floatValue];
-            UIFont *font = [UIFont fontWithName:[UpshotUtility validateString:data[@"font_name"]] size:size];
+        UIColor *textcolor = [UpshotUtility colorFromHex:[UpshotUtility validateString:feedbackBoxData[@"color"]]];
+        UIColor *border_color = [UpshotUtility colorFromHex:[UpshotUtility validateString:feedbackBoxData[@"border_color"]]];
+        UIColor *bgcolor = [UpshotUtility colorFromHex:[UpshotUtility validateString:feedbackBoxData[@"bgcolor"]]];
+        CGFloat size = [feedbackBoxData[@"size"] floatValue];
+        UIFont *font = [UIFont fontWithName:[UpshotUtility validateString:feedbackBoxData[@"font_name"]] size:size];
+        
+        if (textcolor != nil) {
+            [textField setTextColor:textcolor];
+        }
+        if (font != nil) {
+            [textField setFont:font];
+        }
+        
+        if (bgcolor != nil) {
+            [textField setBackgroundColor:bgcolor];
+        }
+        
+        if (border_color != nil) {
             
-            if (textcolor != nil) {
-                [textField setTextColor:textcolor];
-            }
-            if (font != nil) {
-                [textField setFont:font];
-            }
-            if (border_color != nil) {
-                textField.layer.borderColor = border_color.CGColor;
-                textField.layer.borderWidth = 1.0;
-                textField.layer.cornerRadius = 3.0;
-            }
+            textField.layer.borderColor = border_color.CGColor;
+            textField.layer.borderWidth = 1.0;
         }
     }
+    
 }
 
 /*This method is used to customize the Star and Smiley Images based on activityType
@@ -748,13 +807,11 @@ CommentField
             NSDictionary *s_colorData = [UpshotUtility getObjectForKey:@"color" withFileName:kUpshotSurveyTheme];
             switch (activityColor) {
                 case BKActivityBGColor:
+                case BKActivityBottomBGColor:
                     [UpshotUtility customizeColor:color withData:s_colorData[@"background"]];
                     break;
                 case BKActivityHeaderBGColor:
                     [UpshotUtility customizeColor:color withData:s_colorData[@"headerBG"]];
-                    break;
-                case BKActivityBottomBGColor:
-                    [UpshotUtility customizeColor:color withData:s_colorData[@"bottomBG"]];
                     break;
                 case BKActivityPageTintColor:
                     [UpshotUtility customizeColor:color withData:s_colorData[@"pagenationdots_def"]];
@@ -781,13 +838,11 @@ CommentField
             NSDictionary *r_colorData = [UpshotUtility getObjectForKey:@"color" withFileName:kUpshotRatingTheme];
             switch (activityColor) {
                 case BKActivityBGColor:
+                case BKActivityBottomBGColor:
                     [UpshotUtility customizeColor:color withData:r_colorData[@"background"]];
                     break;
                 case BKActivityHeaderBGColor:
                     [UpshotUtility customizeColor:color withData:r_colorData[@"headerBG"]];
-                    break;
-                case BKActivityBottomBGColor:
-                    [UpshotUtility customizeColor:color withData:r_colorData[@"bottomBG"]];
                     break;
                 default:
                     break;
@@ -797,25 +852,24 @@ CommentField
         case BKActivityTypeOpinionPoll: {
             
             NSDictionary *p_colorData = [UpshotUtility getObjectForKey:@"color" withFileName:kUpshotPollTheme];
+            NSDictionary *graph_colorData = [UpshotUtility getObjectForKey:@"graph" withFileName:kUpshotPollTheme];
             switch (activityColor) {
 
                 case BKActivityBGColor:
+                case BKActivityBottomBGColor:
                     [UpshotUtility customizeColor:color withData:p_colorData[@"background"]];
                     break;
                 case BKActivityHeaderBGColor:
                     [UpshotUtility customizeColor:color withData:p_colorData[@"headerBG"]];
-                    break;
-                case BKActivityBottomBGColor:
-                    [UpshotUtility customizeColor:color withData:p_colorData[@"bottomBG"]];
-                    break;
+                    break;                                    
                 case BKActivityPercentageColor:
-                    [UpshotUtility customizeColor:color withData:p_colorData[@"percentageText"]];
+                    [UpshotUtility customizeColor:color withData:graph_colorData[@"percentage"]];
                     break;
                 case BKActivityGraphLabelColor:
-                    [UpshotUtility customizeColor:color withData:p_colorData[@"barGraphNumberText"]];
+                    [UpshotUtility customizeColor:color withData:graph_colorData[@"yAxis"]];
                     break;
                 case BKActivityStrokeColor:
-                    [UpshotUtility customizeColor:color withData:p_colorData[@"barGraphLine"]];
+                    [UpshotUtility customizeColor:color withData:graph_colorData[@"bar_line"]];
                     break;
                 case BKActivityOptionDefaultBorderColor:
                     [UpshotUtility customizeColor:color withData:p_colorData[@"option_def_border"]];
@@ -831,24 +885,15 @@ CommentField
         case BKActivityTypeTrivia: {
 
             NSDictionary *t_colorData = [UpshotUtility getObjectForKey:@"color" withFileName:kUpshotTriviaTheme];
+            NSDictionary *graph_colorData = [UpshotUtility getObjectForKey:@"graph" withFileName:kUpshotTriviaTheme];
+            
             switch (activityColor) {
                 case BKActivityBGColor:
+                case BKActivityBottomBGColor:
                     [UpshotUtility customizeColor:color withData:t_colorData[@"background"]];
                     break;
                 case BKActivityHeaderBGColor:
                     [UpshotUtility customizeColor:color withData:t_colorData[@"headerBG"]];
-                    break;
-                case BKActivityBottomBGColor:
-                    [UpshotUtility customizeColor:color withData:t_colorData[@"bottomBG"]];
-                    break;
-                case BKActivityPercentageColor:
-                    [UpshotUtility customizeColor:color withData:t_colorData[@"percentageText"]];
-                    break;
-                case BKActivityGraphLabelColor:
-                    [UpshotUtility customizeColor:color withData:t_colorData[@"barGraphNumberText"]];
-                    break;
-                case BKActivityStrokeColor:
-                    [UpshotUtility customizeColor:color withData:t_colorData[@"barGraphLine"]];
                     break;
                 case BKActivityOptionDefaultBorderColor:
                     [UpshotUtility customizeColor:color withData:t_colorData[@"option_def_border"]];
@@ -866,6 +911,15 @@ CommentField
                     [UpshotUtility customizeColor:color withData:t_colorData[@"pagenationdots_answered"]];
                     break;
                     
+                case BKActivityPercentageColor:
+                    [UpshotUtility customizeColor:color withData:graph_colorData[@"percentage"]];
+                    break;
+                case BKActivityGraphLabelColor:
+                    [UpshotUtility customizeColor:color withData:graph_colorData[@"yAxis"]];
+                    break;
+                case BKActivityStrokeColor:
+                    [UpshotUtility customizeColor:color withData:graph_colorData[@"bar_line"]];
+                    break;                                                    
                 default:
                     break;
             }

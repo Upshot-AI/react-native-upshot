@@ -168,14 +168,31 @@
 + (UIColor *)colorFromHex:(NSString *)hexString {
     
     unsigned rgbValue = 0;
-    if (![hexString length] || [hexString isEqualToString:@""]) {
-        
+    NSString *colorValue = [hexString stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+    colorValue = [colorValue stringByReplacingOccurrencesOfString:@"#" withString:@""];
+    if (![colorValue length] || [colorValue isEqualToString:@""]) {
         return nil;
     }
-    NSScanner *scanner = [NSScanner scannerWithString:hexString];
-    [scanner setScanLocation:1];
-    [scanner scanHexInt:&rgbValue];
-    return [UIColor colorWithRed:((rgbValue & 0XFF0000) >> 16)/255.0 green:((rgbValue & 0XFF00) >> 8)/255.0 blue:(rgbValue & 0XFF)/255.0 alpha:1.0];
+    
+    if([colorValue length] == 6) {
+        NSScanner *scanner = [NSScanner scannerWithString:hexString];
+        [scanner setScanLocation:1];
+        [scanner scanHexInt:&rgbValue];
+        return [UIColor colorWithRed:((rgbValue & 0XFF0000) >> 16)/255.0 green:((rgbValue & 0XFF00) >> 8)/255.0 blue:(rgbValue & 0XFF)/255.0 alpha:1.0];
+    }
+    
+    if([colorValue length] == 8) {
+        
+        NSScanner *scanner = [NSScanner scannerWithString:hexString];
+        [scanner setScanLocation:1];
+        [scanner scanHexInt:&rgbValue];
+        return [UIColor colorWithRed:((rgbValue & 0xff000000) >> 24)/255.0 green:((rgbValue & 0x00ff0000) >> 16)/255.0 blue:((rgbValue & 0x0000ff00) >> 8)/255.0 alpha: (rgbValue & 0x000000ff) / 255];
+
+    }
+    
+    return nil;
+    
+   
 }
 
 + (void)customizeLabel:(UILabel *)label withData:(NSDictionary *)data {
@@ -200,6 +217,7 @@
         
         CGFloat size = [data[@"size"] floatValue];
         UIColor *textColor = [self colorFromHex:[self validateString:data[@"color"]]];
+        UIColor *border_color = [self colorFromHex:[self validateString:data[@"border_color"]]];
         UIColor *bgColor = [self colorFromHex:[self validateString:data[@"bgcolor"]]];
         UIFont *font = [UIFont fontWithName:[self validateString:data[@"font_name"]] size:size];
         UIImage *image = [UIImage imageNamed:[self validateString:data[@"image"]]];
@@ -216,11 +234,18 @@
             [button setBackgroundColor:bgColor];
         }
         
+        if(border_color != nil) {
+            [button.layer setBorderColor:border_color.CGColor];
+            [button.layer setBorderWidth:1.5];
+        }
+        
         if (image != nil) {
             [button setImage:image forState:UIControlStateNormal];
             [button setImage:image forState:UIControlStateSelected];
             [button setImage:image forState:UIControlStateHighlighted];
         }
+        
+        
     }
 }
 

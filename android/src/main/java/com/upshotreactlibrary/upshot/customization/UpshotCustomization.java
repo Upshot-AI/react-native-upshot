@@ -216,7 +216,7 @@ public class UpshotCustomization {
 
     private void applyBgColorAttribute(Context context, View view, JSONObject jsonObject) {
         String bgcolor = validateJsonString(jsonObject, "bgcolor");
-        String borderColor = validateJsonString(jsonObject, "border_color");
+        String borderColor = "";
 
         if (!TextUtils.isEmpty(borderColor)) {
             try {

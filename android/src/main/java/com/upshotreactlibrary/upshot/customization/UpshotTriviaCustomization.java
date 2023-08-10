@@ -180,6 +180,7 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
         if (mJsonObject != null) {
             try {
                 JSONObject jsonObject = (JSONObject) mJsonObject.get("color");
+                JSONObject graphJson = (JSONObject) mJsonObject.get("graph");
 
                 switch (colorType) {
                     case BKACTIVITY_TRIVIA_GRADE_COLOR:
@@ -241,15 +242,9 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                         }
                         break;
 
+                    case BKACTIVITY_YAXIS_TEXT_COLOR_COLOR:
                     case BKACTIVITY_XAXIS_TEXT_COLOR_COLOR: {
-                        String percentageText = validateJsonString(jsonObject, "xAxis_Header");
-                        if (percentageText != null && !percentageText.isEmpty()) {
-                            color.setColor(Color.parseColor(percentageText));
-                        }
-                    }
-                        break;
-                    case BKACTIVITY_YAXIS_TEXT_COLOR_COLOR: {
-                        String percentageText = validateJsonString(jsonObject, "yAxis_Header");
+                        String percentageText = validateJsonString(graphJson, "yAxis");
                         if (percentageText != null && !percentageText.isEmpty()) {
                             color.setColor(Color.parseColor(percentageText));
                         }
@@ -257,7 +252,7 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                         break;
                     case BKACTIVITY_YAXIS_COLOR:
                     case BKACTIVITY_XAXIS_COLOR:
-                        String barGraphLine = validateJsonString(jsonObject, "yAxis");
+                        String barGraphLine = validateJsonString(graphJson, "bar_line");
                         if (barGraphLine != null && !barGraphLine.isEmpty()) {
                             color.setColor(Color.parseColor(barGraphLine));
                         }
@@ -278,6 +273,8 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
 
             try {
                 JSONObject label_textJsonObject = (JSONObject) mJsonObject.get("label_text");
+                JSONObject graphJson = (JSONObject) mJsonObject.get("graph");
+                JSONObject leaderBoardJson = (JSONObject) mJsonObject.get("leaderBoard");
 
                 switch (textViewType) {
                     case BKACTIVITY_HEADER_TV:
@@ -286,7 +283,7 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                         break;
                     case BKACTIVITY_TRIVIA_DESC_TV:
                         JSONObject desc = (JSONObject) label_textJsonObject.get("desc");
-                        // applyTextViewProperties(mContext, desc, textView);
+                        applyTextViewProperties(mContext, desc, textView);
                         break;
                     case BKACTIVITY_QUESTION_TV:
                         JSONObject question = (JSONObject) label_textJsonObject.get("question");
@@ -310,57 +307,72 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                         break;
 
                     case BKACTIVITY_LEADER_BOARD_SCORE_TV:
-                        JSONObject option_userScore = (JSONObject) label_textJsonObject.get("userScore");
+                        JSONObject option_userScore = (JSONObject) leaderBoardJson.get("yourScore");
                         applyTextViewProperties(mContext, option_userScore, textView);
                         break;
 
-                    case BKACTIVITY_LEADER_BOARD_GRADE_TV:
-                        JSONObject option_userGrade = (JSONObject) label_textJsonObject.get("userGrade");
+                    case BKACTIVITY_LEADER_BOARD_GRADE_TV: {
+                        JSONObject option_userGrade = (JSONObject) leaderBoardJson.get("yourGrade");
                         applyTextViewProperties(mContext, option_userGrade, textView);
+                    }
                         break;
-                    case BKACTIVITY_LEADER_BOARD_GRADE_VALUE_TV:
-
-                        JSONObject option_yourGrade = (JSONObject) label_textJsonObject.get("yourGrade");
-                        applyTextViewProperties(mContext, option_yourGrade, textView);
-                        break;
-                    case BKACTIVITY_LEADER_BOARD_SCORE_VALUE_TV:
                     case BKACTIVITY_SCORE_TV:
                         JSONObject option_score = (JSONObject) label_textJsonObject.get("score");
                         applyTextViewProperties(mContext, option_score, textView);
                         break;
+                    case BKACTIVITY_LEADER_BOARD_GRADE_VALUE_TV:
+                        JSONObject option_yourGrade = (JSONObject) leaderBoardJson.get("userGrade");
+                        applyTextViewProperties(mContext, option_yourGrade, textView);
+                        break;
+                    case BKACTIVITY_LEADER_BOARD_SCORE_VALUE_TV: {
+                        JSONObject option_result = (JSONObject) leaderBoardJson.get("userScore");
+                        applyTextViewProperties(mContext, option_result, textView);
+                    }
+                        break;
                     case BKACTIVITY_LEADER_BOARD_TITLE_TV:
-                        JSONObject option_result = (JSONObject) label_textJsonObject.get("result");
+                        JSONObject option_result = (JSONObject) leaderBoardJson.get("result");
                         applyTextViewProperties(mContext, option_result, textView);
                         break;
                     case BKACTIVITY_TRIVIA_GRADE_HEADER_TABLE_TV: {
-                        JSONObject leaderBoardJsonObject = (JSONObject) mJsonObject.get("leaderBoard");
-
-                        JSONObject tabularResponseHeader = (JSONObject) leaderBoardJsonObject
+                        JSONObject tabularResponseHeader = (JSONObject) leaderBoardJson
                                 .get("tabular_grade_header");
                         applyTextViewProperties(mContext, tabularResponseHeader, textView);
                     }
                         break;
                     case BKACTIVITY_TRIVIA_RESPONSE_HEADER_TABLE_TV:
-                        JSONObject leaderBoardJsonObject = (JSONObject) mJsonObject.get("leaderBoard");
-
-                        JSONObject tabularResponseHeader = (JSONObject) leaderBoardJsonObject
+                        JSONObject tabularResponseHeader = (JSONObject) leaderBoardJson
                                 .get("tabular_response_header");
                         applyTextViewProperties(mContext, tabularResponseHeader, textView);
                         break;
-                    case BKACTIVITY_LEADER_BOARD_BAR_RESPONSES_TV:
-
-                        JSONObject option_userText = (JSONObject) label_textJsonObject.get("graph_users_text");
-                        applyTextViewProperties(mContext, option_userText, textView);
+                    case BKACTIVITY_LEADER_BOARD_BAR_RESPONSES_TV: {
+                        String yAxis_HeaderColor = graphJson.getString("yAxis_Header");
+                        if (!yAxis_HeaderColor.isEmpty()) {
+                            textView.setTextColor(Color.parseColor(yAxis_HeaderColor));
+                        }
+                    }
                         break;
-                    case BKACTIVITY_LEADER_BOARD_BAR_GRADES_TV:
-                        JSONObject option_optionsText = (JSONObject) label_textJsonObject.get("graph_options_text");
-                        applyTextViewProperties(mContext, option_optionsText, textView);
+                    case BKACTIVITY_LEADER_BOARD_BAR_GRADES_TV: {
+                        String xAxis_HeaderColor = graphJson.getString("xAxis_Header");
+                        if (!xAxis_HeaderColor.isEmpty()) {
+                            textView.setTextColor(Color.parseColor(xAxis_HeaderColor));
+                        }
+                    }
                         break;
                     case BKACTIVITY_LEGEND_TV:
-                        JSONObject graphJsonObject = (JSONObject) mJsonObject.get("graph");
-
-                        JSONObject graph_legends = (JSONObject) graphJsonObject.get("legends");
-                        applyTextViewProperties(mContext, graph_legends, textView);
+                        String legendColor = graphJson.getString("legends");
+                        if (!legendColor.isEmpty()) {
+                            textView.setTextColor(Color.parseColor(legendColor));
+                        }
+                        break;
+                    case BKACTIVITY_TRIVIA_GRADE_DATA_TABLE_TV:
+                        JSONObject tabular_grade_header = (JSONObject) leaderBoardJson.get("tabular_grade_header");
+                        applyTextViewProperties(mContext, tabular_grade_header, textView);
+                        break;
+                    case BKACTIVITY_TRIVIA_RESPONSE_DATA_TABLE_TV: {
+                        JSONObject tabular_response_header = (JSONObject) leaderBoardJson
+                                .get("tabular_response_header");
+                        applyTextViewProperties(mContext, tabular_response_header, textView);
+                    }
                         break;
 
                 }

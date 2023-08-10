@@ -21,11 +21,14 @@
 + (NSString *)convertJsonObjToJsonString:(id)json {
   
   NSError *error = nil;
-  NSData *data = [NSJSONSerialization dataWithJSONObject:json options:NSJSONWritingPrettyPrinted error:&error];
-  if (error == nil) {
-    NSString *jsonString = [[NSString alloc] initWithData:data encoding:kCFStringEncodingUTF8];
-    return jsonString;
-  }
+  if(([json isKindOfClass:[NSDictionary class]] || [json isKindOfClass:[NSArray class]]) && json != nil) {
+        
+        NSData *data = [NSJSONSerialization dataWithJSONObject:json options:NSJSONWritingPrettyPrinted error:&error];
+        if (error == nil) {
+            NSString *jsonString = [[NSString alloc] initWithData:data encoding:kCFStringEncodingUTF8];
+            return jsonString;
+        }
+    }
   return @"";
 }
 
@@ -243,9 +246,7 @@
             [button setImage:image forState:UIControlStateNormal];
             [button setImage:image forState:UIControlStateSelected];
             [button setImage:image forState:UIControlStateHighlighted];
-        }
-        
-        
+        }                
     }
 }
 

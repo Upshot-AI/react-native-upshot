@@ -1,13 +1,12 @@
 package com.upshotreactlibrary;
 
+import android.Manifest;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -15,33 +14,22 @@ import android.telecom.Call;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 
 import com.brandkinesis.BKProperties;
-import com.brandkinesis.BKUIPrefComponents;
 import com.brandkinesis.BKUserInfo;
 import com.brandkinesis.BrandKinesis;
 import com.brandkinesis.activitymanager.BKActivityTypes;
 import com.brandkinesis.callback.BKActivityCallback;
-import com.brandkinesis.callback.BKAuthCallback;
 import com.brandkinesis.callback.BKBadgeAccessListener;
 import com.brandkinesis.callback.BKDispatchCallback;
 import com.brandkinesis.callback.BKInboxAccessListener;
 import com.brandkinesis.callback.BKInboxActivityCallback;
-import com.brandkinesis.callback.BKPushCompletionBlock;
 import com.brandkinesis.callback.BKUserInfoCallback;
-import com.brandkinesis.callback.BrandKinesisCallback;
 import com.brandkinesis.callback.BrandKinesisUserStateCompletion;
 import com.brandkinesis.pushnotifications.BKNotificationsCountResponseListener;
 import com.brandkinesis.pushnotifications.BKNotificationsResponseListener;
@@ -52,26 +40,18 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.bridge.Callback;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.upshotreactlibrary.upshot.push.UpshotPushAction;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.InstanceIdResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -547,7 +527,18 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     /* Push Notification Module */
     @ReactMethod
     private static void registerForPush(final Callback callback) {
+        requestForNotificationPermissions();
+    }
 
+    private static void requestForNotificationPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(reactContext.getCurrentActivity(),
+                    Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+
+                reactContext.getCurrentActivity()
+                        .requestPermissions(new String[] { Manifest.permission.POST_NOTIFICATIONS }, 1);
+            }
+        }
     }
 
     @ReactMethod
@@ -677,8 +668,13 @@ public class UpshotModule extends ReactContextBaseJavaModule {
         try {
 
             JSONObject jsonObject = new JSONObject(options);
+
             jsonObject.put("bkInboxType", jsonObject.getInt("BKInboxType"));
             jsonObject.put("bkShowReadNotifications", jsonObject.getBoolean("BKShowReadNotifications"));
+            jsonObject.put("BKEnableLoadMore", jsonObject.getBoolean("BKEnableLoadMore"));
+            jsonObject.put("BKPushFetchLimit", jsonObject.getInt("BKPushFetchLimit"));
+            jsonObject.put("BKDisplayMsgCount", jsonObject.getBoolean("BKDisplayMsgCount"));
+            jsonObject.put("BKDisplayTime", jsonObject.getBoolean("BKDisplayTime"));
 
             BrandKinesis.getBKInstance().showInboxActivity(reactContext.getApplicationContext(),
                     jsonToBundle(jsonObject), new BKInboxActivityCallback() {

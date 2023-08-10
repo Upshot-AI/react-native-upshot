@@ -118,21 +118,20 @@ public class UpshotSurveyCustomization extends UpshotCustomization {
 
         if (mJsonObject != null) {
             try {
-                JSONObject buttonJsonObject = (JSONObject) mJsonObject.get("label_text");
+                JSONObject feedbackBoxJson = (JSONObject) mJsonObject.get("feedbackBox");
 
                 switch (EditTextType) {
                     case BKACTIVITY_SURVEY_EDIT_TEXT:
                     default:
-                        JSONObject inputFieldJsonObject = (JSONObject) buttonJsonObject.get("feedback_box");
                         GradientDrawable gd = new GradientDrawable();
-                        String borderColor = validateJsonString(inputFieldJsonObject, "border_color");
+                        String borderColor = validateJsonString(feedbackBoxJson, "border_color");
                         if (borderColor != null && !borderColor.isEmpty()) {
                             gd.setStroke(3, Color.parseColor(borderColor));
                         }
                         gd.setCornerRadius(8);
                         gd.setColor(Color.TRANSPARENT);
                         editText.setBackground(gd);
-                        applyEditTextProperties(mContext, inputFieldJsonObject, editText);
+                        applyEditTextProperties(mContext, feedbackBoxJson, editText);
                         break;
                 }
             } catch (Exception e) {
@@ -308,7 +307,7 @@ public class UpshotSurveyCustomization extends UpshotCustomization {
                             selectedRatingList.add(bad_sel);
                             selectedRatingList.add(avg_sel);
                             selectedRatingList.add(good_sel);
-                            selectedRatingList.add(veryBad_sel);
+                            selectedRatingList.add(vGood_sel);
                         }
                 }
             } catch (Exception e) {
@@ -330,6 +329,7 @@ public class UpshotSurveyCustomization extends UpshotCustomization {
 
             try {
                 JSONObject label_textJsonObject = (JSONObject) mJsonObject.get("label_text");
+                JSONObject sliderJsonObject = (JSONObject) mJsonObject.get("slider");
                 switch (textViewType) {
                     case BKACTIVITY_HEADER_TV:
                         JSONObject header = (JSONObject) label_textJsonObject.get("header");
@@ -340,23 +340,23 @@ public class UpshotSurveyCustomization extends UpshotCustomization {
                         applyTextViewProperties(mContext, desc, textView);
                         break;
                     case BKACTIVITY_SLIDE_TEXT_TV:
-                        JSONObject slider_score = (JSONObject) label_textJsonObject.get("slider_score");
+                        JSONObject slider_score = (JSONObject) sliderJsonObject.get("slider_score");
                         applyTextViewProperties(mContext, slider_score, textView);
                         break;
                     case BKACTIVITY_SLIDE_MAX_TV:
-                        JSONObject slider_maxScore = (JSONObject) label_textJsonObject.get("slider_maxScore");
+                        JSONObject slider_maxScore = (JSONObject) sliderJsonObject.get("slider_maxScore");
                         applyTextViewProperties(mContext, slider_maxScore, textView);
                         break;
                     case BKACTIVITY_SLIDE_MIN_TV:
-                        JSONObject slider_minScore = (JSONObject) label_textJsonObject.get("slider_minScore");
+                        JSONObject slider_minScore = (JSONObject) sliderJsonObject.get("slider_minScore");
                         applyTextViewProperties(mContext, slider_minScore, textView);
                         break;
                     case BKACTIVITY_SLIDE_MAX_LABEL_TV:
-                        JSONObject slider_maxText = (JSONObject) label_textJsonObject.get("slider_maxText");
+                        JSONObject slider_maxText = (JSONObject) sliderJsonObject.get("slider_maxText");
                         applyTextViewProperties(mContext, slider_maxText, textView);
                         break;
                     case BKACTIVITY_SLIDE_MIN_LABEL_TV:
-                        JSONObject slider_minText = (JSONObject) label_textJsonObject.get("slider_minText");
+                        JSONObject slider_minText = (JSONObject) sliderJsonObject.get("slider_minText");
                         applyTextViewProperties(mContext, slider_minText, textView);
                         break;
                     case BKACTIVITY_QUESTION_TV:

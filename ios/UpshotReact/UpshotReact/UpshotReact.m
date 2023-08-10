@@ -209,8 +209,12 @@ RCT_EXPORT_METHOD(removeTutorials) {
 RCT_EXPORT_METHOD(fetchInboxInfo:(RCTResponseSenderBlock)callback) {
     
     [[BrandKinesis sharedInstance] fetchInboxInfoWithCompletionBlock:^(NSArray * _Nonnull inbox) {
-      NSString *jsonString = [UpshotUtility convertJsonObjToJsonString:inbox];
-        callback(@[jsonString]);
+       if(inbox != nil) {
+            NSString *jsonString = [UpshotUtility convertJsonObjToJsonString:inbox];
+              if([jsonString length] > 0) {
+                  callback(@[jsonString]);
+              }
+        }
     }];
 }
 
@@ -225,7 +229,7 @@ RCT_EXPORT_METHOD(getUserBadges:(RCTResponseSenderBlock)callback) {
 
 RCT_EXPORT_METHOD(registerForPush:(RCTResponseSenderBlock)callback) {
   
-  [self registerForPushWithCallback:callback];
+//   [self registerForPushWithCallback:callback];
 }
 
 RCT_EXPORT_METHOD(sendDeviceToken:(NSString *)token) {

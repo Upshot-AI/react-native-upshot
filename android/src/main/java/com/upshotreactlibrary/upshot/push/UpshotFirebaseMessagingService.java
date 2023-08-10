@@ -38,7 +38,7 @@ public class UpshotFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
-        UpshotModule.sendRegistrationToServer(token);
+        // UpshotModule.sendRegistrationToServer(token);
     }
 
     public void setContext(Context context) {

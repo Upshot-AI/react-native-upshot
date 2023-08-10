@@ -83,6 +83,7 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
         if (mJsonObject != null) {
             try {
                 JSONObject label_textJsonObject = (JSONObject) mJsonObject.get("label_text");
+                JSONObject graphJsonObject = (JSONObject) mJsonObject.get("graph");
                 switch (textViewType) {
                     case BKACTIVITY_QUESTION_TV:
                         JSONObject question = (JSONObject) label_textJsonObject.get("question");
@@ -107,18 +108,25 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
                         applyTextViewProperties(mContext, option, textView);
                         break;
                     case BKACTIVITY_LEGEND_TV:
-                        JSONObject graphJsonObject = (JSONObject) mJsonObject.get("graph");
 
-                        JSONObject graph_legends = (JSONObject) graphJsonObject.get("legends");
-                        applyTextViewProperties(mContext, graph_legends, textView);
+                        String legendsColor = graphJsonObject.getString("legends");
+                        if (!legendsColor.isEmpty()) {
+                            textView.setTextColor(Color.parseColor(legendsColor));
+                        }
+
                         break;
                     case BKACTIVITY_LEADER_BOARD_BAR_RESPONSES_TV:
-                        JSONObject option_response = (JSONObject) label_textJsonObject.get("graph_users_text");
-                        applyTextViewProperties(mContext, option_response, textView);
+                        String yAxis_HeaderColor = graphJsonObject.getString("yAxis_Header");
+                        if (!yAxis_HeaderColor.isEmpty()) {
+                            textView.setTextColor(Color.parseColor(yAxis_HeaderColor));
+                        }
+
                         break;
                     case BKACTIVITY_LEADER_BOARD_BAR_GRADES_TV:
-                        JSONObject bar_option = (JSONObject) label_textJsonObject.get("graph_options_text");
-                        applyTextViewProperties(mContext, bar_option, textView);
+                        String xAxis_HeaderColor = graphJsonObject.getString("xAxis_Header");
+                        if (!xAxis_HeaderColor.isEmpty()) {
+                            textView.setTextColor(Color.parseColor(xAxis_HeaderColor));
+                        }
                         break;
                 }
 
@@ -136,6 +144,7 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
         if (mJsonObject != null) {
             try {
                 JSONObject jsonObject = (JSONObject) mJsonObject.get("color");
+                JSONObject graphJsonObject = (JSONObject) mJsonObject.get("graph");
                 switch (colorType) {
                     case BKACTIVITY_OPTION_DEF_BORDER:
                         String bgColor = validateJsonString(jsonObject, "option_def_border");
@@ -157,15 +166,10 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
                         String headerBG = validateJsonString(jsonObject, "headerBG");
                         color.setColor(Color.parseColor(headerBG));
                         break;
+
+                    case BKACTIVITY_YAXIS_TEXT_COLOR_COLOR:
                     case BKACTIVITY_XAXIS_TEXT_COLOR_COLOR: {
-                        String percentageText = validateJsonString(jsonObject, "xAxis_Header");
-                        if (percentageText != null && !percentageText.isEmpty()) {
-                            color.setColor(Color.parseColor(percentageText));
-                        }
-                    }
-                        break;
-                    case BKACTIVITY_YAXIS_TEXT_COLOR_COLOR: {
-                        String percentageText = validateJsonString(jsonObject, "yAxis_Header");
+                        String percentageText = validateJsonString(graphJsonObject, "yAxis");
                         if (percentageText != null && !percentageText.isEmpty()) {
                             color.setColor(Color.parseColor(percentageText));
                         }
@@ -173,7 +177,7 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
                         break;
                     case BKACTIVITY_YAXIS_COLOR:
                     case BKACTIVITY_XAXIS_COLOR:
-                        String barGraphLine = validateJsonString(jsonObject, "yAxis");
+                        String barGraphLine = validateJsonString(graphJsonObject, "bar_line");
                         if (barGraphLine != null && !barGraphLine.isEmpty()) {
                             color.setColor(Color.parseColor(barGraphLine));
                         }

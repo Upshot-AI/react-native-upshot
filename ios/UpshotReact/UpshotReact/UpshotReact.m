@@ -550,11 +550,11 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
     NSDictionary *deeplinkKeyValue = params[@"deepLink_keyValue"];
     if (deeplinkValue != nil) {
         [self sendEventWithName:@"UpshotDeepLink" body:@{@"deepLink": params[@"deepLink"]}];
-    }
-    
-    if (deeplinkKeyValue != nil && [deeplinkKeyValue allKeys].count > 0) {
+    } else if (deeplinkKeyValue != nil && [deeplinkKeyValue allKeys].count > 0) {
         [self sendEventWithName:@"UpshotDeepLink" body:@{@"deepLink_keyValue": [UpshotUtility convertJsonObjToJsonString:deeplinkKeyValue]}];
-    }    
+    } else if (params != nil && [params allKeys].count > 0) {
+        [self sendEventWithName:@"UpshotDeepLink" body:@{@"deepLink_keyValue": [UpshotUtility convertJsonObjToJsonString:params]}];
+    }
 }
 
 - (void)brandKinesisActivityDidAppear:(BrandKinesis *)brandKinesis forActivityType:(BKActivityType)activityType {

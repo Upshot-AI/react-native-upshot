@@ -869,21 +869,36 @@ public class UpshotModule extends ReactContextBaseJavaModule {
             final Map<String, Object> map) {
 
         WritableMap payload = Arguments.createMap();
-        Boolean isValidJsonObj = false;
-        try {
-            JSONObject obj = new JSONObject(map.get("deepLink").toString());
-            isValidJsonObj = true;
-        } catch (JSONException e) {
-            isValidJsonObj = false;
-            e.printStackTrace();
+        if (map == null) {
+            return;
         }
-
-        if (!isValidJsonObj) {
-            payload.putString("deepLink", map.get("deepLink").toString());
+        if (!map.containsKey("deepLink")) {
+            payload.putString("deepLink", map.toString());
+            emitDeviceEvent("UpshotDeepLink", payload);
         } else {
-            payload.putString("deepLink_keyValue", map.get("deepLink").toString());
+            Boolean isValidJsonObj = false;
+            try {
+                String deeplinkString = map.get("deepLink").toString();
+                if (deeplinkString != null) {
+                    JSONObject obj = new JSONObject(deeplinkString);
+                    isValidJsonObj = true;
+                }
+            } catch (Exception e) {
+                isValidJsonObj = false;
+                e.printStackTrace();
+            }
+
+            try {
+                if (!isValidJsonObj) {
+                    payload.putString("deepLink", map.get("deepLink").toString());
+                } else {
+                    payload.putString("deepLink_keyValue", map.get("deepLink").toString());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            emitDeviceEvent("UpshotDeepLink", payload);
         }
-        emitDeviceEvent("UpshotDeepLink", payload);
     }
 
     public static void upshotActivityCreated(final BKActivityTypes bkActivityTypes) {

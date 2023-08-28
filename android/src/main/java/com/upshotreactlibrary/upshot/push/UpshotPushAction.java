@@ -25,27 +25,35 @@ public class UpshotPushAction extends BroadcastReceiver {
 
         final Bundle bundle = intent.getExtras();
         if (bundle != null) {
-
-            context.getApplicationContext();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 
                 ReactApplication reactApplication = (ReactApplication) context.getApplicationContext();
                 if (reactApplication != null) {
-                    ReactInstanceManager reactInstanceManager = reactApplication.getReactNativeHost().getReactInstanceManager();
-                    reactInstanceManager.addReactInstanceEventListener(new ReactInstanceEventListener() {
-                        @Override
-                        public void onReactContextInitialized(ReactContext reactContext) {
-                            UpshotModule.sendPushClickPayload(UpshotModule.bundleToJsonString(bundle));
-                        }
-                    });
+                    ReactInstanceManager reactInstanceManager = reactApplication.getReactNativeHost()
+                            .getReactInstanceManager();
+                    ReactContext reactContext = reactInstanceManager.getCurrentReactContext();
 
+                    if (reactContext != null) {
+                        UpshotModule.sendPushClickPayload(UpshotModule.bundleToJsonString(bundle));
+                    } else {
+                        reactInstanceManager
+                                .addReactInstanceEventListener(new ReactInstanceManager.ReactInstanceEventListener() {
+                                    @Override
+                                    public void onReactContextInitialized(ReactContext context) {
+                                        // Use context here
+                                        UpshotModule.sendPushClickPayload(UpshotModule.bundleToJsonString(bundle));
+                                        reactInstanceManager.removeReactInstanceEventListener(this);
+                                    }
+                                });
+                    }
                 } else {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             ReactApplication reactApplication = (ReactApplication) context.getApplicationContext();
                             if (reactApplication != null) {
-                                ReactInstanceManager reactInstanceManager = reactApplication.getReactNativeHost().getReactInstanceManager();
+                                ReactInstanceManager reactInstanceManager = reactApplication.getReactNativeHost()
+                                        .getReactInstanceManager();
                                 reactInstanceManager.addReactInstanceEventListener(new ReactInstanceEventListener() {
                                     @Override
                                     public void onReactContextInitialized(ReactContext reactContext) {

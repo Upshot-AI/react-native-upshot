@@ -20,11 +20,6 @@ static UIView *_adsView = nil;
 RCT_EXPORT_MODULE();
 
 #pragma mark SetBridge
-- (void)setBridge:(RCTBridge *)bridge {
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivePushNotifcationWithResponse:) name:@"UpshotDidReceivePushResponse" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidRegisterWithDeviceToken:) name:@"UpshotDidReceiveDeviceToken" object:nil];
-}
 
 #pragma mark SupportedEvents
 
@@ -229,7 +224,7 @@ RCT_EXPORT_METHOD(getUserBadges:(RCTResponseSenderBlock)callback) {
 
 RCT_EXPORT_METHOD(registerForPush:(RCTResponseSenderBlock)callback) {
   
-//   [self registerForPushWithCallback:callback];
+   [self registerForPushWithCallback:callback];
 }
 
 RCT_EXPORT_METHOD(sendDeviceToken:(NSString *)token) {
@@ -388,16 +383,15 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
 
 - (void)startObserving {
     
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidRegisterWithDeviceToken:) name:@"UpshotDidReceiveDeviceToken" object:nil];
-//
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivePushNotifcationWithResponse:) name:@"UpshotDidReceivePushResponse" object:nil];
+    self.hasStartObserving = YES;
     [self sendPushClickCallback];
     [self sendPushTokenCallback];
+    
 }
 
 - (void)stopObserving {
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    self.hasStartObserving = NO;
 }
 
 - (void)sendPushClickCallback {
@@ -441,26 +435,21 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
       
     if (@available(iOS 10.0, *) ) {
         
-        UNUserNotificationCenter *notificationCenter = [UNUserNotificationCenter currentNotificationCenter];
-        [notificationCenter requestAuthorizationWithOptions:(UNAuthorizationOptionAlert | UNAuthorizationOptionBadge | UNAuthorizationOptionSound ) completionHandler:^(BOOL granted, NSError * _Nullable error) {
-            if (granted) {
-                [notificationCenter setDelegate:self];
-            }
-          callback(@[[NSNumber numberWithBool:granted]]);
-        }];
-    } else {
-        
-        UIUserNotificationType types = (UIUserNotificationTypeAlert|
-                                        UIUserNotificationTypeSound|
-                                        UIUserNotificationTypeBadge);
-        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
-        [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
-        [[UIApplication sharedApplication] registerForRemoteNotifications];
+        id delegate = [UIApplication sharedApplication].delegate;
+        if (delegate != nil) {
+            
+            UNUserNotificationCenter *notificationCenter = [UNUserNotificationCenter currentNotificationCenter];
+            [notificationCenter requestAuthorizationWithOptions:(UNAuthorizationOptionAlert | UNAuthorizationOptionBadge | UNAuthorizationOptionSound ) completionHandler:^(BOOL granted, NSError * _Nullable error) {
+                if (granted) {
+                    [notificationCenter setDelegate:delegate];
+                }
+              callback(@[[NSNumber numberWithBool:granted]]);
+            }];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[UIApplication sharedApplication] registerForRemoteNotifications];
+            });
+        }
     }
-
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[UIApplication sharedApplication] registerForRemoteNotifications];
-    });
 }
 
 - (void)updateDeviceToken:(NSString *)token {
@@ -578,18 +567,27 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
     [self sendEventWithName:@"UpshotAdReady" body:@{@"Tag": tag ? tag : @""}];
 }
 
-- (void)applicationDidRegisterWithDeviceToken:(NSNotification *)notification {
+- (void)applicationDidRegisterWithDeviceToken:(NSData *)deviceToken {
     
-    NSString *deviceToken = notification.userInfo[@"token"];
-    [self updateDeviceToken:deviceToken];
-    [self sendEventWithName:@"UpshotPushToken" body:@{@"token": deviceToken}];
+    NSString *token = [UpshotUtility getTokenFromdata:deviceToken];
+    self.pushToken = token;
+    
+    if(self.hasStartObserving == YES) {
+        [self updateDeviceToken:token];
+        [self sendEventWithName:@"UpshotPushToken" body:@{@"token": deviceToken}];
+        self.pushToken = @"";
+    }
+    
 }
 
-- (void)didReceivePushNotifcationWithResponse:(NSNotification *)notification {
+- (void)didReceivePushNotifcationWithResponse:(NSDictionary *)userInfo {
     
-    NSDictionary *payload = notification.userInfo[@"payload"];
-    [self updatePushResponse:payload];
-    [self sendEventWithName:@"UpshotPushPayload" body:@{@"payload": [UpshotUtility convertJsonObjToJsonString:payload]}];
+    self.pushPayload = userInfo;
+    if(self.hasStartObserving == YES) {
+        [self updatePushResponse:userInfo];
+        [self sendEventWithName:@"UpshotPushPayload" body:@{@"payload": [UpshotUtility convertJsonObjToJsonString:userInfo]}];
+        self.pushPayload = @{};
+    }
 }
 
 - (void)brandKinesisCarouselPushClickPayload:(NSDictionary *_Nonnull)payload {

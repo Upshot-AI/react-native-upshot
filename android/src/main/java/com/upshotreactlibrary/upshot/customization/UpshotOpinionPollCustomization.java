@@ -1,6 +1,7 @@
 package com.upshotreactlibrary.upshot.customization;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -91,15 +92,27 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
                         break;
 
                     case BKACTIVITY_THANK_YOU_TV:
+
                         JSONObject thanksJsonObject = (JSONObject) label_textJsonObject.get("thankyou");
                         applyTextViewProperties(mContext, thanksJsonObject, textView);
-                        JSONObject colorJsonObject = (JSONObject) mJsonObject.get("color");
-                        if (colorJsonObject != null) {
-                            String bgColor = validateJsonString(colorJsonObject, "background");
-                            if (bgColor != null && !bgColor.isEmpty()) {
-                                textView.setBackgroundColor(Color.parseColor(bgColor));
+
+                        JSONObject jImageBg = (JSONObject) mJsonObject.get("image");
+                        String bgData = validateJsonString(jImageBg, "background");
+
+                        if (!bgData.isEmpty()) {
+                            Resources resources = mContext.getResources();
+                            int resourceId = resources.getIdentifier(bgData, "drawable", mContext.getPackageName());
+                            textView.setBackgroundResource(resourceId);
+                        } else {
+                            JSONObject colorJsonObject = (JSONObject) mJsonObject.get("color");
+                            if (colorJsonObject != null) {
+                                String bgColor = validateJsonString(colorJsonObject, "background");
+                                if (bgColor != null && !bgColor.isEmpty()) {
+                                    textView.setBackgroundColor(Color.parseColor(bgColor));
+                                }
                             }
                         }
+
                         break;
 
                     case BKACTIVITY_OPTION_TV:
@@ -229,8 +242,11 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
                 switch (relativeLayoutTypes) {
                     case BKACTIVITY_BACKGROUND_IMAGE:
                         String bgData = validateJsonString(jImageBg, "background");
-
-                        applyRelativeLayoutProperties(mContext, bgData, relativeLayout);
+                        if (isFullScreen) {
+                            applyRelativeLayoutProperties(mContext, bgData, relativeLayout);
+                        } else {
+                            applyBGImageForPopup(mContext, bgData, relativeLayout);
+                        }
                         break;
                 }
             } catch (Exception e) {

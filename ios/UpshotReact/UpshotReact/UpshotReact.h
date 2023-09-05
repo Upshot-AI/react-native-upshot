@@ -17,12 +17,13 @@
 
 @property (nonatomic, strong) NSDictionary *pushPayload;
 @property (nonatomic, strong) NSString *pushToken;
+@property (nonatomic, assign) BOOL hasStartObserving;
 
 
 + (UIView *)getAdView;
 
-+ (void)didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
+- (void)applicationDidRegisterWithDeviceToken:(NSData *)deviceToken;
 
-+ (void)didReceiveRemoteNotification:(NSDictionary *)notification;
+- (void)didReceivePushNotifcationWithResponse:(NSDictionary *)notification;
 
 @end

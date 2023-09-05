@@ -19,8 +19,6 @@ static UIView *_adsView = nil;
 
 RCT_EXPORT_MODULE();
 
-#pragma mark SetBridge
-
 #pragma mark SupportedEvents
 
 - (NSArray<NSString *> *)supportedEvents {
@@ -204,8 +202,31 @@ RCT_EXPORT_METHOD(removeTutorials) {
 RCT_EXPORT_METHOD(fetchInboxInfo:(RCTResponseSenderBlock)callback) {
     
     [[BrandKinesis sharedInstance] fetchInboxInfoWithCompletionBlock:^(NSArray * _Nonnull inbox) {
+           
+        NSMutableArray *inboxInfo = [[NSMutableArray alloc] init];
        if(inbox != nil) {
-            NSString *jsonString = [UpshotUtility convertJsonObjToJsonString:inbox];
+           
+           for (id object in inbox) {
+               
+               NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+               [dict setObject:object[@"name"] ? object[@"name"] : @"" forKey:@"name"];
+               
+               NSArray *activities = object[@"activities"];
+               if(activities.count > 0) {
+                   NSMutableDictionary *activityInfo = activities.firstObject;
+                   if([activityInfo valueForKey:@"date"]) {
+                       NSDate *date = activityInfo[@"date"];
+                       [activityInfo setValue:[NSNumber numberWithLongLong:[date timeIntervalSince1970]] forKey:@"date"];
+                   }
+                   if([activityInfo valueForKey:@"expiry"]) {
+                       NSDate *date = activityInfo[@"expiry"];
+                       [activityInfo setValue:[NSNumber numberWithLongLong:[date timeIntervalSince1970]] forKey:@"expiry"];
+                   }
+               }
+               [dict setValue:activities forKey:@"activities"];
+               [inboxInfo addObject:dict];
+           }
+            NSString *jsonString = [UpshotUtility convertJsonObjToJsonString:inboxInfo];
               if([jsonString length] > 0) {
                   callback(@[jsonString]);
               }

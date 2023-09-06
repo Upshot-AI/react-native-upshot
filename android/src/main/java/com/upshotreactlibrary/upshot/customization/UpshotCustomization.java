@@ -4,8 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
@@ -135,6 +137,20 @@ public class UpshotCustomization {
 
     public void applyRelativeLayoutProperties(Context context, String imageName, RelativeLayout view) {
         setBgToView(context, imageName, view);
+    }
+
+    public void applyBGImageForPopup(Context context, String imageName, RelativeLayout view) {
+
+        if (!TextUtils.isEmpty(imageName)) {
+            int resourceId = getIdentifier(context, imageName);
+            if (resourceId > 0) {
+                Bitmap bm = BitmapFactory.decodeResource(context.getResources(), resourceId);
+                bm = Bitmap.createScaledBitmap(bm, 300, 250, true);
+
+                Drawable d = new BitmapDrawable(context.getResources(), bm);
+                view.setBackground(d);
+            }
+        }
     }
 
     public void applyImageProperties(Context context, String imageName, ImageView view) {

@@ -42,6 +42,6 @@ declare namespace Upshot {
     function showInboxNotificationScreen(options: any): void;
     function getStreaksData(successCallback: (arg0: string) => any, failurecallback: any): void;
     function addListener(eventName: string, handler: any): void;
-    function removeEventListener(eventName: any): void;
+    function removeEventListener(eventName: string): void;
 }
 export { UpshotActivityType, UpshotGender, UpshotMaritalStatus, UpshotRewardHistory, UpshotInitOptions, UpshotAttribution, UpshotInboxConfigOptions };

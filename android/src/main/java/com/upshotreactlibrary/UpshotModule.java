@@ -526,7 +526,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
 
     /* Push Notification Module */
     @ReactMethod
-    private static void registerForPush(final Callback callback) {
+    private static void registerForPush() {
         requestForNotificationPermissions();
     }
 

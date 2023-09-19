@@ -243,9 +243,9 @@ RCT_EXPORT_METHOD(getUserBadges:(RCTResponseSenderBlock)callback) {
 
 #pragma mark PushNotifications
 
-RCT_EXPORT_METHOD(registerForPush:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(registerForPush) {
   
-   [self registerForPushWithCallback:callback];
+   [self registerForPushWithCallback];
 }
 
 RCT_EXPORT_METHOD(sendDeviceToken:(NSString *)token) {
@@ -452,7 +452,7 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
     [[NSNotificationCenter defaultCenter] postNotificationName:@"UpshotDidReceivePushResponse" object:self userInfo: userInfo];
 }
 
-- (void)registerForPushWithCallback:(RCTResponseSenderBlock)callback {
+- (void)registerForPushWithCallback {
       
     if (@available(iOS 10.0, *) ) {
         
@@ -463,8 +463,7 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
             [notificationCenter requestAuthorizationWithOptions:(UNAuthorizationOptionAlert | UNAuthorizationOptionBadge | UNAuthorizationOptionSound ) completionHandler:^(BOOL granted, NSError * _Nullable error) {
                 if (granted) {
                     [notificationCenter setDelegate:delegate];
-                }
-              callback(@[[NSNumber numberWithBool:granted]]);
+                }              
             }];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[UIApplication sharedApplication] registerForRemoteNotifications];
@@ -595,7 +594,7 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
     
     if(self.hasStartObserving == YES) {
         [self updateDeviceToken:token];
-        [self sendEventWithName:@"UpshotPushToken" body:@{@"token": deviceToken}];
+        [self sendEventWithName:@"UpshotPushToken" body:@{@"token": token}];
         self.pushToken = @"";
     }
     

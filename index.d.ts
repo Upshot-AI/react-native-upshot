@@ -25,7 +25,7 @@ declare namespace Upshot {
     function removeTutorials(): void;
     function fetchInboxInfo(callback: (arg0: string) => any): void;
     function getUserBadges(callback: (arg0: string) => any): void;
-    function registerForPush(callback: (arg0: boolean) => any): void;
+    function registerForPush(): void;
     function sendDeviceToken(token: string): void;
     function sendPushDataToUpshot(pushPayload: string): void;
     function displayNotification(pushPayload: string): void;

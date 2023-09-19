@@ -54,12 +54,24 @@ public class UpshotPushAction extends BroadcastReceiver {
                             if (reactApplication != null) {
                                 ReactInstanceManager reactInstanceManager = reactApplication.getReactNativeHost()
                                         .getReactInstanceManager();
-                                reactInstanceManager.addReactInstanceEventListener(new ReactInstanceEventListener() {
-                                    @Override
-                                    public void onReactContextInitialized(ReactContext reactContext) {
-                                        UpshotModule.sendPushClickPayload(UpshotModule.bundleToJsonString(bundle));
-                                    }
-                                });
+
+                                ReactContext reactContext = reactInstanceManager.getCurrentReactContext();
+
+                                if (reactContext != null) {
+                                    UpshotModule.sendPushClickPayload(UpshotModule.bundleToJsonString(bundle));
+                                } else {
+                                    reactInstanceManager
+                                            .addReactInstanceEventListener(
+                                                    new ReactInstanceManager.ReactInstanceEventListener() {
+                                                        @Override
+                                                        public void onReactContextInitialized(ReactContext context) {
+                                                            // Use context here
+                                                            UpshotModule.sendPushClickPayload(
+                                                                    UpshotModule.bundleToJsonString(bundle));
+                                                            reactInstanceManager.removeReactInstanceEventListener(this);
+                                                        }
+                                                    });
+                                }
                             }
                         }
                     }, 1000);

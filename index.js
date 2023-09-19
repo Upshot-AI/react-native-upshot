@@ -197,13 +197,11 @@ var Upshot = {
 
     /** 
     *  register for push
-    *  requires for only ios
-    * 
-    * @param {function(Boolean)} callback - get the status of push registration
+    *  
     */
-    registerForPush: function (callback) {
+    registerForPush: function () {
 
-        UpshotReact.registerForPush(callback);
+        UpshotReact.registerForPush();
     },
 
     /** 

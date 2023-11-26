@@ -45,9 +45,12 @@ RCT_EXPORT_METHOD(initializeUpshot) {
     [[BKUIPreferences preferences] setDelegate:customization];
 }
 
-RCT_EXPORT_METHOD(initializeUpshotUsingOptions:(NSString *_Nonnull)options) {
+RCT_EXPORT_METHOD(initializeUpshotUsingOptions:(NSString *)options) {
     
     NSDictionary *json = [UpshotUtility convertJsonStringToJson:options];
+    if(json == nil) {
+        return;
+    }
     NSMutableDictionary *initOptions = [[NSMutableDictionary alloc] init];
     if ([json valueForKey:@"bkApplicationID"]) {
         [initOptions setValue:json[@"bkApplicationID"] forKey:BKApplicationID];
@@ -80,13 +83,12 @@ RCT_EXPORT_METHOD(setDispatchInterval:(NSInteger)interval) {
     [[BrandKinesis sharedInstance] setDispatchInterval:interval];
 }
 
-RCT_EXPORT_METHOD(createPageViewEvent:(NSString *_Nonnull)currentPage callback:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(createPageViewEvent:(NSString *)currentPage callback:(RCTResponseSenderBlock)callback) {
     
     NSString *eventId = nil;
-    if (currentPage && ![currentPage isEqualToString:@""]) {
+    if ((currentPage != nil) && ![currentPage isEqualToString:@""]) {
         eventId = [[BrandKinesis sharedInstance] createEvent:BKPageViewNative params:@{BKCurrentPage: currentPage} isTimed:YES];
     }
-    
     if (callback != nil) {
         if (eventId != nil) {
             callback(@[eventId]);
@@ -96,10 +98,10 @@ RCT_EXPORT_METHOD(createPageViewEvent:(NSString *_Nonnull)currentPage callback:(
     }
 }
 
-RCT_EXPORT_METHOD(createCustomEvent:(NSString *_Nonnull)eventName payload:(NSString *)payload timed:(BOOL)isTimed callback:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(createCustomEvent:(NSString *)eventName payload:(NSString *)payload timed:(BOOL)isTimed callback:(RCTResponseSenderBlock)callback) {
     
     NSString *eventId = nil;
-    if (eventName && ![eventName isEqualToString: @""]) {
+    if ((eventName != nil) && ![eventName isEqualToString: @""]) {
         NSDictionary *eventPayload = [UpshotUtility convertJsonStringToJson:payload];
         eventId = [[BrandKinesis sharedInstance] createEvent:eventName params:eventPayload isTimed:isTimed];
     }
@@ -112,15 +114,19 @@ RCT_EXPORT_METHOD(createCustomEvent:(NSString *_Nonnull)eventName payload:(NSStr
     }
 }
 
-RCT_EXPORT_METHOD(setValueAndClose:(NSString *)payload forEvent:(NSString *_Nonnull)eventId) {
-    
+RCT_EXPORT_METHOD(setValueAndClose:(NSString *)payload forEvent:(NSString *)eventId) {
+        
     NSDictionary *eventPayload = [UpshotUtility convertJsonStringToJson:payload];
-    [[BrandKinesis sharedInstance] setValueAndClose:eventPayload forEvent:eventId];
+    if(eventId != nil && eventPayload != nil) {
+        [[BrandKinesis sharedInstance] setValueAndClose:eventPayload forEvent:eventId];
+    }
 }
 
-RCT_EXPORT_METHOD(closeEventForId:(NSString *_Nonnull)eventId) {
+RCT_EXPORT_METHOD(closeEventForId:(NSString *)eventId) {
     
-    [[BrandKinesis sharedInstance] closeEventForID:eventId];
+    if(eventId != nil) {
+        [[BrandKinesis sharedInstance] closeEventForID:eventId];
+    }
 }
 
 RCT_EXPORT_METHOD(dispatchEventsWithTimedEvents:(BOOL)timed callback:(RCTResponseSenderBlock)callback) {
@@ -128,11 +134,11 @@ RCT_EXPORT_METHOD(dispatchEventsWithTimedEvents:(BOOL)timed callback:(RCTRespons
     [[BrandKinesis sharedInstance] dispatchEventsWithTimedEvents:timed completionBlock:^(BOOL dispatched) {
         if (callback != nil) {
             callback(@[[NSNumber numberWithBool:dispatched]]);
-        }        
+        }
     }];
 }
 
-RCT_EXPORT_METHOD(createLocationEvent:(NSString *_Nonnull)latitude longitude:(NSString *_Nonnull)longitude) {
+RCT_EXPORT_METHOD(createLocationEvent:(NSString *)latitude longitude:(NSString *)longitude) {
     
     CGFloat lat = [latitude floatValue];
     CGFloat lon = [longitude floatValue];
@@ -145,7 +151,9 @@ RCT_EXPORT_METHOD(createAttributionEvent:(NSString *)payload callback:(RCTRespon
     NSString *eventId = nil;
     if (payload && ![payload isEqualToString: @""]) {
         NSDictionary *eventPayload = [UpshotUtility convertJsonStringToJson:payload];
-        eventId = [[BrandKinesis sharedInstance] createAttributionEvent:eventPayload];
+        if(eventPayload != nil) {
+            eventId = [[BrandKinesis sharedInstance] createAttributionEvent:eventPayload];
+        }
     }
     if (callback != nil) {
         if (eventId != nil) {
@@ -160,10 +168,12 @@ RCT_EXPORT_METHOD(createAttributionEvent:(NSString *)payload callback:(RCTRespon
 
 RCT_EXPORT_METHOD(setUserProfile:(NSString *)userData callback:(RCTResponseSenderBlock)callback) {
      
-     NSDictionary *userDict = [UpshotUtility convertJsonStringToJson:userData];
-    [self buildUserInfoForParams:userDict completionBlock:^(BOOL success, NSError * _Nullable error) {
-      callback(@[[NSNumber numberWithBool:success]]);
-    }];
+    NSDictionary *userDict = [UpshotUtility convertJsonStringToJson:userData];
+    if(userDict != nil && userDict.allKeys.count > 0) {
+        [self buildUserInfoForParams:userDict completionBlock:^(BOOL success, NSError * _Nullable error) {
+          callback(@[[NSNumber numberWithBool:success]]);
+        }];
+    }
 }
 
 #pragma mark GetUserDetails
@@ -186,12 +196,14 @@ RCT_EXPORT_METHOD(showActivityWithType:(NSInteger)type andTag:(NSString *)tag) {
     [[BrandKinesis sharedInstance] showActivityWithType:activityType andTag:tag];
 }
 
-RCT_EXPORT_METHOD(showActivityWithId:(NSString *_Nonnull)activityId) {
+RCT_EXPORT_METHOD(showActivityWithId:(NSString *)activityId) {
     
-    UpshotCustomization *customization = [[UpshotCustomization alloc] init];
-    [[BKUIPreferences preferences] setDelegate:customization];
-    [[BrandKinesis sharedInstance] setDelegate:self];
-    [[BrandKinesis sharedInstance] showActivityWithActivityId:activityId];
+    if(activityId != nil) {
+        UpshotCustomization *customization = [[UpshotCustomization alloc] init];
+        [[BKUIPreferences preferences] setDelegate:customization];
+        [[BrandKinesis sharedInstance] setDelegate:self];
+        [[BrandKinesis sharedInstance] showActivityWithActivityId:activityId];
+    }
 }
 
 RCT_EXPORT_METHOD(removeTutorials) {
@@ -201,7 +213,7 @@ RCT_EXPORT_METHOD(removeTutorials) {
 
 RCT_EXPORT_METHOD(fetchInboxInfo:(RCTResponseSenderBlock)callback) {
     
-    [[BrandKinesis sharedInstance] fetchInboxInfoWithCompletionBlock:^(NSArray * _Nonnull inbox) {
+    [[BrandKinesis sharedInstance] fetchInboxInfoWithCompletionBlock:^(NSArray * inbox) {
            
         NSMutableArray *inboxInfo = [[NSMutableArray alloc] init];
        if(inbox != nil) {
@@ -289,11 +301,14 @@ RCT_EXPORT_METHOD(getUnreadNotificationsCount:(NSInteger)limit type:(NSInteger)i
     }];
 }
 
-RCT_EXPORT_METHOD(showInboxNotificationScreen:(NSString *_Nonnull)options) {
+RCT_EXPORT_METHOD(showInboxNotificationScreen:(NSString *)options) {
     
-    NSDictionary *json = [UpshotUtility convertJsonStringToJson:options];
-    [[BrandKinesis sharedInstance] showInboxController:json];
-    
+    if(options != nil) {
+        NSDictionary *json = [UpshotUtility convertJsonStringToJson:options];
+        if(json != nil) {
+            [[BrandKinesis sharedInstance] showInboxController:json];
+        }
+    }
 }
 
 #pragma mark Streaks
@@ -308,7 +323,7 @@ RCT_EXPORT_METHOD(getStreaksData:(RCTResponseSenderBlock)successCallback error:(
             errorCallback(@[errorMessage]);
         } else {
              NSString *jsonString = [UpshotUtility convertJsonObjToJsonString:jsonResponse];
-            successCallback(@[jsonString]);            
+            successCallback(@[jsonString]);
         }
     }];
 }
@@ -357,6 +372,10 @@ RCT_EXPORT_METHOD(getRewardsList:(RCTResponseSenderBlock)successCallback error:(
 
 RCT_EXPORT_METHOD(getRewardHistoryForProgram:(NSString *)programId historyType:(NSInteger)type callback:(RCTResponseSenderBlock)successCallback error:(RCTResponseSenderBlock)failureCallback) {
     
+    if(programId == nil) {
+        failureCallback(@[@"Invalid Program Id"]);
+        return;
+    }
   BKRewardHistoryType historyType = (BKRewardHistoryType)type;
     [[BrandKinesis sharedInstance] getRewardHistoryForProgramId:programId withHistoryType:historyType withCompletionBlock:^(NSDictionary * _Nullable response, NSString * _Nullable errorMessage) {
       
@@ -373,6 +392,10 @@ RCT_EXPORT_METHOD(getRewardHistoryForProgram:(NSString *)programId historyType:(
 
 RCT_EXPORT_METHOD(getRewardRulesforProgram:(NSString *)programId callback:(RCTResponseSenderBlock)successCallback error:(RCTResponseSenderBlock)failureCallback) {
     
+    if(programId == nil) {
+        failureCallback(@[@"Invalid Program Id"]);
+        return;
+    }
     [[BrandKinesis sharedInstance] getRewardDetailsForProgramId:programId
                                             withCompletionblock:^(NSDictionary * _Nullable response, NSString * _Nullable errorMessage) {
         
@@ -389,6 +412,10 @@ RCT_EXPORT_METHOD(getRewardRulesforProgram:(NSString *)programId callback:(RCTRe
 
 RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmount:(NSInteger)amount redeemValue:(NSInteger)value tag:(NSString *)tag callback:(RCTResponseSenderBlock)successCallback error:(RCTResponseSenderBlock)failureCallback) {
     
+    if(programId == nil) {
+        failureCallback(@[@"Invalid Program Id"]);
+        return;
+    }
     [[BrandKinesis sharedInstance] redeemRewardsWithProgramId:programId transactionValue:amount redeemAmout:value tag:tag withCompletionblock:^(NSDictionary * _Nullable response, NSString * _Nullable errorMessage) {
         
         NSString *error = errorMessage ? errorMessage : @"";
@@ -463,7 +490,7 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
             [notificationCenter requestAuthorizationWithOptions:(UNAuthorizationOptionAlert | UNAuthorizationOptionBadge | UNAuthorizationOptionSound ) completionHandler:^(BOOL granted, NSError * _Nullable error) {
                 if (granted) {
                     [notificationCenter setDelegate:delegate];
-                }              
+                }
             }];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[UIApplication sharedApplication] registerForRemoteNotifications];
@@ -513,9 +540,15 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
   
   for (NSString *key in [mutDict allKeys]) {
     
+      if(key == nil) {
+          continue;
+      }
     NSString *type = [UpshotUtility getInfoTypeForKey:key];
     
     id object = dict[key];
+    if(object == nil || [object isKindOfClass:[NSNull class]]) {
+          continue;
+    }
     if ([object isKindOfClass:[NSNumber class]]) {
       object = [NSNumber numberWithInt:[object intValue]];
     }

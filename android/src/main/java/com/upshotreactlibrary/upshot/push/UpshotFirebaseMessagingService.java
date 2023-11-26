@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 
 import com.brandkinesis.BrandKinesis;
+import com.facebook.react.BuildConfig;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.upshotreactlibrary.UpshotModule;
@@ -39,45 +40,52 @@ public class UpshotFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        Bundle bundle = new Bundle();
-        for (Map.Entry<String, String> entry : remoteMessage.getData().entrySet()) {
-            bundle.putString(entry.getKey(), entry.getValue());
-        }
-        if (context == null) {
-            context = getApplicationContext();
-        }
-        ApplicationInfo applicationInfo = null;
-        String packageName = context.getPackageName();
-
         try {
-            applicationInfo = context.getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA);
-        } catch (PackageManager.NameNotFoundException e) {
-        }
-        Bundle metaData = applicationInfo.metaData;
-
-        if (bundle.containsKey("bk")) {
-
-            String bkSmallNotificationIcon = null;
-            Integer bkSmallNotificationIconColor = null;
-            boolean allowForeground = false;
-
-            if (metaData != null) {
-                bkSmallNotificationIcon = metaData.getString("UpshotPushSmallIcon");
-                bkSmallNotificationIconColor = metaData.getInt("UpshotPushSmallIconColor");
-                allowForeground = metaData.getBoolean("UpshotAllowForegroundPush");
+            Bundle bundle = new Bundle();
+            for (Map.Entry<String, String> entry : remoteMessage.getData().entrySet()) {
+                bundle.putString(entry.getKey(), entry.getValue());
             }
-            if (!TextUtils.isEmpty(bkSmallNotificationIcon)) {
-                Resources resources = context.getResources();
-                int resourceId = resources.getIdentifier(bkSmallNotificationIcon, "drawable", packageName);
-                if (resourceId > 0) {
-                    bundle.putInt(BrandKinesis.BK_LOLLIPOP_NOTIFICATION_ICON, resourceId);
+            if (context == null) {
+                context = getApplicationContext();
+            }
+            ApplicationInfo applicationInfo = null;
+            String packageName = context.getPackageName();
+
+            try {
+                applicationInfo = context.getPackageManager().getApplicationInfo(packageName,
+                        PackageManager.GET_META_DATA);
+            } catch (PackageManager.NameNotFoundException e) {
+            }
+            Bundle metaData = applicationInfo.metaData;
+
+            if (bundle.containsKey("bk")) {
+
+                String bkSmallNotificationIcon = null;
+                Integer bkSmallNotificationIconColor = null;
+                boolean allowForeground = false;
+
+                if (metaData != null) {
+                    bkSmallNotificationIcon = metaData.getString("UpshotPushSmallIcon");
+                    bkSmallNotificationIconColor = metaData.getInt("UpshotPushSmallIconColor");
+                    allowForeground = metaData.getBoolean("UpshotAllowForegroundPush");
                 }
+                if (!TextUtils.isEmpty(bkSmallNotificationIcon)) {
+                    Resources resources = context.getResources();
+                    int resourceId = resources.getIdentifier(bkSmallNotificationIcon, "drawable", packageName);
+                    if (resourceId > 0) {
+                        bundle.putInt(BrandKinesis.BK_LOLLIPOP_NOTIFICATION_ICON, resourceId);
+                    }
 
+                }
+                if (bkSmallNotificationIconColor != null) {
+                    bundle.putInt(BrandKinesis.BK_LOLLIPOP_NOTIFICATION_ICON_BG_COLOR, bkSmallNotificationIconColor);
+                }
+                sendPushBundletoBK(bundle, context, allowForeground);
             }
-            if (bkSmallNotificationIconColor != null) {
-                bundle.putInt(BrandKinesis.BK_LOLLIPOP_NOTIFICATION_ICON_BG_COLOR, bkSmallNotificationIconColor);
+        } catch (Exception e) {
+            if (BuildConfig.DEBUG) {
+                e.printStackTrace();
             }
-            sendPushBundletoBK(bundle, context, allowForeground);
         }
     }
 

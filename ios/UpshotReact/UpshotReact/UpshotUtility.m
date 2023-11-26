@@ -13,6 +13,9 @@
 
 + (NSDictionary *)convertJsonStringToJson:(NSString *)jsonString {
   
+  if(jsonString == nil) {
+        return nil;
+    }
   NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
   NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
   return jsonDict;

@@ -101,6 +101,9 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void initializeUpshotUsingOptions(final String options) {
 
+        if (options == null) {
+            return;
+        }
         UpshotApplication.initType = "Options";
         if (UpshotApplication.options == null) {
             try {
@@ -133,12 +136,25 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     @ReactMethod
     private void createPageViewEvent(final String PageName, final Callback callback) {
 
-        final HashMap<String, Object> pageData = new HashMap<>();
-        pageData.put(BrandKinesis.BK_CURRENT_PAGE, PageName);
-        final BrandKinesis bkInstance = BrandKinesis.getBKInstance();
-        final String eventID = bkInstance.createEvent(BKProperties.BKPageViewEvent.NATIVE, pageData, true);
-        if (callback != null) {
-            callback.invoke(eventID);
+        try {
+            if (PageName == null) {
+                if (callback != null) {
+                    callback.invoke(null);
+                }
+                return;
+            }
+            final HashMap<String, Object> pageData = new HashMap<>();
+            pageData.put(BrandKinesis.BK_CURRENT_PAGE, PageName);
+
+            final BrandKinesis bkInstance = BrandKinesis.getBKInstance();
+            final String eventID = bkInstance.createEvent(BKProperties.BKPageViewEvent.NATIVE, pageData, true);
+            if (callback != null) {
+                callback.invoke(eventID);
+            }
+        } catch (Exception e) {
+            if (BuildConfig.DEBUG) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -147,13 +163,19 @@ public class UpshotModule extends ReactContextBaseJavaModule {
             final Callback callback) {
 
         try {
-            final JSONObject jeventPayload = new JSONObject(eventPayload);
-            final String eventID = BrandKinesis.getBKInstance().createEvent(eventName, jsonToHashMap(jeventPayload),
+            if (eventName == null || eventPayload == null) {
+                if (callback != null) {
+                    callback.invoke(null);
+                }
+                return;
+            }
+            final JSONObject jEventPayload = new JSONObject(eventPayload);
+            final String eventID = BrandKinesis.getBKInstance().createEvent(eventName, jsonToHashMap(jEventPayload),
                     isTimed);
             if (callback != null) {
                 callback.invoke(eventID);
             }
-        } catch (final JSONException e) {
+        } catch (final Exception e) {
             if (BuildConfig.DEBUG) {
                 e.printStackTrace();
             }
@@ -163,6 +185,9 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     @ReactMethod
     private void setValueAndClose(final String payload, final String eventId) {
         try {
+            if (eventId == null) {
+                return;
+            }
             final JSONObject jeventPayload = new JSONObject(payload);
             BrandKinesis.getBKInstance().closeEvent(eventId, jsonToHashMap(jeventPayload));
         } catch (final Exception e) {
@@ -175,6 +200,9 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     @ReactMethod
     private void closeEventForId(final String eventId) {
         try {
+            if (eventId == null) {
+                return;
+            }
             BrandKinesis.getBKInstance().closeEvent(eventId);
         } catch (final Exception e) {
             if (BuildConfig.DEBUG) {
@@ -218,6 +246,9 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     private void createAttributionEvent(final String payload, final Callback callback) {
 
         try {
+            if (payload == null) {
+                return;
+            }
             final JSONObject jeventPayload = new JSONObject(payload);
             String eventId = BrandKinesis.getBKInstance().createAttributionEvent(jsonToHashMapString(jeventPayload));
             if (callback != null) {
@@ -233,6 +264,10 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     /* Profile Module */
     @ReactMethod
     private void setUserProfile(final String userData, final Callback callback) {
+
+        if (userData == null) {
+            return;
+        }
 
         Map<String, String> predefinedKeys = new HashMap<>();
         predefinedKeys.put("lastName", BKUserInfo.BKUserData.LAST_NAME);
@@ -278,7 +313,9 @@ public class UpshotModule extends ReactContextBaseJavaModule {
 
                 final String key = keys.next();
                 final Object value = providedJson.get(key);
-
+                if (key == null || value == null) {
+                    continue;
+                }
                 if (predefinedKeys.containsKey(key)) {
                     // predefined
                     String bkKey = predefinedKeys.get(key);
@@ -371,6 +408,9 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     @ReactMethod
     private void showActivityWithId(final String activityId) {
 
+        if (activityId == null) {
+            return;
+        }
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
@@ -544,13 +584,14 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     @ReactMethod
     private static void sendDeviceToken(final String token) {
 
-        final Bundle userInfo = new Bundle();
-        userInfo.putString(BKUserInfo.BKExternalIds.GCM, token);
-
         final BrandKinesis bkInstance = BrandKinesis.getBKInstance();
         if (bkInstance == null || token == null || token.isEmpty()) {
             return;
         }
+
+        final Bundle userInfo = new Bundle();
+        userInfo.putString(BKUserInfo.BKExternalIds.GCM, token);
+
         bkInstance.setUserInfoBundle(userInfo, new BKUserInfoCallback() {
             @Override
             public void onUserInfoUploaded(final boolean uploadSuccess) {
@@ -626,7 +667,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
             }
 
             bkInstance.buildEnhancedPushNotification(context, bundle, allowPushForeground);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             if (BuildConfig.DEBUG) {
                 e.printStackTrace();
             }
@@ -665,6 +706,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     private void showInboxNotificationScreen(final String options) {
+
         try {
 
             JSONObject jsonObject = new JSONObject(options);
@@ -758,6 +800,10 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getRewardHistoryForProgram(final String programId, final int historyType,
             final Callback successCallback, final Callback failureCallback) {
+
+        if (programId == null) {
+            return;
+        }
         final BrandKinesis bkInstance = BrandKinesis.getBKInstance();
 
         bkInstance.getRewardHistoryForProgramId(reactContext.getApplicationContext(), programId, historyType,
@@ -777,6 +823,10 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void redeemRewardsForProgram(final String programId, final int transactionAmount,
             final int redeemValue, final String tag, final Callback successCallback, final Callback failureCallback) {
+
+        if (programId == null) {
+            return;
+        }
         final BrandKinesis bkInstance = BrandKinesis.getBKInstance();
 
         bkInstance.redeemRewardsWithProgramId(reactContext.getApplicationContext(), programId, transactionAmount,
@@ -797,6 +847,10 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getRewardRulesforProgram(final String programId, final Callback successCallback,
             final Callback failureCallback) {
+
+        if (programId == null) {
+            return;
+        }
         final BrandKinesis bkInstance = BrandKinesis.getBKInstance();
 
         bkInstance.getRewardDetailsForProgramId(reactContext.getApplicationContext(), programId,
@@ -853,7 +907,6 @@ public class UpshotModule extends ReactContextBaseJavaModule {
                             if (!task.isSuccessful()) {
                                 return;
                             }
-
                             String token = task.getResult();
                             sendRegistrationToServer(token);
                         }
@@ -996,6 +1049,9 @@ public class UpshotModule extends ReactContextBaseJavaModule {
         while (iter.hasNext()) {
             try {
                 final String key = (String) iter.next();
+                if (key == null) {
+                    continue;
+                }
                 final Object value = jsonObject.get(key);
                 // predefined
                 if (value != null) {
@@ -1021,11 +1077,16 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     public static HashMap<String, Object> jsonToHashMap(final JSONObject jsonObject) throws JSONException {
         final HashMap<String, Object> data = new HashMap<>();
 
-        final Iterator iter = jsonObject.keys();
-        while (iter.hasNext()) {
-            final String key = (String) iter.next();
+        final Iterator jsonKeys = jsonObject.keys();
+        while (jsonKeys.hasNext()) {
+            final String key = (String) jsonKeys.next();
+            if (key == null) {
+                continue;
+            }
             final Object value = jsonObject.get(key);
-            data.put(key, value);
+            if (value != null) {
+                data.put(key, value);
+            }
         }
         return data;
     }
@@ -1033,11 +1094,16 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     public static HashMap<String, String> jsonToHashMapString(final JSONObject jsonObject) throws JSONException {
         final HashMap<String, String> data = new HashMap<>();
 
-        final Iterator iter = jsonObject.keys();
-        while (iter.hasNext()) {
-            final String key = (String) iter.next();
+        final Iterator jsonKeys = jsonObject.keys();
+        while (jsonKeys.hasNext()) {
+            final String key = (String) jsonKeys.next();
+            if (key == null) {
+                continue;
+            }
             final String value = jsonObject.getString(key);
-            data.put(key, value);
+            if (value != null) {
+                data.put(key, value);
+            }
         }
         return data;
     }

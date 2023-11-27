@@ -462,20 +462,20 @@ public class UpshotApplication extends Application implements BKAppStatusUtil.BK
         BrandKinesis bkInstance = BrandKinesis.getBKInstance();
         bkInstance.setBrandkinesisCallback(new BrandKinesisCallback() {
 
-            @Override
-            public void notificationsResponse(Object o) {
+            // @Override
+            // public void notificationsResponse(Object o) {
 
-            }
+            // }
 
-            @Override
-            public void onErrorReceived(Object o) {
+            // @Override
+            // public void onErrorReceived(Object o) {
 
-            }
+            // }
 
-            @Override
-            public void notificationsCount(int i) {
+            // @Override
+            // public void notificationsCount(int i) {
 
-            }
+            // }
 
             @Override
             public void brandKinesisInboxActivityPresented() {

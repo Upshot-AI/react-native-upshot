@@ -156,7 +156,7 @@ public class UpshotApplication extends Application implements BKAppStatusUtil.BK
 
     public static void initUpshotUsingConfig() {
         try {
-            setUpshotGlobalCallbak();
+            setUpshotGlobalCallback();
             BrandKinesis.initialiseBrandKinesis(get(), new BKAuthCallback() {
                 @Override
                 public void onAuthenticationError(String errorMsg) {
@@ -175,7 +175,7 @@ public class UpshotApplication extends Application implements BKAppStatusUtil.BK
 
     public static void initUpshotUsingOptions(Bundle options) {
 
-        setUpshotGlobalCallbak();
+        setUpshotGlobalCallback();
         BrandKinesis.initialiseBrandKinesis(get(), options, null);
         setCustomizations();
     }
@@ -457,25 +457,24 @@ public class UpshotApplication extends Application implements BKAppStatusUtil.BK
         BrandKinesis.getBKInstance().setUIPreferences(components);
     }
 
-    private static void setUpshotGlobalCallbak() {
+    private static void setUpshotGlobalCallback() {
 
         BrandKinesis bkInstance = BrandKinesis.getBKInstance();
         bkInstance.setBrandkinesisCallback(new BrandKinesisCallback() {
+            @Override
+            public void notificationsResponse(Object o) {
 
-            // @Override
-            // public void notificationsResponse(Object o) {
+            }
 
-            // }
+            @Override
+            public void onErrorReceived(Object o) {
 
-            // @Override
-            // public void onErrorReceived(Object o) {
+            }
 
-            // }
+            @Override
+            public void notificationsCount(int i) {
 
-            // @Override
-            // public void notificationsCount(int i) {
-
-            // }
+            }
 
             @Override
             public void brandKinesisInboxActivityPresented() {
@@ -510,6 +509,11 @@ public class UpshotApplication extends Application implements BKAppStatusUtil.BK
             @Override
             public void onActivityDestroyed(BKActivityTypes bkActivityTypes) {
                 UpshotModule.upshotActivityDestroyed(bkActivityTypes);
+            }
+
+            @Override
+            public void onActivitySkipped(BKActivityTypes bkActivityTypes) {
+                UpshotModule.upshotActivitySkipped(bkActivityTypes);
             }
 
             @Override
@@ -559,4 +563,5 @@ public class UpshotApplication extends Application implements BKAppStatusUtil.BK
             }
         });
     }
+
 }

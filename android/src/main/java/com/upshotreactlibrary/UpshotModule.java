@@ -396,6 +396,11 @@ public class UpshotModule extends ReactContextBaseJavaModule {
                     }
 
                     @Override
+                    public void onActivitySkipped(BKActivityTypes bkActivityTypes) {
+                        upshotActivitySkipped(bkActivityTypes);
+                    }
+
+                    @Override
                     public void brandKinesisActivityPerformedActionWithParams(final BKActivityTypes bkActivityTypes,
                             final Map<String, Object> map) {
                         upshotDeeplinkCallback(bkActivityTypes, map);
@@ -429,6 +434,11 @@ public class UpshotModule extends ReactContextBaseJavaModule {
                     @Override
                     public void onActivityDestroyed(BKActivityTypes bkActivityTypes) {
                         upshotActivityDestroyed(bkActivityTypes);
+                    }
+
+                    @Override
+                    public void onActivitySkipped(BKActivityTypes bkActivityTypes) {
+                        upshotActivitySkipped(bkActivityTypes);
                     }
 
                     @Override
@@ -967,6 +977,13 @@ public class UpshotModule extends ReactContextBaseJavaModule {
         payload.putInt("activityType", bkActivityTypes.getValue());
         // add activity payload
         emitDeviceEvent("UpshotActivityDidDismiss", payload);
+    }
+
+    public static void upshotActivitySkipped(final BKActivityTypes bkActivityTypes) {
+
+        WritableMap payload = Arguments.createMap();
+        payload.putInt("activityType", bkActivityTypes.getValue());
+        emitDeviceEvent("UpshotActivitySkip", payload);
     }
 
     public static void upshotActivityError(int error) {

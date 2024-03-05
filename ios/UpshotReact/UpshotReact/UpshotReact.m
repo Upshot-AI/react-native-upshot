@@ -24,9 +24,9 @@ RCT_EXPORT_MODULE();
 - (NSArray<NSString *> *)supportedEvents {
     
   return @[@"UpshotDeepLink",
-           @"UpshotActivityDidAppear",
-           @"UpshotActivityWillAppear",
+           @"UpshotActivityDidAppear",           
            @"UpshotActivityDidDismiss",
+           @"UpshotActivitySkip",
            @"UpshotActivityError",
            @"UpshotAuthStatus",
            @"UpshotPushToken",
@@ -608,6 +608,12 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
     
     [self sendEventWithName:@"UpshotActivityDidDismiss" body:@{@"activityType": [NSNumber numberWithInteger:activityType]}];
 }
+
+- (void)brandKinesisActivitySkipped:(BrandKinesis *)brandKinesis forActivityType:(BKActivityType)activityType {
+
+    [self sendEventWithName:@"UpshotActivitySkip" body:@{@"activityType": [NSNumber numberWithInteger:activityType]}];
+}
+
 
 - (void)brandkinesisErrorLoadingActivity:(BrandKinesis *)brandkinesis withError:(NSError *)error {
     

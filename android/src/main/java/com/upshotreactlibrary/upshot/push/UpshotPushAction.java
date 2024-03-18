@@ -87,7 +87,7 @@ public class UpshotPushAction extends BroadcastReceiver {
             try {
                 mainActivity = Class.forName(className);
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
             if (mainActivity == null) {
                 return;

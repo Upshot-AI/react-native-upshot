@@ -12,7 +12,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -32,9 +31,7 @@ import com.brandkinesis.BKUIPrefComponents.BKActivityImageViewType;
 import com.brandkinesis.BKUIPrefComponents.BKActivityRatingTypes;
 import com.brandkinesis.BKUIPrefComponents.BKActivityTextViewTypes;
 import com.brandkinesis.BKUIPrefComponents.BKBGColors;
-import com.brandkinesis.activitymanager.BKActivityTypes;
-import com.upshotreactlibrary.BuildConfig;
-import com.upshotreactlibrary.UpshotApplication;
+import com.upshotreactlibrary.UpshotModule;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,13 +57,13 @@ public class UpshotCustomization {
             is.close();
             json = new String(buffer, "UTF-8");
         } catch (IOException ex) {
-            ex.printStackTrace();
+            UpshotModule.logException(ex);
             return null;
         }
         return json;
     }
 
-    private int validateJsonInt(JSONObject json, String key) {
+    private int getFontSize(JSONObject json, String key) {
 
         try {
             if (json.has(key) && json.get(key) != null) {
@@ -81,9 +78,21 @@ public class UpshotCustomization {
                 }
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            UpshotModule.logException(e);
         }
-        return 0;
+        return 14;
+    }
+
+    public String getImageName(JSONObject json, String key) {
+
+        String imageName = validateJsonString(json, key);
+        if (imageName.contains(".")) {
+            String[] list = imageName.split("\\.");
+            if (list.length > 0) {
+                return list[0];
+            }
+        }
+        return imageName;
     }
 
     public String validateJsonString(JSONObject json, String key) {
@@ -97,23 +106,57 @@ public class UpshotCustomization {
                 }
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            UpshotModule.logException(e);
         }
         return "";
     }
 
-    public void applyEditTextProperties(Context mContext, JSONObject submitButtonJsonObject, EditText editText) {
-        applyFontAttribute(mContext, editText, submitButtonJsonObject);
-        applyTextSizeAttribute(mContext, editText, submitButtonJsonObject);
-        applyTextColorAttribute(mContext, editText, submitButtonJsonObject);
+    public void applyEditTextProperties(Context mContext, JSONObject editTextJson, EditText editText) {
+
+        GradientDrawable gd = new GradientDrawable();
+        String borderColor = validateJsonString(editTextJson, "border_color");
+        String bgColorValue = validateJsonString(editTextJson, "bgcolor");
+        int bgColor = Color.TRANSPARENT;
+        if (borderColor != null && !borderColor.isEmpty()) {
+            gd.setStroke(3, Color.parseColor(borderColor));
+        }
+
+        if (bgColorValue != null && !bgColorValue.isEmpty()) {
+            bgColor = Color.parseColor(bgColorValue);
+        }
+        gd.setCornerRadius(8);
+        gd.setColor(bgColor);
+        editText.setBackground(gd);
+
+        applyFontAttribute(mContext, editText, editTextJson);
+        applyTextSizeAttribute(mContext, editText, editTextJson);
+        applyTextColorAttribute(mContext, editText, editTextJson);
     }
 
     public void applyButtonProperties(Context context, JSONObject submitButtonJsonObject, Button button) {
         applyFontAttribute(context, button, submitButtonJsonObject);
+
+        String border_color = validateJsonString(submitButtonJsonObject, "border_color");
+        String bgColor = validateJsonString(submitButtonJsonObject, "bgcolor");
+        if (!border_color.isEmpty()) {
+            applyBorderColorForButtons(button, border_color, bgColor);
+        } else {
+            applyBgColorAttribute(context, button, submitButtonJsonObject);
+            applyBgImageAttribute(context, button, submitButtonJsonObject);
+        }
         applyTextSizeAttribute(context, button, submitButtonJsonObject);
         applyTextColorAttribute(context, button, submitButtonJsonObject);
-        applyBgColorAttribute(context, button, submitButtonJsonObject);
-        applyBgImageAttribute(context, button, submitButtonJsonObject);
+    }
+
+    public void applyBorderColorForButtons(Button button, String border_color, String bg_color) {
+        GradientDrawable borderDrawable = new GradientDrawable();
+        borderDrawable.setCornerRadius(15);
+        borderDrawable.setStroke(3, Color.parseColor(border_color));
+
+        if (!bg_color.isEmpty()) {
+            borderDrawable.setColor(Color.parseColor(bg_color));
+        }
+        button.setBackground(borderDrawable);
     }
 
     private void setImageResourceToView(Context context, String bgImage, View view) {
@@ -189,7 +232,7 @@ public class UpshotCustomization {
             int resourceId = resources.getIdentifier(bgImage, "drawable", context.getPackageName());
             return resourceId;
         } catch (Exception e) {
-            e.printStackTrace();
+            UpshotModule.logException(e);
         }
         return 0;
     }
@@ -240,14 +283,14 @@ public class UpshotCustomization {
                     applyBorderRadiusToButton((Button) view, Color.parseColor(bgcolor), Color.parseColor(borderColor));
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         } else {
             if (!TextUtils.isEmpty(bgcolor)) {
                 try {
                     view.setBackgroundColor(Color.parseColor(bgcolor));
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    UpshotModule.logException(e);
                 }
             }
         }
@@ -263,13 +306,13 @@ public class UpshotCustomization {
                     ((TextView) view).setTextColor(Color.parseColor(text_color));
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
 
     private void applyTextSizeAttribute(Context context, View view, JSONObject jsonObject) {
-        int font_size = validateJsonInt(jsonObject, "size");
+        int font_size = getFontSize(jsonObject, "size");
         try {
             if (view instanceof Button) {
                 ((Button) view).setTextSize(font_size);
@@ -277,7 +320,7 @@ public class UpshotCustomization {
                 ((TextView) view).setTextSize(font_size);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            UpshotModule.logException(e);
         }
     }
 
@@ -286,23 +329,23 @@ public class UpshotCustomization {
         try {
             font = context.getResources().getIdentifier(fontName, "font", packageName);
         } catch (Exception e) {
-            if (BuildConfig.DEBUG) {
-                e.printStackTrace();
-            }
+            UpshotModule.logException(e);
         }
         return font;
     }
 
     private void applyFontAttribute(Context context, View view, JSONObject jsonObject) {
+
         String font_name = validateJsonString(jsonObject, "font_name");
         if (!TextUtils.isEmpty(font_name)) {
             Typeface typeface = null;
-
             try {
+                if (!font_name.contains(".ttf")) {
+                    font_name += ".ttf";
+                }
                 typeface = Typeface.createFromAsset(context.getAssets(), "fonts/" + font_name);
-
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
 
             if (typeface == null) {
@@ -310,9 +353,7 @@ public class UpshotCustomization {
                     typeface = ResourcesCompat.getFont(context,
                             getFontIdWithFontName(context, font_name, context.getPackageName()));
                 } catch (Exception e) {
-                    if (BuildConfig.DEBUG) {
-                        e.printStackTrace();
-                    }
+                    UpshotModule.logException(e);
                 }
             }
 

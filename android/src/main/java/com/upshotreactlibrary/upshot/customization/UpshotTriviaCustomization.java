@@ -18,6 +18,7 @@ import com.brandkinesis.BKUIPrefComponents.BKActivityButtonTypes;
 import com.brandkinesis.BKUIPrefComponents.BKActivityColorTypes;
 import com.brandkinesis.BKUIPrefComponents.BKActivityTextViewTypes;
 import com.brandkinesis.BKUIPrefComponents.BKBGColors;
+import com.upshotreactlibrary.UpshotModule;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
         try {
             mJsonObject = new JSONObject(loadJSONFromAsset(context, "UpshotTriviaTheme.json"));
         } catch (Exception e) {
-            e.printStackTrace();
+            UpshotModule.logException(e);
         }
     }
 
@@ -70,7 +71,7 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -103,7 +104,7 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                         break;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -137,7 +138,7 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                         break;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -156,7 +157,7 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                         break;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -265,7 +266,7 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -394,7 +395,7 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -428,7 +429,7 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                         break;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -446,7 +447,7 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                             JSONObject imageJsonObject = (JSONObject) mJsonObject.get("image");
                             applyImageProperties(mContext, validateJsonString(imageJsonObject, "logo"), imageView);
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            UpshotModule.logException(e);
                         }
                     }
                 }

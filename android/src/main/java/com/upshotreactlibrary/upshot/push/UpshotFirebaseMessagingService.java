@@ -83,9 +83,7 @@ public class UpshotFirebaseMessagingService extends FirebaseMessagingService {
                 sendPushBundletoBK(bundle, context, allowForeground);
             }
         } catch (Exception e) {
-            if (BuildConfig.DEBUG) {
-                e.printStackTrace();
-            }
+            UpshotModule.logException(e);
         }
     }
 

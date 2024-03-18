@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat;
 import com.brandkinesis.BKUIPrefComponents;
 import com.brandkinesis.BKUIPrefComponents.BKActivityTextViewTypes;
 import com.upshotreactlibrary.R;
+import com.upshotreactlibrary.UpshotModule;
 
 import org.json.JSONObject;
 
@@ -38,7 +39,7 @@ public class UpshotRatingCustomization extends UpshotCustomization {
         try {
             mJsonObject = new JSONObject(loadJSONFromAsset(context, "UpshotRatingTheme.json"));
         } catch (Exception e) {
-            e.printStackTrace();
+            UpshotModule.logException(e);
         }
     }
 
@@ -64,7 +65,7 @@ public class UpshotRatingCustomization extends UpshotCustomization {
                         break;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -142,7 +143,7 @@ public class UpshotRatingCustomization extends UpshotCustomization {
                         break;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -179,7 +180,7 @@ public class UpshotRatingCustomization extends UpshotCustomization {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -251,7 +252,7 @@ public class UpshotRatingCustomization extends UpshotCustomization {
                         }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -312,7 +313,7 @@ public class UpshotRatingCustomization extends UpshotCustomization {
                         break;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -343,7 +344,7 @@ public class UpshotRatingCustomization extends UpshotCustomization {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -359,21 +360,11 @@ public class UpshotRatingCustomization extends UpshotCustomization {
                 switch (EditTextType) {
                     case BKACTIVITY_RATING_EDIT_TEXT:
                     default:
-                        // JSONObject inputFieldJsonObject = (JSONObject)
-                        // buttonJsonObject.get("feedback_box");
-                        GradientDrawable gd = new GradientDrawable();
-                        String borderColor = validateJsonString(feedbackBoxJSON, "border_color");
-                        if (borderColor != null && !borderColor.isEmpty()) {
-                            gd.setStroke(3, Color.parseColor(borderColor));
-                        }
-                        gd.setCornerRadius(8);
-                        gd.setColor(Color.TRANSPARENT);
-                        editText.setBackground(gd);
                         applyEditTextProperties(mContext, feedbackBoxJSON, editText);
                         break;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -405,7 +396,7 @@ public class UpshotRatingCustomization extends UpshotCustomization {
                         break;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -424,7 +415,7 @@ public class UpshotRatingCustomization extends UpshotCustomization {
                         break;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }

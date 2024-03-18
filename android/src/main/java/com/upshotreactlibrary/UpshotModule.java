@@ -111,9 +111,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
                 UpshotApplication.initUpshotUsingOptions(jsonToBundle(new JSONObject(options)));
                 fetchTokenFromFirebaseSdk();
             } catch (JSONException s) {
-                if (BuildConfig.DEBUG) {
-                    s.printStackTrace();
-                }
+                logException(s);
             }
         }
     }
@@ -152,9 +150,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
                 callback.invoke(eventID);
             }
         } catch (Exception e) {
-            if (BuildConfig.DEBUG) {
-                e.printStackTrace();
-            }
+            logException(e);
         }
     }
 
@@ -176,9 +172,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
                 callback.invoke(eventID);
             }
         } catch (final Exception e) {
-            if (BuildConfig.DEBUG) {
-                e.printStackTrace();
-            }
+            logException(e);
         }
     }
 
@@ -191,9 +185,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
             final JSONObject jeventPayload = new JSONObject(payload);
             BrandKinesis.getBKInstance().closeEvent(eventId, jsonToHashMap(jeventPayload));
         } catch (final Exception e) {
-            if (BuildConfig.DEBUG) {
-                e.printStackTrace();
-            }
+            logException(e);
         }
     }
 
@@ -205,9 +197,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
             }
             BrandKinesis.getBKInstance().closeEvent(eventId);
         } catch (final Exception e) {
-            if (BuildConfig.DEBUG) {
-                e.printStackTrace();
-            }
+            logException(e);
         }
     }
 
@@ -224,9 +214,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
                         }
                     });
         } catch (final Exception e) {
-            if (BuildConfig.DEBUG) {
-                e.printStackTrace();
-            }
+            logException(e);
         }
     }
 
@@ -236,9 +224,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
             BrandKinesis.getBKInstance().createLocationEvent(Double.parseDouble(latitude),
                     Double.parseDouble(longitude));
         } catch (final Exception e) {
-            if (BuildConfig.DEBUG) {
-                e.printStackTrace();
-            }
+            logException(e);
         }
     }
 
@@ -255,9 +241,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
                 callback.invoke(eventId);
             }
         } catch (final Exception e) {
-            if (BuildConfig.DEBUG) {
-                e.printStackTrace();
-            }
+            logException(e);
         }
     }
 
@@ -349,9 +333,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
                 }
             });
         } catch (final JSONException e) {
-            if (BuildConfig.DEBUG) {
-                e.printStackTrace();
-            }
+            logException(e);
         }
     }
 
@@ -495,9 +477,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
                                 messageJson.put(jKey, entry.getValue());
                             }
                         } catch (JSONException e) {
-                            if (BuildConfig.DEBUG) {
-                                e.printStackTrace();
-                            }
+                            logException(e);
                         }
                     }
                     messagesJson.put(messageJson);
@@ -547,9 +527,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
                                 } else {
                                 }
                             } catch (JSONException e) {
-                                if (BuildConfig.DEBUG) {
-                                    e.printStackTrace();
-                                }
+                                logException(e);
                             }
                         }
                         if (jKey.equalsIgnoreCase("active_list")) {
@@ -566,9 +544,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
                     badge.put("inactive_list", inactiveBadgesArray);
                     callback.invoke(badge.toString());
                 } catch (JSONException e) {
-                    if (BuildConfig.DEBUG) {
-                        e.printStackTrace();
-                    }
+                    logException(e);
                 }
             }
         });
@@ -623,9 +599,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
             bkInstance.handlePushNotification(reactContext.getApplicationContext(),
                     jsonToBundle(new JSONObject(pushData)));
         } catch (JSONException e) {
-            if (BuildConfig.DEBUG) {
-                e.printStackTrace();
-            }
+            logException(e);
         }
     }
 
@@ -671,16 +645,12 @@ public class UpshotModule extends ReactContextBaseJavaModule {
                     bundle.putInt(BrandKinesis.BK_LOLLIPOP_NOTIFICATION_ICON_BG_COLOR, bkSmallNotificationIconColor);
                 }
             } catch (PackageManager.NameNotFoundException e) {
-                if (BuildConfig.DEBUG) {
-                    e.printStackTrace();
-                }
+                logException(e);
             }
 
             bkInstance.buildEnhancedPushNotification(context, bundle, allowPushForeground);
         } catch (Exception e) {
-            if (BuildConfig.DEBUG) {
-                e.printStackTrace();
-            }
+            logException(e);
         }
     }
 
@@ -741,9 +711,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
                         }
                     });
         } catch (JSONException e) {
-            if (BuildConfig.DEBUG) {
-                e.printStackTrace();
-            }
+            logException(e);
         }
         ;
     }
@@ -922,9 +890,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
                         }
                     });
         } catch (Exception e) {
-            if (BuildConfig.DEBUG) {
-                e.printStackTrace();
-            }
+            logException(e);
         }
     }
 
@@ -948,7 +914,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
                 }
             } catch (Exception e) {
                 isValidJsonObj = false;
-                e.printStackTrace();
+                logException(e);
             }
 
             try {
@@ -958,7 +924,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
                     payload.putString("deepLink_keyValue", map.get("deepLink").toString());
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logException(e);
             }
             emitDeviceEvent("UpshotDeepLink", payload);
         }
@@ -992,7 +958,6 @@ public class UpshotModule extends ReactContextBaseJavaModule {
         if (error == -1) {
             errorMessage = "No Activity Found";
         }
-
         WritableMap payload = Arguments.createMap();
         payload.putString("error", errorMessage);
         emitDeviceEvent("UpshotActivityError", payload);
@@ -1019,9 +984,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
             payload.putString("token", token);
             emitDeviceEvent("UpshotPushToken", payload);
         } catch (Exception e) {
-            if (BuildConfig.DEBUG) {
-                e.printStackTrace();
-            }
+            logException(e);
         }
     }
 
@@ -1051,9 +1014,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
             try {
                 json.put(key, JSONObject.wrap(bundle.get(key)));
             } catch (JSONException e) {
-                if (BuildConfig.DEBUG) {
-                    e.printStackTrace();
-                }
+                logException(e);
             }
         }
         return json.toString();
@@ -1083,9 +1044,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
                     }
                 }
             } catch (JSONException e) {
-                if (BuildConfig.DEBUG) {
-                    e.printStackTrace();
-                }
+                logException(e);
             }
         }
         return bundle;
@@ -1147,5 +1106,11 @@ public class UpshotModule extends ReactContextBaseJavaModule {
             }
         }
         return map;
+    }
+
+    public static void logException(Exception e) {
+        if (BuildConfig.DEBUG) {
+            e.printStackTrace();
+        }
     }
 }

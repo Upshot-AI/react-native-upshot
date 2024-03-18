@@ -31,6 +31,7 @@ import com.brandkinesis.BKUIPrefComponents.BKActivityButtonTypes;
 import com.brandkinesis.BKUIPrefComponents.BKActivityColorTypes;
 import com.brandkinesis.BKUIPrefComponents.BKActivityTextViewTypes;
 import com.brandkinesis.BKUIPrefComponents.BKBGColors;
+import com.upshotreactlibrary.UpshotModule;
 
 import org.json.JSONObject;
 
@@ -45,7 +46,7 @@ public class UpshotSurveyCustomization extends UpshotCustomization {
         try {
             mJsonObject = new JSONObject(loadJSONFromAsset(context, "UpshotSurveyTheme.json"));
         } catch (Exception e) {
-            e.printStackTrace();
+            UpshotModule.logException(e);
         }
     }
 
@@ -76,7 +77,7 @@ public class UpshotSurveyCustomization extends UpshotCustomization {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -108,7 +109,7 @@ public class UpshotSurveyCustomization extends UpshotCustomization {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -124,19 +125,11 @@ public class UpshotSurveyCustomization extends UpshotCustomization {
                 switch (EditTextType) {
                     case BKACTIVITY_SURVEY_EDIT_TEXT:
                     default:
-                        GradientDrawable gd = new GradientDrawable();
-                        String borderColor = validateJsonString(feedbackBoxJson, "border_color");
-                        if (borderColor != null && !borderColor.isEmpty()) {
-                            gd.setStroke(3, Color.parseColor(borderColor));
-                        }
-                        gd.setCornerRadius(8);
-                        gd.setColor(Color.TRANSPARENT);
-                        editText.setBackground(gd);
                         applyEditTextProperties(mContext, feedbackBoxJson, editText);
                         break;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -171,7 +164,7 @@ public class UpshotSurveyCustomization extends UpshotCustomization {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -240,7 +233,7 @@ public class UpshotSurveyCustomization extends UpshotCustomization {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -312,7 +305,7 @@ public class UpshotSurveyCustomization extends UpshotCustomization {
                         }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -393,7 +386,7 @@ public class UpshotSurveyCustomization extends UpshotCustomization {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -416,7 +409,7 @@ public class UpshotSurveyCustomization extends UpshotCustomization {
                         break;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -448,7 +441,7 @@ public class UpshotSurveyCustomization extends UpshotCustomization {
                         break;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -468,7 +461,7 @@ public class UpshotSurveyCustomization extends UpshotCustomization {
                         break;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }

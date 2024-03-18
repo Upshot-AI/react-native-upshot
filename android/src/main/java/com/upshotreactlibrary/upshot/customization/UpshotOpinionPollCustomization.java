@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.brandkinesis.BKUIPrefComponents;
 import com.brandkinesis.BKUIPrefComponents.BKActivityButtonTypes;
 import com.brandkinesis.BKUIPrefComponents.BKActivityTextViewTypes;
+import com.upshotreactlibrary.UpshotModule;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,7 +32,7 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
         try {
             mJsonObject = new JSONObject(loadJSONFromAsset(context, "UpshotPollTheme.json"));
         } catch (Exception e) {
-            e.printStackTrace();
+            UpshotModule.logException(e);
         }
     }
 
@@ -50,7 +51,7 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
                         getIdentifier(mContext, validateJsonString(imageJsonObject, "radio_def")));
                 checkBox.setUnselectedCheckBox(default_select);
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -72,7 +73,7 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -144,7 +145,7 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -197,7 +198,7 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
                         break;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -219,7 +220,7 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
                         break;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -250,7 +251,7 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
                         break;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -283,7 +284,7 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }
@@ -305,7 +306,7 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                UpshotModule.logException(e);
             }
         }
     }

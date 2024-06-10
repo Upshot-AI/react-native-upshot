@@ -174,7 +174,7 @@ public class UpshotCustomization {
     }
 
     private void applyImageResourceAttribute(Context context, View view, JSONObject jsonObject) {
-        String bgImage = validateJsonString(jsonObject, "image");
+        String bgImage = getImageName(jsonObject, "image");
         setImageResourceToView(context, bgImage, view);
     }
 
@@ -213,7 +213,7 @@ public class UpshotCustomization {
     }
 
     private void applyBgImageAttribute(Context context, View view, JSONObject jsonObject) {
-        String bgImage = validateJsonString(jsonObject, "image");
+        String bgImage = getImageName(jsonObject, "image");
         setBgToView(context, bgImage, view);
     }
 

@@ -44,11 +44,11 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
                 Bitmap check_select, default_select;
 
                 check_select = BitmapFactory.decodeResource(mContext.getResources(),
-                        getIdentifier(mContext, validateJsonString(imageJsonObject, "radio_sel")));
+                        getIdentifier(mContext, getImageName(imageJsonObject, "radio_sel")));
                 checkBox.setSelectedCheckBox(check_select);
 
                 default_select = BitmapFactory.decodeResource(mContext.getResources(),
-                        getIdentifier(mContext, validateJsonString(imageJsonObject, "radio_def")));
+                        getIdentifier(mContext, getImageName(imageJsonObject, "radio_def")));
                 checkBox.setUnselectedCheckBox(default_select);
             } catch (Exception e) {
                 UpshotModule.logException(e);
@@ -98,7 +98,7 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
                         applyTextViewProperties(mContext, thanksJsonObject, textView);
 
                         JSONObject jImageBg = (JSONObject) mJsonObject.get("image");
-                        String bgData = validateJsonString(jImageBg, "background");
+                        String bgData = getImageName(jImageBg, "background");
 
                         if (!bgData.isEmpty()) {
                             Resources resources = mContext.getResources();
@@ -211,12 +211,9 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
                 JSONObject jImageBg = (JSONObject) mJsonObject.get("image");
                 switch (imageType) {
                     case BKACTIVITY_PORTRAIT_LOGO:
-                        String bgData = validateJsonString(jImageBg, "logo");
-                        applyImageProperties(mContext, bgData, imageView);
-                        break;
                     case BKACTIVITY_LANDSCAPE_LOGO:
-                        String landscapeBackground = validateJsonString(jImageBg, "landscapeLogo");
-                        applyImageProperties(mContext, landscapeBackground, imageView);
+                        String bgData = getImageName(jImageBg, "logo");
+                        applyImageProperties(mContext, bgData, imageView);
                         break;
                 }
             } catch (Exception e) {
@@ -242,7 +239,7 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
                 }
                 switch (relativeLayoutTypes) {
                     case BKACTIVITY_BACKGROUND_IMAGE:
-                        String bgData = validateJsonString(jImageBg, "background");
+                        String bgData = getImageName(jImageBg, "background");
                         if (isFullScreen) {
                             applyRelativeLayoutProperties(mContext, bgData, relativeLayout);
                         } else {

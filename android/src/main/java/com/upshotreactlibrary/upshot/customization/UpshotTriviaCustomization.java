@@ -49,20 +49,20 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                 Bitmap check_select, default_select;
                 if (isCheckBox) {
                     check_select = BitmapFactory.decodeResource(mContext.getResources(),
-                            getIdentifier(mContext, validateJsonString(imageJsonObject, "checkbox_sel")));
+                            getIdentifier(mContext, getImageName(imageJsonObject, "checkbox_sel")));
                     if (check_select != null) {
                         checkBox.setSelectedCheckBox(check_select);
                     }
                     default_select = BitmapFactory.decodeResource(mContext.getResources(),
-                            getIdentifier(mContext, validateJsonString(imageJsonObject, "checkbox_def")));
+                            getIdentifier(mContext, getImageName(imageJsonObject, "checkbox_def")));
                     if (default_select != null) {
                         checkBox.setUnselectedCheckBox(default_select);
                     }
                 } else {
                     check_select = BitmapFactory.decodeResource(mContext.getResources(),
-                            getIdentifier(mContext, validateJsonString(imageJsonObject, "radio_sel")));
+                            getIdentifier(mContext, getImageName(imageJsonObject, "radio_sel")));
                     default_select = BitmapFactory.decodeResource(mContext.getResources(),
-                            getIdentifier(mContext, validateJsonString(imageJsonObject, "radio_def")));
+                            getIdentifier(mContext, getImageName(imageJsonObject, "radio_def")));
                     if (check_select != null) {
                         checkBox.setSelectedCheckBox(check_select);
                     }
@@ -129,7 +129,7 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                 switch (relativeLayoutTypes) {
                     case BKACTIVITY_BACKGROUND_IMAGE:
                         JSONObject jImageBg = (JSONObject) mJsonObject.get("image");
-                        String bgData = validateJsonString(jImageBg, "background");
+                        String bgData = getImageName(jImageBg, "background");
                         if (isFullScreen) {
                             applyRelativeLayoutProperties(mContext, bgData, relativeLayout);
                         } else {
@@ -300,7 +300,7 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                         applyTextViewProperties(mContext, thanksJsonObject, textView);
 
                         JSONObject jImageBg = (JSONObject) mJsonObject.get("image");
-                        String bgData = validateJsonString(jImageBg, "background");
+                        String bgData = getImageName(jImageBg, "background");
 
                         if (!bgData.isEmpty()) {
                             Resources resources = mContext.getResources();
@@ -441,11 +441,12 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
 
         switch (imageType) {
             case BKACTIVITY_PORTRAIT_LOGO:
+            case BKACTIVITY_LANDSCAPE_LOGO:
                 if (mJsonObject != null) {
                     {
                         try {
                             JSONObject imageJsonObject = (JSONObject) mJsonObject.get("image");
-                            applyImageProperties(mContext, validateJsonString(imageJsonObject, "logo"), imageView);
+                            applyImageProperties(mContext, getImageName(imageJsonObject, "logo"), imageView);
                         } catch (Exception e) {
                             UpshotModule.logException(e);
                         }

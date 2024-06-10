@@ -7,7 +7,6 @@ import { UpshotInitOptions } from './UpshotConstants';
 import { UpshotAttribution } from './UpshotConstants';
 import { UpshotInboxConfigOptions } from './UpshotConstants';
 declare namespace Upshot {
-    function initializeUpshot(): void;
     function initializeUpshotUsingOptions(options: string): void;
     function terminate(): void;
     function setDispatchInterval(interval: number): void;
@@ -19,7 +18,6 @@ declare namespace Upshot {
     function createLocationEvent(latitude: string, longitude: string): void;
     function createAttributionEvent(payload: string, callback: (arg0: string) => any): void;
     function setUserProfile(userData: string, callback: (arg0: boolean) => any): void;
-    function getUserDetails(callback: (arg0: string) => any): void;
     function showActivityWithType(type: any, tag: string): void;
     function showActivityWithId(activityId: string): void;
     function removeTutorials(): void;
@@ -29,7 +27,7 @@ declare namespace Upshot {
     function sendDeviceToken(token: string): void;
     function sendPushDataToUpshot(pushPayload: string): void;
     function displayNotification(pushPayload: string): void;
-    function disableUser(shouldDisable: boolean, callback: (arg0: boolean) => any): void;
+    function disableUser(callback: (arg0: boolean) => any): void;
     function getUserId(callback: (arg0: string) => any): void;
     function getSDKVersion(callback: (arg0: string) => any): void;
     function getRewardsList(successCallback: (arg0: string) => any, failureCallback: (arg0: error) => any): void;
@@ -38,7 +36,8 @@ declare namespace Upshot {
     function redeemRewardsForProgram(programId: string, transactionValue: Int, redeemValue: Int, tag: string, successCallback: (arg0: string) => any, failurecallback: any): void;
     function getPushClickPayload(callback: any): void;
     function getNotificationList(limit: number, loadMore: boolean, successCallback: (arg0: string) => any, failurecallback: any): void;
-    function getUnreadNotificationsCount(limit: number, inboxType: any, callback: (arg0: number) => any): void;
+    function getUnreadNotificationsCount(inboxType: any, callback: (arg0: number) => any): void;
+    function updateNotificationReadStatus(notificationId: string): void;
     function showInboxNotificationScreen(options: any): void;
     function getStreaksData(successCallback: (arg0: string) => any, failurecallback: any): void;
     function addListener(eventName: string, handler: any): void;

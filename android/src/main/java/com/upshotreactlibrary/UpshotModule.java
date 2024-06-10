@@ -673,15 +673,20 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    private void getUnreadNotificationsCount(final int limit, final int inboxType, final Callback callback) {
+    private void getUnreadNotificationsCount(final int inboxType, final Callback callback) {
 
-        BrandKinesis.getBKInstance().getUnreadNotificationsCount(reactContext.getApplicationContext(), limit, inboxType,
+        BrandKinesis.getBKInstance().getUnreadNotificationsCount(reactContext.getApplicationContext(), inboxType,
                 new BKNotificationsCountResponseListener() {
                     @Override
                     public void notificationsCount(int i) {
                         callback.invoke(i);
                     }
                 });
+    }
+
+    @ReactMethod
+    private void updateNotificationReadStatus(final String notificationId) {
+        BrandKinesis.getBKInstance().updatePushNotificationReadStatus(reactContext, notificationId);
     }
 
     @ReactMethod
@@ -726,10 +731,10 @@ public class UpshotModule extends ReactContextBaseJavaModule {
 
     /* GDPR */
     @ReactMethod
-    private void disableUser(final boolean shouldDisable, final Callback callback) {
+    private void disableUser(final Callback callback) {
 
         final BrandKinesis bkInstance = BrandKinesis.getBKInstance();
-        bkInstance.disableUser(shouldDisable, reactContext.getApplicationContext(),
+        bkInstance.disableUser(reactContext.getApplicationContext(),
                 new BrandKinesisUserStateCompletion() {
                     @Override
                     public void userStateCompletion(boolean b) {

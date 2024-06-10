@@ -293,12 +293,17 @@ RCT_EXPORT_METHOD(getNotificationList:(NSInteger)limit enable:(BOOL)loadMore res
     }];
 }
 
-RCT_EXPORT_METHOD(getUnreadNotificationsCount:(NSInteger)limit type:(NSInteger)inboxType response:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(getUnreadNotificationsCount:(NSInteger)inboxType response:(RCTResponseSenderBlock)callback) {
     
     BKInboxMessageType type = (BKInboxMessageType)inboxType;
-    [[BrandKinesis sharedInstance] getUnreadNotificationsCount:limit notificationType:type onCompletion:^(NSInteger pushCount) {
+    [[BrandKinesis sharedInstance] getUnreadNotificationsCountWithType:type onCompletion:^(NSInteger pushCount) {
         callback(@[[NSNumber numberWithInteger:pushCount]]);
     }];
+}
+
+RCT_EXPORT_METHOD(updateNotificationReadStatus:(NSString *)notificationId) {
+    
+    [[BrandKinesis sharedInstance] updatePushNotificationReadStatus:notificationId];
 }
 
 RCT_EXPORT_METHOD(showInboxNotificationScreen:(NSString *)options) {
@@ -330,11 +335,11 @@ RCT_EXPORT_METHOD(getStreaksData:(RCTResponseSenderBlock)successCallback error:(
 
 #pragma mark GDPR
 
-RCT_EXPORT_METHOD(disableUser:(BOOL)shouldDisable callback:(RCTResponseSenderBlock)callback) {
-    
-  [[BrandKinesis sharedInstance] disableUser:shouldDisable completion:^(BOOL status, NSError * _Nullable error) {
-    callback(@[[NSNumber numberWithBool:status]]);
-  }];
+RCT_EXPORT_METHOD(disableUser:(RCTResponseSenderBlock)callback) {
+        
+    [[BrandKinesis sharedInstance] disableUser:^(BOOL status, NSError * _Nullable error) {
+        callback(@[[NSNumber numberWithBool:status]]);
+    }];
 }
 
 #pragma mark Upshot UserId

@@ -59,20 +59,20 @@ public class UpshotSurveyCustomization extends UpshotCustomization {
                 if (isCheckBox) {
                     Bitmap check_select, default_select;
                     check_select = BitmapFactory.decodeResource(mContext.getResources(),
-                            getIdentifier(mContext, validateJsonString(buttonJsonObject, "checkbox_sel")));
+                            getIdentifier(mContext, getImageName(buttonJsonObject, "checkbox_sel")));
                     checkBox.setSelectedCheckBox(check_select);
 
                     default_select = BitmapFactory.decodeResource(mContext.getResources(),
-                            getIdentifier(mContext, validateJsonString(buttonJsonObject, "checkbox_def")));
+                            getIdentifier(mContext, getImageName(buttonJsonObject, "checkbox_def")));
                     checkBox.setUnselectedCheckBox(default_select);
                 } else {
                     Bitmap check_select, default_select;
                     check_select = BitmapFactory.decodeResource(mContext.getResources(),
-                            getIdentifier(mContext, validateJsonString(buttonJsonObject, "radio_sel")));
+                            getIdentifier(mContext, getImageName(buttonJsonObject, "radio_sel")));
                     checkBox.setSelectedCheckBox(check_select);
 
                     default_select = BitmapFactory.decodeResource(mContext.getResources(),
-                            getIdentifier(mContext, validateJsonString(buttonJsonObject, "radio_def")));
+                            getIdentifier(mContext, getImageName(buttonJsonObject, "radio_def")));
                     checkBox.setUnselectedCheckBox(default_select);
                 }
 
@@ -103,7 +103,7 @@ public class UpshotSurveyCustomization extends UpshotCustomization {
                         seekBar.setProgressTintList(ColorStateList.valueOf(Color.parseColor(maxColor)));
                     }
                     bitmapDrawable = ContextCompat.getDrawable(mContext,
-                            getIdentifier(mContext, validateJsonString(sliderJsonObject, "thumb_image")));
+                            getIdentifier(mContext, getImageName(sliderJsonObject, "thumb_image")));
                     if (bitmapDrawable != null) {
                         seekBar.setThumb(bitmapDrawable);
                     }
@@ -251,9 +251,9 @@ public class UpshotSurveyCustomization extends UpshotCustomization {
                 switch (ratingType) {
                     case BKACTIVITY_STAR_RATING:
                         Bitmap selected = BitmapFactory.decodeResource(mContext.getResources(),
-                                getIdentifier(mContext, validateJsonString(ratingJsonObject, "star_sel")));
+                                getIdentifier(mContext, getImageName(ratingJsonObject, "star_sel")));
                         Bitmap unselected = BitmapFactory.decodeResource(mContext.getResources(),
-                                getIdentifier(mContext, validateJsonString(ratingJsonObject, "star_def")));
+                                getIdentifier(mContext, getImageName(ratingJsonObject, "star_def")));
 
                         if (selected != null && unselected != null) {
                             selectedRatingList.add(selected);
@@ -264,26 +264,26 @@ public class UpshotSurveyCustomization extends UpshotCustomization {
                     case BKACTIVITY_EMOJI_RATING:
 
                         Bitmap veryBad_def = getBitmap(
-                                getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_vbad_def")));
+                                getIdentifier(mContext, getImageName(ratingJsonObject, "smiley_vbad_def")));
                         Bitmap bad_def = getBitmap(
-                                getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_bad_def")));
+                                getIdentifier(mContext, getImageName(ratingJsonObject, "smiley_bad_def")));
                         Bitmap avg_def = getBitmap(
-                                getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_avg_def")));
+                                getIdentifier(mContext, getImageName(ratingJsonObject, "smiley_avg_def")));
                         Bitmap good_def = getBitmap(
-                                getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_good_def")));
+                                getIdentifier(mContext, getImageName(ratingJsonObject, "smiley_good_def")));
                         Bitmap vGood_def = getBitmap(
-                                getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_Vgood_def")));
+                                getIdentifier(mContext, getImageName(ratingJsonObject, "smiley_Vgood_def")));
 
                         Bitmap veryBad_sel = getBitmap(
-                                getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_vbad_sel")));
+                                getIdentifier(mContext, getImageName(ratingJsonObject, "smiley_vbad_sel")));
                         Bitmap bad_sel = getBitmap(
-                                getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_bad_sel")));
+                                getIdentifier(mContext, getImageName(ratingJsonObject, "smiley_bad_sel")));
                         Bitmap avg_sel = getBitmap(
-                                getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_avg_sel")));
+                                getIdentifier(mContext, getImageName(ratingJsonObject, "smiley_avg_sel")));
                         Bitmap good_sel = getBitmap(
-                                getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_good_sel")));
+                                getIdentifier(mContext, getImageName(ratingJsonObject, "smiley_good_sel")));
                         Bitmap vGood_sel = getBitmap(
-                                getIdentifier(mContext, validateJsonString(ratingJsonObject, "smiley_Vgood_sel")));
+                                getIdentifier(mContext, getImageName(ratingJsonObject, "smiley_Vgood_sel")));
 
                         if (veryBad_sel != null && veryBad_def != null &&
                                 bad_def != null && bad_sel != null &&
@@ -363,7 +363,7 @@ public class UpshotSurveyCustomization extends UpshotCustomization {
                         applyTextViewProperties(mContext, thanksJsonObject, textView);
 
                         JSONObject jImageBg = (JSONObject) mJsonObject.get("image");
-                        String bgData = validateJsonString(jImageBg, "background");
+                        String bgData = getImageName(jImageBg, "background");
 
                         if (!bgData.isEmpty()) {
                             Resources resources = mContext.getResources();
@@ -400,12 +400,9 @@ public class UpshotSurveyCustomization extends UpshotCustomization {
 
                 switch (imageType) {
                     case BKACTIVITY_PORTRAIT_LOGO:
-                        String bgData = validateJsonString(jImageBg, "logo");
-                        applyImageProperties(mContext, bgData, imageView);
-                        break;
                     case BKACTIVITY_LANDSCAPE_LOGO:
-                        String landscapeBackground = validateJsonString(jImageBg, "landscapeLogo");
-                        applyImageProperties(mContext, landscapeBackground, imageView);
+                        String bgData = getImageName(jImageBg, "logo");
+                        applyImageProperties(mContext, bgData, imageView);
                         break;
                 }
             } catch (Exception e) {
@@ -432,7 +429,7 @@ public class UpshotSurveyCustomization extends UpshotCustomization {
                 }
                 switch (relativeLayoutTypes) {
                     case BKACTIVITY_BACKGROUND_IMAGE:
-                        String bgData = validateJsonString(jImageBg, "background");
+                        String bgData = getImageName(jImageBg, "background");
                         if (isFullScreen) {
                             applyRelativeLayoutProperties(mContext, bgData, relativeLayout);
                         } else {

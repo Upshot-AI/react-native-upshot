@@ -53,9 +53,6 @@ public class UpshotApplication extends Application implements BKAppStatusUtil.BK
 
         application = this;
 
-        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder.build());
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             registerChannel();
         }

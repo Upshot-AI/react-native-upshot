@@ -8,15 +8,6 @@ var upshotEmitter = new NativeEventEmitter(UpshotReact)
 var Upshot = {
 
     /**
-    * initialize Upshot using config file
-    * Authentication status will be notified through event listener
-    */
-
-    initializeUpshot: function () {
-        UpshotReact.initializeUpshot();
-    },
-
-    /**
     * initialize Upshot using options
     * Authentication status will be notified through event listener
     * @param {string} options - initialize options
@@ -134,16 +125,6 @@ var Upshot = {
     },
 
     /** 
-    *  get list of user details from Upshot
-    *      
-    * @param {function(string)} callback - get json string as a callback with list of user details
-    */
-    getUserDetails: function (callback) {
-
-        UpshotReact.getUserDetails(callback);
-    },
-
-    /** 
     *  Show Activity with type and tag
     *      
     * @param {UpshotActivityType} activityType - enum value get it from UpshotConstants
@@ -240,9 +221,9 @@ var Upshot = {
     * @param {boolean} shouldDisable - shouldDisable true for delete account and false for enable
     * @param {function(Boolean)} callback - get the status of diable account status
     */
-    disableUser: function (shouldDisable, callback) {
+    disableUser: function ( callback) {
 
-        UpshotReact.disableUser(shouldDisable, callback);
+        UpshotReact.disableUser(callback);
     },
 
     /** 
@@ -331,12 +312,19 @@ var Upshot = {
 
     /** 
     * Fetch Unread Notification Count 
-    * @param {number} limit - Fetch number of notifications based on limit
     * @param {number} InboxType - Only PushNotifications / Only InApp / Both the notifications     
     * @param {function(number)} callback - Will get Unread notification count.  
     */
-    getUnreadNotificationsCount: function (limit, inboxType, callback) {
-        UpshotReact.getUnreadNotificationsCount(limit, inboxType, callback)
+    getUnreadNotificationsCount: function (inboxType, callback) {
+        UpshotReact.getUnreadNotificationsCount(inboxType, callback)
+    },
+
+     /** 
+    * Update Notification Read Status 
+    * @param {string} notificationId - Notification Id
+    */
+     updateNotificationReadStatus: function (notificationId) {
+        UpshotReact.updateNotificationReadStatus(notificationId)
     },
 
     /** 

@@ -301,9 +301,12 @@ RCT_EXPORT_METHOD(getUnreadNotificationsCount:(NSInteger)inboxType response:(RCT
     }];
 }
 
-RCT_EXPORT_METHOD(updateNotificationReadStatus:(NSString *)notificationId) {
+RCT_EXPORT_METHOD(updateNotificationReadStatus:(NSString *)notificationId response:(RCTResponseSenderBlock)callback) {
     
-    [[BrandKinesis sharedInstance] updatePushNotificationReadStatus:notificationId];
+    [[BrandKinesis sharedInstance] updatePushNotificationReadStatus:notificationId onCompletion:^(BOOL status, NSString * _Nullable error) {
+        NSDictionary *jsonResponse = @{@"status": [NSNumber numberWithBool:status],@"error":error ? error: @""};
+        callback(@[jsonResponse]);
+    }];
 }
 
 RCT_EXPORT_METHOD(showInboxNotificationScreen:(NSString *)options) {

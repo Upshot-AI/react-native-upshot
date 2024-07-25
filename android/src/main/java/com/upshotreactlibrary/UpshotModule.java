@@ -685,7 +685,16 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    private void updateNotificationReadStatus(final String notificationId) {
+    private void updateNotificationReadStatus(final String notificationId, final Callback callback) {
+        BrandKinesis.getBKInstance().setBrandkinesisMessageReadStatusCallback(new BKMessageReadStatusListener() {
+            @Override
+            public void onMessageStatus(boolean b, String s) {
+                HashMap<String, Object> data = new HashMap<>();
+                data.put("status", b);
+                data.put("error", s);
+                callback.invoke(data);
+            }
+        });
         BrandKinesis.getBKInstance().updatePushNotificationReadStatus(reactContext, notificationId);
     }
 

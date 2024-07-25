@@ -658,7 +658,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     private void getNotificationList(final int limit, final Boolean loadMore, final Callback successCallback,
             final Callback errorCallback) {
 
-        BrandKinesis.getBKInstance().getNotifications(reactContext.getApplicationContext(), loadMore, limit,
+        BrandKinesis.getBKInstance().getNotifications(reactContext.getApplicationContext(), !loadMore, limit,
                 new BKNotificationsResponseListener() {
                     @Override
                     public void notificationsResponse(Object response) {

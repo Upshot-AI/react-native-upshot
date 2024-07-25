@@ -305,7 +305,8 @@ RCT_EXPORT_METHOD(updateNotificationReadStatus:(NSString *)notificationId respon
     
     [[BrandKinesis sharedInstance] updatePushNotificationReadStatus:notificationId onCompletion:^(BOOL status, NSString * _Nullable error) {
         NSDictionary *jsonResponse = @{@"status": [NSNumber numberWithBool:status],@"error":error ? error: @""};
-        callback(@[jsonResponse]);
+        NSString *jsonString = [UpshotUtility convertJsonObjToJsonString:jsonResponse];
+        callback(@[jsonString]);
     }];
 }
 

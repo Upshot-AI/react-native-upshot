@@ -33,6 +33,7 @@ import com.brandkinesis.callback.BKUserInfoCallback;
 import com.brandkinesis.callback.BrandKinesisUserStateCompletion;
 import com.brandkinesis.pushnotifications.BKNotificationsCountResponseListener;
 import com.brandkinesis.pushnotifications.BKNotificationsResponseListener;
+import com.brandkinesis.callback.BKMessageReadStatusListener;
 import com.brandkinesis.rewards.BKRewardsResponseListener;
 import com.brandkinesis.utils.BKUtilLogger;
 import com.facebook.react.BuildConfig;

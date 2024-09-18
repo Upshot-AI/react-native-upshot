@@ -57,8 +57,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.Map;
 
 import static com.facebook.react.bridge.UiThreadUtil.runOnUiThread;
 
@@ -890,6 +890,26 @@ public class UpshotModule extends ReactContextBaseJavaModule {
         adsView = adView;
     }
 
+    private static WritableMap getWritableMapFromMap(Map<String, Object> map) {
+        WritableMap payload = Arguments.createMap();
+
+        for (String key : map.keySet()) {
+            Object value = map.get(key);
+
+            if (value instanceof Integer) {
+                payload.putInt(key, (Integer) value);
+            } else if (value instanceof Float || value instanceof Double) {
+                payload.putDouble(key, (Double) value);
+            } else if (value instanceof Boolean) {
+                payload.putBoolean(key, (Boolean) value);
+            } else {
+                payload.putString(key, (String) value);
+            }
+
+        }
+        return payload;
+    }
+
     public static View getAdsView() {
         return adsView;
     }
@@ -917,33 +937,18 @@ public class UpshotModule extends ReactContextBaseJavaModule {
             final Map<String, Object> map) {
 
         WritableMap payload = Arguments.createMap();
-        if (map == null) {
-            return;
-        }
-        if (!map.containsKey("deepLink")) {
-            payload.putString("deepLink", map.toString());
-            emitDeviceEvent("UpshotDeepLink", payload);
+        if (map instanceof HashMap) {
+            emitDeviceEvent("UpshotDeepLink", getWritableMapFromMap(map));
         } else {
-            Boolean isValidJsonObj = false;
-            try {
-                String deeplinkString = map.get("deepLink").toString();
-                if (deeplinkString != null) {
-                    JSONObject obj = new JSONObject(deeplinkString);
-                    isValidJsonObj = true;
+            String data = (String) map.get("deepLink");
+            payload.putInt("activityType", bkActivityTypes.getValue());
+            if (TextUtils.isEmpty(data)) {
+                try {
+                    JSONObject deeplinkJSON = new JSONObject(data);
+                    payload.putString("deepLink_keyValue", deeplinkJSON.toString());
+                } catch (JSONException e) {
+                    payload.putString("deepLink", data);
                 }
-            } catch (Exception e) {
-                isValidJsonObj = false;
-                logException(e);
-            }
-
-            try {
-                if (!isValidJsonObj) {
-                    payload.putString("deepLink", map.get("deepLink").toString());
-                } else {
-                    payload.putString("deepLink_keyValue", map.get("deepLink").toString());
-                }
-            } catch (Exception e) {
-                logException(e);
             }
             emitDeviceEvent("UpshotDeepLink", payload);
         }

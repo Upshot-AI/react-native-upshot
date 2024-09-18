@@ -599,12 +599,12 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
     
     NSString *deeplinkValue = params[@"deepLink"];
     NSDictionary *deeplinkKeyValue = params[@"deepLink_keyValue"];
-    if (deeplinkValue != nil) {
+    if (deeplinkValue != nil && params.count == 1) {
         [self sendEventWithName:@"UpshotDeepLink" body:@{@"deepLink": params[@"deepLink"]}];
     } else if (deeplinkKeyValue != nil && [deeplinkKeyValue allKeys].count > 0) {
         [self sendEventWithName:@"UpshotDeepLink" body:@{@"deepLink_keyValue": [UpshotUtility convertJsonObjToJsonString:deeplinkKeyValue]}];
     } else if (params != nil && [params allKeys].count > 0) {
-        [self sendEventWithName:@"UpshotDeepLink" body:@{@"deepLink_keyValue": [UpshotUtility convertJsonObjToJsonString:params]}];
+        [self sendEventWithName:@"UpshotDeepLink" body:params];
     }
 }
 

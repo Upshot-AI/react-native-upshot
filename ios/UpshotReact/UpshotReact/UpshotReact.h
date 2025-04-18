@@ -13,17 +13,6 @@
 
 @interface UpshotReact : RCTEventEmitter <RCTBridgeModule, BrandKinesisDelegate, UNUserNotificationCenterDelegate>
 
-//@property(nonatomic, strong) UIView *adsView;
-
-@property (nonatomic, strong) NSDictionary *pushPayload;
-@property (nonatomic, strong) NSString *pushToken;
-@property (nonatomic, assign) BOOL hasStartObserving;
-
-
 + (UIView *)getAdView;
-
-- (void)applicationDidRegisterWithDeviceToken:(NSData *)deviceToken;
-
-- (void)didReceivePushNotifcationWithResponse:(NSDictionary *)notification;
 
 @end

@@ -12,13 +12,41 @@
 #import <React/RCTEventDispatcher.h>
 #import "UpshotUtility.h"
 
-@implementation UpshotReact
+@interface UpshotReact () <UpshotUtilityDelegate>
+
+@end
+
+@implementation UpshotReact {
+    
+    NSMutableArray *missedEvents;
+    bool hasStartObserving;
+}
 
 static UIView *_adsView = nil;
 
-
 RCT_EXPORT_MODULE();
 
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        missedEvents = [NSMutableArray array];
+        [UpshotUtility sharedUtility].delegate = self;
+    }
+    return self;
+}
+
+- (void)addObservers {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleNotification:)
+                                                 name:@"UpshotDidReceiveDeviceToken"
+                                               object:nil];
+}
+
+- (void)handleNotification:(NSNotification *)notification {
+    NSLog(@"Notification received: %@", notification.userInfo);
+}
 #pragma mark SupportedEvents
 
 - (NSArray<NSString *> *)supportedEvents {
@@ -439,34 +467,42 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
 }
 
 - (void)startObserving {
-    
-    self.hasStartObserving = YES;
-    [self sendPushClickCallback];
-    [self sendPushTokenCallback];
-    
+        
+    hasStartObserving = YES;
+    [self sendMissedEvents];
 }
 
 - (void)stopObserving {
-    
-    self.hasStartObserving = NO;
+    hasStartObserving = NO;
 }
 
-- (void)sendPushClickCallback {
-    
-    if(self.pushPayload != nil && self.pushPayload.allKeys.count > 0) {
-        [self updatePushResponse:self.pushPayload];
-        [self sendEventWithName:@"UpshotPushPayload" body:@{@"payload": [UpshotUtility convertJsonObjToJsonString:self.pushPayload]}];
-        self.pushPayload = @{};
+- (void)sendEvent:(NSDictionary *)eventPayload {
+    if (missedEvents == nil) {
+        missedEvents = [NSMutableArray array];
+    }
+    if (hasStartObserving) {
+        
+        [self updatePushResponse:eventPayload];
+        [self sendEventWithName:@"UpshotPushPayload" body:@{@"payload": [UpshotUtility convertJsonObjToJsonString:eventPayload]}];
+    } else {
+        [missedEvents addObject:eventPayload];
     }
 }
 
-- (void)sendPushTokenCallback {
+- (void)sendMissedEvents {
     
-    if(self.pushToken != nil && self.pushToken.length > 0) {
-        [self updateDeviceToken:self.pushToken];
-        [self sendEventWithName:@"UpshotPushToken" body:@{@"token": self.pushToken}];
-        self.pushToken = @"";
+    if ([[UpshotUtility sharedUtility] getDeviceToken] != nil) {
+        
+        [self sendEventWithName:@"UpshotPushToken" body:[[UpshotUtility sharedUtility] getDeviceToken]];
     }
+        
+    [missedEvents addObjectsFromArray:[[UpshotUtility sharedUtility] getPushPayloads]];
+    for (NSDictionary *eventPayload in missedEvents) {
+        [self updatePushResponse:eventPayload];
+        [self sendEventWithName:@"UpshotPushPayload" body:@{@"payload": [UpshotUtility convertJsonObjToJsonString:eventPayload]}];
+    }
+    [missedEvents removeAllObjects];
+    [[UpshotUtility sharedUtility] removeAllObjects];
 }
 
 + (UIView *)getAdView {
@@ -475,18 +511,6 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
 }
 
 #pragma mark Upshot Internal Methods
-
-+ (void)didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    
-    NSString *token = [UpshotUtility getTokenFromdata:deviceToken];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UpshotDidReceiveDeviceToken" object:self userInfo:@{@"token": token}];
-}
-
-+ (void)didReceiveRemoteNotification:(NSDictionary *)notification {
-    
-    NSDictionary *userInfo = @{@"payload": notification};
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UpshotDidReceivePushResponse" object:self userInfo: userInfo];
-}
 
 - (void)registerForPushWithCallback {
       
@@ -635,29 +659,6 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
     [self sendEventWithName:@"UpshotAdReady" body:@{@"Tag": tag ? tag : @""}];
 }
 
-- (void)applicationDidRegisterWithDeviceToken:(NSData *)deviceToken {
-    
-    NSString *token = [UpshotUtility getTokenFromdata:deviceToken];
-    self.pushToken = token;
-    
-    if(self.hasStartObserving == YES) {
-        [self updateDeviceToken:token];
-        [self sendEventWithName:@"UpshotPushToken" body:@{@"token": token}];
-        self.pushToken = @"";
-    }
-    
-}
-
-- (void)didReceivePushNotifcationWithResponse:(NSDictionary *)userInfo {
-    
-    self.pushPayload = userInfo;
-    if(self.hasStartObserving == YES) {
-        [self updatePushResponse:userInfo];
-        [self sendEventWithName:@"UpshotPushPayload" body:@{@"payload": [UpshotUtility convertJsonObjToJsonString:userInfo]}];
-        self.pushPayload = @{};
-    }
-}
-
 - (void)brandKinesisCarouselPushClickPayload:(NSDictionary *_Nonnull)payload {
 
     [self sendEventWithName:@"UpshotCarouselPushClick" body:@{@"payload": [UpshotUtility convertJsonObjToJsonString:payload]}];
@@ -670,6 +671,10 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
 
 - (dispatch_queue_t)methodQueue {
   return dispatch_get_main_queue();
+}
+
+- (void)didReceivePushPayload:(nonnull NSDictionary *)userInfo { 
+    [self sendEvent: userInfo];
 }
 
 @end

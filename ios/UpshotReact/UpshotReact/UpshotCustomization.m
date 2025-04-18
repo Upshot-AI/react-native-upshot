@@ -599,8 +599,12 @@ CommentField
                 case BKActivitySubmitButton:
                     [UpshotUtility customizeButton:button withData:s_buttonData[@"submit"]];
                     break;
-                case BKActivitySkipButton:
-                    [UpshotUtility customizeButton:button withData:s_buttonData[@"skip"]];
+                case BKActivitySkipButton: {
+                    UIImage *image = [UIImage imageNamed:s_buttonData[@"image"]];
+                    [button setImage:image forState:UIControlStateNormal];
+                    [button setImage:image forState:UIControlStateSelected];
+                    [button setImage:image forState:UIControlStateHighlighted];
+                }                     
                     break;
                 default:
                     break;
@@ -622,8 +626,12 @@ CommentField
                 case BKActivitySubmitButton:
                     [UpshotUtility customizeButton:button withData:r_buttonData[@"submit"]];
                     break;
-                case BKActivitySkipButton:
-                    [UpshotUtility customizeButton:button withData:r_buttonData[@"skip"]];
+                case BKActivitySkipButton:{
+                    UIImage *image = [UIImage imageNamed:r_buttonData[@"image"]];
+                    [button setImage:image forState:UIControlStateNormal];
+                    [button setImage:image forState:UIControlStateSelected];
+                    [button setImage:image forState:UIControlStateHighlighted];
+                }
                     break;
                 case BKActivityRatingLikeButton:
                     if (r_ImageData != nil) {
@@ -663,7 +671,12 @@ CommentField
                     [UpshotUtility customizeButton:button withData:p_buttonData[@"submit"]];
                     break;
                 case BKActivitySkipButton:
-                    [UpshotUtility customizeButton:button withData:p_buttonData[@"skip"]];
+                {
+                    UIImage *image = [UIImage imageNamed:p_buttonData[@"image"]];
+                    [button setImage:image forState:UIControlStateNormal];
+                    [button setImage:image forState:UIControlStateSelected];
+                    [button setImage:image forState:UIControlStateHighlighted];
+                }
                     break;
                 default:
                     break;
@@ -688,7 +701,12 @@ CommentField
                     [UpshotUtility customizeButton:button withData:t_buttonData[@"submit"]];
                     break;
                 case BKActivitySkipButton:
-                    [UpshotUtility customizeButton:button withData:t_buttonData[@"skip"]];
+                {
+                    UIImage *image = [UIImage imageNamed:t_buttonData[@"image"]];
+                    [button setImage:image forState:UIControlStateNormal];
+                    [button setImage:image forState:UIControlStateSelected];
+                    [button setImage:image forState:UIControlStateHighlighted];
+                }
                     break;
                 default:
                     break;

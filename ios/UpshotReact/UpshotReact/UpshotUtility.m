@@ -8,7 +8,52 @@
 
 #import "UpshotUtility.h"
 
-@implementation UpshotUtility
+@implementation UpshotUtility {
+    
+    NSString *device_token;
+    NSMutableArray *pushPayloads;
+}
+
++(instancetype)sharedUtility {
+    
+    static dispatch_once_t onceToken;
+    static UpshotUtility *sharedUtility = nil;
+       
+    dispatch_once(&onceToken, ^{
+        sharedUtility = [[UpshotUtility alloc] init];
+    });
+    return sharedUtility;
+}
+
+- (void)applicationDidRegisterWithDeviceToken:(NSData *)deviceToken {
+    
+    device_token = [self getTokenFromdata:deviceToken];
+}
+
+- (void)didReceivePushNotifcationWithResponse:(NSDictionary *)userInfo {
+    
+    if (pushPayloads == nil) {
+        pushPayloads = [NSMutableArray array];
+    }
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didReceivePushPayload:)]) {
+        [self.delegate didReceivePushPayload:userInfo];
+    } else {
+        [pushPayloads addObject:userInfo];
+    }
+}
+
+- (NSString *)getDeviceToken {
+    return device_token;
+}
+
+- (NSArray *)getPushPayloads {        
+    return pushPayloads;
+}
+
+- (void)removeAllObjects {
+    [pushPayloads removeAllObjects];
+}
+
 
 
 + (NSDictionary *)convertJsonStringToJson:(NSString *)jsonString {
@@ -35,7 +80,7 @@
   return @"";
 }
 
-+ (NSString *)getTokenFromdata:(NSData *)data {
+- (NSString *)getTokenFromdata:(NSData *)data {
 
   NSUInteger dataLength = data.length;
   if (dataLength == 0) {

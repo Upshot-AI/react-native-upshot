@@ -7,18 +7,27 @@
 //
 
 #import <Foundation/Foundation.h>
-@import UIKit;
-@import Upshot;
+#import <UIKit/UIKit.h>
+#import <Upshot/Upshot.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol UpshotUtilityDelegate <NSObject>
+
+-(void)didReceivePushPayload:(NSDictionary *)userInfo;
+
+@end
+
+
 @interface UpshotUtility : NSObject
+
+@property(nonatomic, weak, nullable) id delegate;
+
++(instancetype)sharedUtility;
 
 + (NSDictionary *)convertJsonStringToJson:(NSString *)jsonString;
 
 + (NSString *)convertJsonObjToJsonString:(id)json;
-
-+ (NSString *)getTokenFromdata:(NSData *)data;
 
 + (NSString *)writeImageToTemp:(UIImage *)image withName:(NSString *)name;
 
@@ -37,6 +46,16 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)customizeButton:(UIButton *)button withData:(NSDictionary *)data;
 
 + (void)customizeColor:(BKBGColor *)color withData:(NSString *)colorStr;
+
+- (void)applicationDidRegisterWithDeviceToken:(NSData *)deviceToken;
+
+- (void)didReceivePushNotifcationWithResponse:(NSDictionary *)userInfo;
+
+- (NSString *)getDeviceToken;
+
+- (NSArray *)getPushPayloads;
+
+- (void)removeAllObjects;
 
 @end
 

@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol UpshotUtilityDelegate <NSObject>
 
 -(void)didReceivePushPayload:(NSDictionary *)userInfo;
+-(void)didReceivePushToken:(NSString *)token;
 
 @end
 

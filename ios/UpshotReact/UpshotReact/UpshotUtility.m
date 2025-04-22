@@ -11,7 +11,7 @@
 @implementation UpshotUtility {
     
     NSString *device_token;
-    NSMutableArray *pushPayloads;
+    NSMutableArray *pushPayloads;    
 }
 
 +(instancetype)sharedUtility {
@@ -28,6 +28,9 @@
 - (void)applicationDidRegisterWithDeviceToken:(NSData *)deviceToken {
     
     device_token = [self getTokenFromdata:deviceToken];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didReceivePushToken:)]) {
+        [self.delegate didReceivePushToken:device_token];
+    }
 }
 
 - (void)didReceivePushNotifcationWithResponse:(NSDictionary *)userInfo {

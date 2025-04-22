@@ -19,6 +19,7 @@
 @implementation UpshotReact {
     
     NSMutableArray *missedEvents;
+    NSDictionary *deeplinkInfo;
     bool hasStartObserving;
 }
 
@@ -490,10 +491,16 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
 }
 
 - (void)sendMissedEvents {
-    
+        
+    [[BrandKinesis sharedInstance] setDelegate:self];
     if ([[UpshotUtility sharedUtility] getDeviceToken] != nil) {
         
         [self sendEventWithName:@"UpshotPushToken" body:[[UpshotUtility sharedUtility] getDeviceToken]];
+    }
+    
+    if (deeplinkInfo != nil && deeplinkInfo.allKeys.count > 0) {
+        [self sendEventWithName:@"UpshotOnPushClickInfo" body:@{@"payload": [UpshotUtility convertJsonObjToJsonString:deeplinkInfo]}];
+        deeplinkInfo = @{};
     }
         
     [missedEvents addObjectsFromArray:[[UpshotUtility sharedUtility] getPushPayloads]];
@@ -660,7 +667,11 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
 }
 
 - (void)brandKinesisOnPushClickInfo:(NSDictionary *)payload {
-    [self sendEventWithName:@"UpshotOnPushClickInfo" body:@{@"payload": [UpshotUtility convertJsonObjToJsonString:payload]}];
+    if (hasStartObserving) {
+        [self sendEventWithName:@"UpshotOnPushClickInfo" body:@{@"payload": [UpshotUtility convertJsonObjToJsonString:payload]}];
+    } else {
+        deeplinkInfo = payload;
+    }
 }
 
 - (void)brandkinesisCampaignDetailsLoaded {
@@ -672,8 +683,14 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
   return dispatch_get_main_queue();
 }
 
-- (void)didReceivePushPayload:(nonnull NSDictionary *)userInfo { 
+- (void)didReceivePushPayload:(nonnull NSDictionary *)userInfo {
+    [[BrandKinesis sharedInstance] setDelegate:self];
     [self sendEvent: userInfo];
+}
+
+- (void)didReceivePushToken:(NSString *)token {
+    [self updateDeviceToken:token];
+    [self sendEventWithName:@"UpshotPushToken" body:token];
 }
 
 @end

@@ -60,7 +60,7 @@ RCT_EXPORT_MODULE();
            @"UpshotPushToken",
            @"UpshotPushPayload",
            @"UpshotCampaignDetailsLoaded",
-           @"UpshotCarouselPushClick",
+           @"UpshotOnPushClickInfo",
            @"UpshotAdReady"];
 }
 
@@ -659,9 +659,8 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
     [self sendEventWithName:@"UpshotAdReady" body:@{@"Tag": tag ? tag : @""}];
 }
 
-- (void)brandKinesisCarouselPushClickPayload:(NSDictionary *_Nonnull)payload {
-
-    [self sendEventWithName:@"UpshotCarouselPushClick" body:@{@"payload": [UpshotUtility convertJsonObjToJsonString:payload]}];
+- (void)brandKinesisOnPushClickInfo:(NSDictionary *)payload {
+    [self sendEventWithName:@"UpshotOnPushClickInfo" body:@{@"payload": [UpshotUtility convertJsonObjToJsonString:payload]}];
 }
 
 - (void)brandkinesisCampaignDetailsLoaded {

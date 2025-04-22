@@ -10,6 +10,7 @@
 #import <React/RCTEventEmitter.h>
 
 #import <Upshot/Upshot.h>
+@import UserNotifications;
 
 @interface UpshotReact : RCTEventEmitter <RCTBridgeModule, BrandKinesisDelegate, UNUserNotificationCenterDelegate>
 

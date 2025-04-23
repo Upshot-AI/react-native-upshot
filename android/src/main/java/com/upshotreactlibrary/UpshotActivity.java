@@ -19,8 +19,7 @@ public class UpshotActivity extends ReactActivity {
         Intent currentIntent = getIntent();
         if (currentIntent != null) {
             String deeplinkInfo = currentIntent.getStringExtra("deeplinkInfo");
-            if (deeplinkInfo != null && !deeplinkInfo.isEmpty()) {
-                Log.d("Deepink info on onCreate ---", deeplinkInfo);
+            if (deeplinkInfo != null && !deeplinkInfo.isEmpty()) {                
                 Handler mHandler = new Handler();
                 Runnable mRunnable = new Runnable() {
                     @Override

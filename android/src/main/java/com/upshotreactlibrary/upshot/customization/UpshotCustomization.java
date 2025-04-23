@@ -138,7 +138,7 @@ public class UpshotCustomization {
 
         String border_color = validateJsonString(submitButtonJsonObject, "border_color");
         String bgColor = validateJsonString(submitButtonJsonObject, "bgcolor");
-        if (!border_color.isEmpty()) {
+        if (border_color != null && !border_color.isEmpty()) {
             applyBorderColorForButtons(button, border_color, bgColor);
         } else {
             applyBgColorAttribute(context, button, submitButtonJsonObject);
@@ -153,7 +153,7 @@ public class UpshotCustomization {
         borderDrawable.setCornerRadius(15);
         borderDrawable.setStroke(3, Color.parseColor(border_color));
 
-        if (!bg_color.isEmpty()) {
+        if (bg_color != null && !bg_color.isEmpty()) {
             borderDrawable.setColor(Color.parseColor(bg_color));
         }
         button.setBackground(borderDrawable);

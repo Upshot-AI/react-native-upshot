@@ -572,7 +572,10 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     private static void sendDeviceToken(final String token) {
 
         final BrandKinesis bkInstance = BrandKinesis.getBKInstance();
-        if (bkInstance == null || token == null || token.isEmpty()) {
+        if (bkInstance == null || token == null) {
+            return;
+        }
+        if(token.isEmpty()) {
             return;
         }
 

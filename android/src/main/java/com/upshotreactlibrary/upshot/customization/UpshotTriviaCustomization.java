@@ -302,7 +302,7 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                         JSONObject jImageBg = (JSONObject) mJsonObject.get("image");
                         String bgData = getImageName(jImageBg, "background");
 
-                        if (!bgData.isEmpty()) {
+                        if (bgData != null && !bgData.isEmpty()) {
                             Resources resources = mContext.getResources();
                             int resourceId = resources.getIdentifier(bgData, "drawable", mContext.getPackageName());
                             textView.setBackgroundResource(resourceId);
@@ -363,21 +363,21 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                         break;
                     case BKACTIVITY_LEADER_BOARD_BAR_RESPONSES_TV: {
                         String yAxis_HeaderColor = graphJson.getString("yAxis_Header");
-                        if (!yAxis_HeaderColor.isEmpty()) {
+                        if (yAxis_HeaderColor != null && !yAxis_HeaderColor.isEmpty()) {
                             textView.setTextColor(Color.parseColor(yAxis_HeaderColor));
                         }
                     }
                         break;
                     case BKACTIVITY_LEADER_BOARD_BAR_GRADES_TV: {
                         String xAxis_HeaderColor = graphJson.getString("xAxis_Header");
-                        if (!xAxis_HeaderColor.isEmpty()) {
+                        if (xAxis_HeaderColor != null && !xAxis_HeaderColor.isEmpty()) {
                             textView.setTextColor(Color.parseColor(xAxis_HeaderColor));
                         }
                     }
                         break;
                     case BKACTIVITY_LEGEND_TV:
                         String legendColor = graphJson.getString("legends");
-                        if (!legendColor.isEmpty()) {
+                        if (legendColor != null && !legendColor.isEmpty()) {
                             textView.setTextColor(Color.parseColor(legendColor));
                         }
                         break;

@@ -100,7 +100,7 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
                         JSONObject jImageBg = (JSONObject) mJsonObject.get("image");
                         String bgData = getImageName(jImageBg, "background");
 
-                        if (!bgData.isEmpty()) {
+                        if (bgData != null && !bgData.isEmpty()) {
                             Resources resources = mContext.getResources();
                             int resourceId = resources.getIdentifier(bgData, "drawable", mContext.getPackageName());
                             textView.setBackgroundResource(resourceId);
@@ -124,21 +124,21 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
                     case BKACTIVITY_LEGEND_TV:
 
                         String legendsColor = graphJsonObject.getString("legends");
-                        if (!legendsColor.isEmpty()) {
+                        if (legendsColor != null && !legendsColor.isEmpty()) {
                             textView.setTextColor(Color.parseColor(legendsColor));
                         }
 
                         break;
                     case BKACTIVITY_LEADER_BOARD_BAR_RESPONSES_TV:
                         String yAxis_HeaderColor = graphJsonObject.getString("yAxis_Header");
-                        if (!yAxis_HeaderColor.isEmpty()) {
+                        if (yAxis_HeaderColor != null && !yAxis_HeaderColor.isEmpty()) {
                             textView.setTextColor(Color.parseColor(yAxis_HeaderColor));
                         }
 
                         break;
                     case BKACTIVITY_LEADER_BOARD_BAR_GRADES_TV:
                         String xAxis_HeaderColor = graphJsonObject.getString("xAxis_Header");
-                        if (!xAxis_HeaderColor.isEmpty()) {
+                        if (xAxis_HeaderColor != null && !xAxis_HeaderColor.isEmpty()) {
                             textView.setTextColor(Color.parseColor(xAxis_HeaderColor));
                         }
                         break;

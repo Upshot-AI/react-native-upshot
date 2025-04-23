@@ -93,7 +93,7 @@ public class UpshotRatingCustomization extends UpshotCustomization {
                         JSONObject jImageBg = (JSONObject) mJsonObject.get("image");
                         String bgData = getImageName(jImageBg, "background");
 
-                        if (!bgData.isEmpty()) {
+                        if (bgData != null && !bgData.isEmpty()) {
                             Resources resources = mContext.getResources();
                             int resourceId = resources.getIdentifier(bgData, "drawable", mContext.getPackageName());
                             textView.setBackgroundResource(resourceId);

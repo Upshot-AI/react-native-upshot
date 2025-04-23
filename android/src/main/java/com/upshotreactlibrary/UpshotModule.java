@@ -68,6 +68,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     private static final String TAG = UpshotModule.class.getSimpleName();
     public static ReactApplicationContext reactContext;
     private static String pushClickPayload = "";
+    private static String deeplinkInfo = "";
     private static View adsView = null;
 
     public UpshotModule(final ReactApplicationContext reactContext) {
@@ -101,7 +102,6 @@ public class UpshotModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void initializeUpshotUsingOptions(final String options) {
-
         if (options == null) {
             return;
         }
@@ -138,7 +138,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
         try {
             if (PageName == null) {
                 if (callback != null) {
-                    callback.invoke(null);
+                    callback.invoke("");
                 }
                 return;
             }
@@ -157,12 +157,12 @@ public class UpshotModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     private void createCustomEvent(final String eventName, final String eventPayload, final boolean isTimed,
-            final Callback callback) {
+                                   final Callback callback) {
 
         try {
             if (eventName == null || eventPayload == null) {
                 if (callback != null) {
-                    callback.invoke(null);
+                    callback.invoke("");
                 }
                 return;
             }
@@ -385,7 +385,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
 
                     @Override
                     public void brandKinesisActivityPerformedActionWithParams(final BKActivityTypes bkActivityTypes,
-                            final Map<String, Object> map) {
+                                                                              final Map<String, Object> map) {
                         upshotDeeplinkCallback(bkActivityTypes, map);
                     }
                 });
@@ -426,7 +426,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
 
                     @Override
                     public void brandKinesisActivityPerformedActionWithParams(BKActivityTypes bkActivityTypes,
-                            Map<String, Object> map) {
+                                                                              Map<String, Object> map) {
                         upshotDeeplinkCallback(bkActivityTypes, map);
                     }
                 });
@@ -553,7 +553,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
 
     /* Push Notification Module */
     @ReactMethod
-    private static void registerForPush() {
+    private void registerForPush() {
         requestForNotificationPermissions();
     }
 
@@ -657,7 +657,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     private void getNotificationList(final int limit, final Boolean loadMore, final Callback successCallback,
-            final Callback errorCallback) {
+                                     final Callback errorCallback) {
 
         BrandKinesis.getBKInstance().getNotifications(reactContext.getApplicationContext(), !loadMore, limit,
                 new BKNotificationsResponseListener() {
@@ -796,7 +796,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void getRewardHistoryForProgram(final String programId, final int historyType,
-            final Callback successCallback, final Callback failureCallback) {
+                                           final Callback successCallback, final Callback failureCallback) {
 
         if (programId == null) {
             return;
@@ -819,7 +819,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void redeemRewardsForProgram(final String programId, final int transactionAmount,
-            final int redeemValue, final String tag, final Callback successCallback, final Callback failureCallback) {
+                                        final int redeemValue, final String tag, final Callback successCallback, final Callback failureCallback) {
 
         if (programId == null) {
             return;
@@ -843,7 +843,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void getRewardRulesforProgram(final String programId, final Callback successCallback,
-            final Callback failureCallback) {
+                                         final Callback failureCallback) {
 
         if (programId == null) {
             return;
@@ -934,7 +934,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     }
 
     public static void upshotDeeplinkCallback(final BKActivityTypes bkActivityTypes,
-            final Map<String, Object> map) {
+                                              final Map<String, Object> map) {
 
         WritableMap payload = Arguments.createMap();
         if (map instanceof HashMap) {
@@ -1026,6 +1026,21 @@ public class UpshotModule extends ReactContextBaseJavaModule {
             }, 1000);
         } else {
             emitDeviceEvent("UpshotPushPayload", payload);
+        }
+    }
+
+    public static void sendDeeplinkInfo(final String deeplinkInfo) {
+        final WritableMap payload = Arguments.createMap();
+        payload.putString("payload", deeplinkInfo);
+        if (reactContext == null) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    emitDeviceEvent("UpshotOnPushClickInfo", payload);
+                }
+            }, 1000);
+        } else {
+            emitDeviceEvent("UpshotOnPushClickInfo", payload);
         }
     }
 

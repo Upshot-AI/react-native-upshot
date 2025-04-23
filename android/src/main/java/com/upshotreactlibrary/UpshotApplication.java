@@ -40,6 +40,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import dalvik.system.ZipPathValidator;
+
 public class UpshotApplication extends Application implements BKAppStatusUtil.BKAppStatusListener {
 
     public static final String PRIMARY_CHANNEL = "default";
@@ -55,6 +57,9 @@ public class UpshotApplication extends Application implements BKAppStatusUtil.BK
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             registerChannel();
+        }
+        if (Build.VERSION.SDK_INT >= 34) {
+            ZipPathValidator.clearCallback();
         }
         BKAppStatusUtil.getInstance().register(this, this);
     }

@@ -1,5 +1,6 @@
 package com.upshotreactlibrary;
 
+import android.app.Activity;
 import android.Manifest;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;

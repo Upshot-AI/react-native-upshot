@@ -558,12 +558,16 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     }
 
     private static void requestForNotificationPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ActivityCompat.checkSelfPermission(reactContext.getCurrentActivity(),
-                    Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-
-                reactContext.getCurrentActivity()
-                        .requestPermissions(new String[] { Manifest.permission.POST_NOTIFICATIONS }, 1);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && reactContext != null) {
+            try {
+                Activity currentActivity = reactContext.getCurrentActivity();
+                if (currentActivity != null && ActivityCompat.checkSelfPermission(currentActivity,
+                        Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                    currentActivity
+                            .requestPermissions(new String[] { Manifest.permission.POST_NOTIFICATIONS }, 1);
+                }
+            } catch (Exception e) {
+                logException(e);
             }
         }
     }

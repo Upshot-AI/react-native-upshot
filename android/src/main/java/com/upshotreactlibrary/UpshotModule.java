@@ -574,7 +574,32 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    private static void sendDeviceToken(final String token) {
+    private void sendDeviceToken(final String token) {
+
+        final BrandKinesis bkInstance = BrandKinesis.getBKInstance();
+        if (bkInstance == null || token == null) {
+            return;
+        }
+        if(token.isEmpty()) {
+            return;
+        }
+
+        final Bundle userInfo = new Bundle();
+        userInfo.putString(BKUserInfo.BKExternalIds.GCM, token);
+
+        bkInstance.setUserInfoBundle(userInfo, new BKUserInfoCallback() {
+            @Override
+            public void onUserInfoUploaded(final boolean uploadSuccess) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                });
+            }
+        });
+    }
+
+    private void sendDeviceTokenToUpshot(final String token) {
 
         final BrandKinesis bkInstance = BrandKinesis.getBKInstance();
         if (bkInstance == null || token == null) {
@@ -601,7 +626,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
 
     // For Creating Push Click Event
     @ReactMethod
-    public static void sendPushDataToUpshot(final String pushData) {
+    public void sendPushDataToUpshot(final String pushData) {
 
         BrandKinesis bkInstance = BrandKinesis.getBKInstance();
         try {
@@ -613,7 +638,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public static void displayNotification(final String pushData) {
+    public void displayNotification(final String pushData) {
 
         BrandKinesis bkInstance = BrandKinesis.getBKInstance();
         try {
@@ -1011,7 +1036,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
             if (token.isEmpty()) {
                 return;
             }
-            sendDeviceToken(token);
+            sendDeviceTokenToUpshot(token);
             WritableMap payload = Arguments.createMap();
             payload.putString("token", token);
             emitDeviceEvent("UpshotPushToken", payload);

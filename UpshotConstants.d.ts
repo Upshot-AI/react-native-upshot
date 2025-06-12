@@ -39,6 +39,7 @@ export namespace UpshotInitOptions {
     let ExternalStorage: string;
     let EnableLocation: string;
     let EnableCrashLog: string;
+    let AppuId: string;
 }
 export namespace UpshotAttribution {
     let Source: string;

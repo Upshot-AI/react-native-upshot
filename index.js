@@ -382,6 +382,13 @@ var Upshot = {
   },
 
   /**
+   * Set Font Styles
+   * @param {Object} fontStyles - Font styles to be applied
+   */
+  setFontStyles: function (fontStyles) {
+    UpshotReact.setFontStyles(fontStyles);
+  },
+  /**
    * Add Upshot event listener
    * supported events UpshotAuthStatus, UpshotActivityDidAppear, UpshotActivityDidDismiss, UpshotDeepLink, UpshotPushToken, UpshotPushPayload
    * @param {string} eventName - the Upshot event name

@@ -93,6 +93,9 @@ RCT_EXPORT_METHOD(initializeUpshotUsingOptions:(NSString *)options) {
     if ([json valueForKey:@"bkExceptionHandler"]) {
         [initOptions setValue:[NSNumber numberWithBool:[json[@"bkExceptionHandler"] boolValue]] forKey:BKExceptionHandler];
     }
+    if ([json valueForKey:@"appuid"]) {
+        [initOptions setValue:json[@"appuid"] forKey:BKAppuID];
+    }
     [[BrandKinesis sharedInstance] initializeWithOptions:initOptions delegate:self];
     UpshotCustomization *customization = [[UpshotCustomization alloc] init];
     [[BKUIPreferences preferences] setDelegate:customization];
@@ -465,6 +468,16 @@ RCT_EXPORT_METHOD(redeemRewardsForProgram:(NSString *)programId transactionAmoun
           successCallback(@[jsonString]);
         }
     }];
+}
+
+RCT_EXPORT_METHOD(setFontStyles:(NSString *)fontStyles) {
+    
+    if(fontStyles != nil) {
+        NSDictionary *fonts = [UpshotUtility convertJsonStringToJson:fontStyles];
+        if(fonts != nil) {
+            [[BrandKinesis sharedInstance] setFontStyles:fonts];
+        }
+    }
 }
 
 - (void)startObserving {

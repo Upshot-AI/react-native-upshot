@@ -599,7 +599,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
         });
     }
 
-    private void sendDeviceTokenToUpshot(final String token) {
+    private static void sendDeviceTokenToUpshot(final String token) {
 
         final BrandKinesis bkInstance = BrandKinesis.getBKInstance();
         if (bkInstance == null || token == null) {
@@ -903,6 +903,26 @@ public class UpshotModule extends ReactContextBaseJavaModule {
         if (callback != null) {
             callback.invoke(pushClickPayload);
             pushClickPayload = "";
+        }
+    }
+
+    @ReactMethod
+    private void setFontStyles(final String fontStyles) {
+        try {
+            final JSONObject fontsJson = new JSONObject(fontStyles);
+            final HashMap<String, Object> fonts = jsonToHashMap(fontsJson);
+            HashMap<String, String> fontsMap = new HashMap<>();
+            for (Map.Entry<String, Object> entry : fonts.entrySet()) {
+                if (entry.getValue() instanceof String) {
+                    fontsMap.put(entry.getKey(), (String) entry.getValue());
+                } else {
+                    // Optionally handle non-string values
+                    fontsMap.put(entry.getKey(), String.valueOf(entry.getValue()));
+                }
+            }
+            BrandKinesis.getBKInstance().setFonts(fontsMap);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
         }
     }
 

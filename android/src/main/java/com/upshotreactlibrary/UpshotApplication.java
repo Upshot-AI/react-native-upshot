@@ -48,7 +48,7 @@ public class UpshotApplication extends Application implements BKAppStatusUtil.BK
     private static Application application;
     public static Bundle options = null;
     public static String initType = null;
-
+    public static boolean enableCustomization = false;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -178,8 +178,12 @@ public class UpshotApplication extends Application implements BKAppStatusUtil.BK
     public static void initUpshotUsingOptions(Bundle options) {
 
         setUpshotGlobalCallback();
+        enableCustomization = options.getBoolean("bkEnableCustomization", false);
+        if (enableCustomization) {
+            setCustomizations();    
+        }
         BrandKinesis.initialiseBrandKinesis(get(), options, null);
-        setCustomizations();
+            
     }
 
     private static void setCustomizations() {

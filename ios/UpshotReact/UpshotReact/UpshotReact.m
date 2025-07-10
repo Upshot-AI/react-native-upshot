@@ -21,6 +21,7 @@
     NSMutableArray *missedEvents;
     NSDictionary *deeplinkInfo;
     bool hasStartObserving;
+    bool enableCustomization;
 }
 
 static UIView *_adsView = nil;
@@ -96,9 +97,14 @@ RCT_EXPORT_METHOD(initializeUpshotUsingOptions:(NSString *)options) {
     if ([json valueForKey:@"appuid"]) {
         [initOptions setValue:json[@"appuid"] forKey:BKAppuID];
     }
+     if ([json valueForKey:@"bkEnableCustomization"]) {
+        enableCustomization = [json[@"bkEnableCustomization"] boolValue];
+    }
     [[BrandKinesis sharedInstance] initializeWithOptions:initOptions delegate:self];
-    UpshotCustomization *customization = [[UpshotCustomization alloc] init];
-    [[BKUIPreferences preferences] setDelegate:customization];
+    if(enableCustomization) {
+        UpshotCustomization *customization = [[UpshotCustomization alloc] init];
+        [[BKUIPreferences preferences] setDelegate:customization];
+    }
 }
 
 #pragma mark Terminate
@@ -221,8 +227,11 @@ RCT_EXPORT_METHOD(getUserDetails:(RCTResponseSenderBlock)callback) {
 
 RCT_EXPORT_METHOD(showActivityWithType:(NSInteger)type andTag:(NSString *)tag) {
   
-    UpshotCustomization *customization = [[UpshotCustomization alloc] init];
+  if(enableCustomization) {
+     UpshotCustomization *customization = [[UpshotCustomization alloc] init];
     [[BKUIPreferences preferences] setDelegate:customization];
+  }
+    
     BKActivityType activityType = (BKActivityType)type;
     [[BrandKinesis sharedInstance] setDelegate:self];
     [[BrandKinesis sharedInstance] showActivityWithType:activityType andTag:tag];
@@ -231,8 +240,10 @@ RCT_EXPORT_METHOD(showActivityWithType:(NSInteger)type andTag:(NSString *)tag) {
 RCT_EXPORT_METHOD(showActivityWithId:(NSString *)activityId) {
     
     if(activityId != nil) {
-        UpshotCustomization *customization = [[UpshotCustomization alloc] init];
-        [[BKUIPreferences preferences] setDelegate:customization];
+        if(enableCustomization) {
+            UpshotCustomization *customization = [[UpshotCustomization alloc] init];
+            [[BKUIPreferences preferences] setDelegate:customization];
+        }        
         [[BrandKinesis sharedInstance] setDelegate:self];
         [[BrandKinesis sharedInstance] showActivityWithActivityId:activityId];
     }

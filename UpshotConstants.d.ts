@@ -40,6 +40,7 @@ export namespace UpshotInitOptions {
     let EnableLocation: string;
     let EnableCrashLog: string;
     let AppuId: string;
+    let EnableCustomisation: string;
 }
 export namespace UpshotAttribution {
     let Source: string;

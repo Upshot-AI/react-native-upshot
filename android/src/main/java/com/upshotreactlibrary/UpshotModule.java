@@ -907,24 +907,44 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    private void setFontStyles(final String fontStyles) {
-        try {
-            final JSONObject fontsJson = new JSONObject(fontStyles);
-            final HashMap<String, Object> fonts = jsonToHashMap(fontsJson);
-            HashMap<String, String> fontsMap = new HashMap<>();
-            for (Map.Entry<String, Object> entry : fonts.entrySet()) {
-                if (entry.getValue() instanceof String) {
-                    fontsMap.put(entry.getKey(), (String) entry.getValue());
+private void setFontStyles(final String fontStyles) {
+    try {
+        final JSONObject fontsJson = new JSONObject(fontStyles);
+        final HashMap<String, Object> data = jsonToHashMap(fontsJson);
+
+        HashMap<String, String> formattedFontData = new HashMap<>();
+
+        for (HashMap.Entry<String, Object> entry : data.entrySet()) {
+            String key = entry.getKey();
+            try {
+
+                HashMap<String, Object> keyDataMap = (HashMap<String, Object>) data.get(key);
+
+                JSONObject jFormattedObj = new JSONObject();
+                Integer size = (Integer) keyDataMap.get("size");
+                jFormattedObj.put("size", size);
+
+                String formattedFontName = "";
+                String fontName = (String) keyDataMap.get("name");
+                if (!fontName.endsWith(".ttf")) {
+                    formattedFontName = fontName + ".ttf";
                 } else {
-                    // Optionally handle non-string values
-                    fontsMap.put(entry.getKey(), String.valueOf(entry.getValue()));
+                    formattedFontName = fontName;
                 }
-            }
-            BrandKinesis.getBKInstance().setFonts(fontsMap);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
+                jFormattedObj.put("name", formattedFontName);
+
+                Log.i("formattedFontName", "formattedFontName : " + formattedFontName);
+                formattedFontData.put(key, jFormattedObj.toString());
+
+            } catch (Exception e) {
+
+            }            
         }
+        BrandKinesis.getBKInstance().setFonts(formattedFontData, reactContext.getApplicationContext());
+    } catch (JSONException e) {
+        throw new RuntimeException(e);
     }
+}
 
     /* Utility Methods */
     public static void upshotInitStatus(boolean isSuccessCallback, String msg) {

@@ -44,6 +44,7 @@ const UpshotInitOptions = {
   EnableLocation: "bkFetchLocation",
   EnableCrashLog: "bkExceptionHandler",
   AppuId: "appuid",
+  EnableCustomisation: "bkEnableCustomization",
 };
 
 const UpshotAttribution = {

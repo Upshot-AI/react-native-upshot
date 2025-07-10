@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
+import netscape.javascript.JSObject;
 
 import com.brandkinesis.BKProperties;
 import com.brandkinesis.BKUserInfo;
@@ -907,42 +908,38 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-private void setFontStyles(final String fontStyles) {
-    try {
-        final JSONObject fontsJson = new JSONObject(fontStyles);
-        final HashMap<String, Object> data = jsonToHashMap(fontsJson);
+    private void setFontStyles(final String fontStyles) {
+        try {
+            final JSONObject fontsJson = new JSONObject(fontStyles);
+            final HashMap<String, Object> data = jsonToHashMap(fontsJson);
 
-        HashMap<String, String> formattedFontData = new HashMap<>();
+            HashMap<String, String> formattedFontData = new HashMap<>();
 
-        for (HashMap.Entry<String, Object> entry : data.entrySet()) {
-            String key = entry.getKey();
-            try {
+            for (HashMap.Entry<String, Object> entry : data.entrySet()) {
+                String key = entry.getKey();
+                try {
 
-                HashMap<String, Object> keyDataMap = (HashMap<String, Object>) data.get(key);
+                    JSONObject keyDataMap = (JSONObject)data.get(key);
+                    JSONObject jFormattedObj = new JSONObject();
+                    Integer size = (Integer) keyDataMap.get("size");
+                    jFormattedObj.put("size", size);
 
-                JSONObject jFormattedObj = new JSONObject();
-                Integer size = (Integer) keyDataMap.get("size");
-                jFormattedObj.put("size", size);
-
-                String formattedFontName = "";
-                String fontName = (String) keyDataMap.get("name");
-                if (!fontName.endsWith(".ttf")) {
-                    formattedFontName = fontName + ".ttf";
-                } else {
-                    formattedFontName = fontName;
-                }
-                jFormattedObj.put("name", formattedFontName);
-
-                Log.i("formattedFontName", "formattedFontName : " + formattedFontName);
-                formattedFontData.put(key, jFormattedObj.toString());
-
+                    String formattedFontName = "";
+                    String fontName = (String) keyDataMap.get("name");
+                    if (!fontName.endsWith(".ttf")) {
+                        formattedFontName = fontName + ".ttf";
+                    } else {
+                        formattedFontName = fontName;
+                    }
+                    jFormattedObj.put("name", formattedFontName);
+                    formattedFontData.put(key, jFormattedObj.toString());
             } catch (Exception e) {
-
+                logException(e);
             }            
         }
         BrandKinesis.getBKInstance().setFonts(formattedFontData, reactContext.getApplicationContext());
     } catch (JSONException e) {
-        throw new RuntimeException(e);
+        logException(e);
     }
 }
 

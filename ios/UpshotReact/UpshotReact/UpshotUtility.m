@@ -291,6 +291,9 @@
         if(border_color != nil) {
             [button.layer setBorderColor:border_color.CGColor];
             [button.layer setBorderWidth:1.5];
+        } else {
+            [button.layer setBorderColor:[UIColor clearColor].CGColor];
+            [button.layer setBorderWidth:0.0];
         }
         
         if (image != nil) {

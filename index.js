@@ -134,6 +134,15 @@ var Upshot = {
   },
 
   /**
+   *  Show interactive Tutorial
+   *
+   * @param {string} tag - requested tag
+   */
+  showInteractiveTutorial: function (tag) {
+    UpshotReact.showInteractiveTutorial(tag);
+  },
+
+  /**
    *  Show Activity with type and tag
    *
    * @param {UpshotActivityType} activityType - enum value get it from UpshotConstants

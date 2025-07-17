@@ -396,6 +396,53 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    private void showInteractiveTutorial( final String tagName) {
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                final BrandKinesis bkInstance = BrandKinesis.getBKInstance();
+
+                BKActivityTypes type = BKActivityTypes.ACTIVITY_ANY;
+               View view = null;
+                try {
+                        view = reactContext.getCurrentActivity().getWindow().getDecorView();
+                } catch (Exception e) {
+                    logException(e);
+                }
+                bkInstance.getActivity(view, type, tagName, new BKActivityCallback() {
+                    @Override
+                    public void onActivityError(final int i) {
+
+                        upshotActivityError(i);
+                    }
+
+                    @Override
+                    public void onActivityCreated(final BKActivityTypes bkActivityTypes) {
+                        upshotActivityCreated(bkActivityTypes);
+                    }
+
+                    @Override
+                    public void onActivityDestroyed(BKActivityTypes bkActivityTypes) {
+                        upshotActivityDestroyed(bkActivityTypes);
+                    }
+
+                    @Override
+                    public void onActivitySkipped(BKActivityTypes bkActivityTypes) {
+                        upshotActivitySkipped(bkActivityTypes);
+                    }
+
+                    @Override
+                    public void brandKinesisActivityPerformedActionWithParams(final BKActivityTypes bkActivityTypes,
+                                                                              final Map<String, Object> map) {
+                        upshotDeeplinkCallback(bkActivityTypes, map);
+                    }
+                });
+            }
+        });
+    }
+
+    @ReactMethod
     private void showActivityWithId(final String activityId) {
 
         if (activityId == null) {

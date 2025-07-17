@@ -237,6 +237,18 @@ RCT_EXPORT_METHOD(showActivityWithType:(NSInteger)type andTag:(NSString *)tag) {
     [[BrandKinesis sharedInstance] showActivityWithType:activityType andTag:tag];
 }
 
+RCT_EXPORT_METHOD(showInteractiveTutorial:(NSString *)tag) {
+  
+  if(enableCustomization) {
+     UpshotCustomization *customization = [[UpshotCustomization alloc] init];
+    [[BKUIPreferences preferences] setDelegate:customization];
+  }
+    
+    BKActivityType activityType = BKActivityTypeTutorial;
+    [[BrandKinesis sharedInstance] setDelegate:self];
+    [[BrandKinesis sharedInstance] showActivityWithType:activityType andTag:tag];
+}
+
 RCT_EXPORT_METHOD(showActivityWithId:(NSString *)activityId) {
     
     if(activityId != nil) {

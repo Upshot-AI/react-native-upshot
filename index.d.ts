@@ -19,6 +19,7 @@ declare namespace Upshot {
     function createAttributionEvent(payload: string, callback: (arg0: string) => any): void;
     function setUserProfile(userData: string, callback: (arg0: boolean) => any): void;
     function getUserDetails(callback: (arg0: response) => any): void;
+    function showInteractiveTutorial(tag: string): void;
     function showActivityWithType(type: any, tag: string): void;
     function showActivityWithId(activityId: string): void;
     function removeTutorials(): void;

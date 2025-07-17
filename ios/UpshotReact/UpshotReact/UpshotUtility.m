@@ -294,10 +294,10 @@
         }
         
         if (image != nil) {
-            [button setImage:image forState:UIControlStateNormal];
-            [button setImage:image forState:UIControlStateSelected];
-            [button setImage:image forState:UIControlStateHighlighted];
-        }                
+            [button setBackgroundImage:image forState:UIControlStateNormal];
+            [button setBackgroundImage:image forState:UIControlStateSelected];
+            [button setBackgroundImage:image forState:UIControlStateHighlighted];
+        }           
     }
 }
 

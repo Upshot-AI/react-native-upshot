@@ -600,11 +600,16 @@ CommentField
                     [UpshotUtility customizeButton:button withData:s_buttonData[@"submit"]];
                     break;
                 case BKActivitySkipButton: {
-                    UIImage *image = [UIImage imageNamed:s_buttonData[@"image"]];
-                    [button setImage:image forState:UIControlStateNormal];
-                    [button setImage:image forState:UIControlStateSelected];
-                    [button setImage:image forState:UIControlStateHighlighted];
-                }                     
+                    NSDictionary *skipJSON = s_buttonData[@"skip"];
+                    if (skipJSON != nil) {
+                        UIImage *image = [UIImage imageNamed:skipJSON[@"image"]];
+                        if (image != nil) {
+                            [button setImage:image forState:UIControlStateNormal];
+                            [button setImage:image forState:UIControlStateSelected];
+                            [button setImage:image forState:UIControlStateHighlighted];
+                        }
+                    }
+                }
                     break;
                 default:
                     break;
@@ -627,10 +632,15 @@ CommentField
                     [UpshotUtility customizeButton:button withData:r_buttonData[@"submit"]];
                     break;
                 case BKActivitySkipButton:{
-                    UIImage *image = [UIImage imageNamed:r_buttonData[@"image"]];
-                    [button setImage:image forState:UIControlStateNormal];
-                    [button setImage:image forState:UIControlStateSelected];
-                    [button setImage:image forState:UIControlStateHighlighted];
+                    NSDictionary *skipJSON = r_buttonData[@"skip"];
+                    if (skipJSON != nil) {
+                        UIImage *image = [UIImage imageNamed:skipJSON[@"image"]];
+                        if (image != nil) {
+                            [button setImage:image forState:UIControlStateNormal];
+                            [button setImage:image forState:UIControlStateSelected];
+                            [button setImage:image forState:UIControlStateHighlighted];
+                        }
+                    }
                 }
                     break;
                 case BKActivityRatingLikeButton:
@@ -672,10 +682,15 @@ CommentField
                     break;
                 case BKActivitySkipButton:
                 {
-                    UIImage *image = [UIImage imageNamed:p_buttonData[@"image"]];
-                    [button setImage:image forState:UIControlStateNormal];
-                    [button setImage:image forState:UIControlStateSelected];
-                    [button setImage:image forState:UIControlStateHighlighted];
+                    NSDictionary *skipJSON = p_buttonData[@"skip"];
+                    if (skipJSON != nil) {
+                        UIImage *image = [UIImage imageNamed:skipJSON[@"image"]];
+                        if (image != nil) {
+                            [button setImage:image forState:UIControlStateNormal];
+                            [button setImage:image forState:UIControlStateSelected];
+                            [button setImage:image forState:UIControlStateHighlighted];
+                        }
+                    }
                 }
                     break;
                 default:
@@ -702,10 +717,15 @@ CommentField
                     break;
                 case BKActivitySkipButton:
                 {
-                    UIImage *image = [UIImage imageNamed:t_buttonData[@"image"]];
-                    [button setImage:image forState:UIControlStateNormal];
-                    [button setImage:image forState:UIControlStateSelected];
-                    [button setImage:image forState:UIControlStateHighlighted];
+                    NSDictionary *skipJSON = t_buttonData[@"skip"];
+                    if (skipJSON != nil) {
+                        UIImage *image = [UIImage imageNamed:skipJSON[@"image"]];
+                        if (image != nil) {
+                            [button setImage:image forState:UIControlStateNormal];
+                            [button setImage:image forState:UIControlStateSelected];
+                            [button setImage:image forState:UIControlStateHighlighted];
+                        }
+                    }
                 }
                     break;
                 default:

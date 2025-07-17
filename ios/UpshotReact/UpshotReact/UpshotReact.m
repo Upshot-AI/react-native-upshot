@@ -207,11 +207,11 @@ RCT_EXPORT_METHOD(createAttributionEvent:(NSString *)payload callback:(RCTRespon
 RCT_EXPORT_METHOD(setUserProfile:(NSString *)userData callback:(RCTResponseSenderBlock)callback) {
      
     NSDictionary *userDict = [UpshotUtility convertJsonStringToJson:userData];
-    if(userDict != nil && userDict.allKeys.count > 0) {
-        [self buildUserInfoForParams:userDict completionBlock:^(BOOL success, NSError * _Nullable error) {
-          callback(@[[NSNumber numberWithBool:success]]);
-        }];
-    }
+        if(userDict != nil && userDict.allKeys.count > 0) {
+            [self buildUserInfoForParams:userDict completionBlock:^(BOOL success, NSError * _Nullable error) {
+              callback(@[[NSNumber numberWithBool:success]]);
+            }];
+        }
 }
 
 #pragma mark GetUserDetails
@@ -602,37 +602,56 @@ RCT_EXPORT_METHOD(setFontStyles:(NSString *)fontStyles) {
     [mutDict removeObjectForKey:@"token"];
   }
   
-  for (NSString *key in [mutDict allKeys]) {
-    
-      if(key == nil) {
-          continue;
-      }
-    NSString *type = [UpshotUtility getInfoTypeForKey:key];
-    
-    id object = dict[key];
-    if(object == nil || [object isKindOfClass:[NSNull class]]) {
-          continue;
+    for (NSString *key in [mutDict allKeys]) {
+        
+        if(key == nil) {
+            continue;
+        }
+        NSString *type = [UpshotUtility getInfoTypeForKey:key];
+        
+        id object = dict[key];
+        if(object == nil || [object isKindOfClass:[NSNull class]]) {
+            continue;
+        }
+        if ([object isKindOfClass:[NSNumber class]]) {
+            object = [NSNumber numberWithInt:[object intValue]];
+        }
+        if ([key isEqualToString:@"data_opt"] && [object isKindOfClass:[NSNumber class]]) {
+            userInfo.dataOptout = object;
+            continue;
+        }
+        if ([key isEqualToString:@"email_opt"] && [object isKindOfClass:[NSNumber class]]) {
+            userInfo.emailOptout = object;
+            continue;
+        }
+        if ([key isEqualToString:@"sms_opt"] && [object isKindOfClass:[NSNumber class]]) {
+            userInfo.smsOptout = object;
+            continue;
+        }
+        if ([key isEqualToString:@"push_opt"] && [object isKindOfClass:[NSNumber class]]) {
+            userInfo.pushOptout = object;
+            continue;
+        }
+        if ([key isEqualToString:@"ip_opt"] && [object isKindOfClass:[NSNumber class]]) {
+            userInfo.ipOptout = object;
+            continue;
+        }
+        if ([type  isEqual:@"BKDob"]) {
+            
+            [dob setValue:object forKey:key];
+            
+        }else if ([type isEqual:@"BKExternalId"]){
+            
+            [externalId setValue:object forKey:key];
+            
+        } else if ([type isEqual:@"UserInfo"]){
+            
+            [userInfo setValue:object forKey:key];
+            
+        }else{
+            [others setObject:object forKey:key];
+        }
     }
-    if ([object isKindOfClass:[NSNumber class]]) {
-      object = [NSNumber numberWithInt:[object intValue]];
-    }
-    
-    if ([type  isEqual:@"BKDob"]) {
-      
-      [dob setValue:object forKey:key];
-      
-    }else if ([type isEqual:@"BKExternalId"]){
-      
-      [externalId setValue:object forKey:key];
-      
-    } else if ([type isEqual:@"UserInfo"]){
-      
-      [userInfo setValue:object forKey:key];
-      
-    }else{
-      [others setObject:object forKey:key];
-    }
-  }
   [userInfo setOthers:others];
   [userInfo setExternalId:externalId];
   [userInfo setDateOfBirth:dob];

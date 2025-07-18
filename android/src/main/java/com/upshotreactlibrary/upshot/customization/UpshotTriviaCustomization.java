@@ -5,6 +5,11 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.StateListDrawable;
+import android.os.Build;
+import android.util.StateSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -18,6 +23,7 @@ import com.brandkinesis.BKUIPrefComponents.BKActivityButtonTypes;
 import com.brandkinesis.BKUIPrefComponents.BKActivityColorTypes;
 import com.brandkinesis.BKUIPrefComponents.BKActivityTextViewTypes;
 import com.brandkinesis.BKUIPrefComponents.BKBGColors;
+import com.brandkinesis.activitymanager.BKActivityTypes;
 import com.upshotreactlibrary.UpshotModule;
 
 import java.util.List;
@@ -391,6 +397,23 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                         applyTextViewProperties(mContext, tabular_response_header, textView);
                     }
                         break;
+                    case BKACTIVITY_TRIVIA_PROGRESS_TV:
+                    case BKACTIVITY_TRIVIA_SCORE_PROGRESS_TV:
+
+                        JSONObject buttonJsonObject = (JSONObject) mJsonObject.get("button");
+                        JSONObject submitButtonJsonObject = (JSONObject) buttonJsonObject.get("submit");
+
+                        String bgColor = validateJsonString(submitButtonJsonObject, "bgcolor");
+
+                        int color = Color.parseColor(bgColor);
+
+                        textView.setTextColor(color);
+                        Drawable background = generateDrawableRectangle(adjustAlpha(color, 0.2f),
+                                color, true, BKActivityTypes.ACTIVITY_TRIVIA, 48);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                            textView.setBackground(background);
+                        }
+                        break;
 
                 }
 
@@ -398,6 +421,25 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                 UpshotModule.logException(e);
             }
         }
+    }
+    public static Drawable generateDrawableRectangle(int backgroundColor, int borderColor, boolean generateWithBorder, BKActivityTypes bkActivityTypes, int cornerRadius) {
+        // Default state
+        GradientDrawable background = new GradientDrawable();
+        background.setShape(GradientDrawable.RECTANGLE);
+        background.setCornerRadius(cornerRadius);
+
+
+
+        background.setColor(backgroundColor);
+
+
+        if (generateWithBorder) {
+            background.setStroke(2, borderColor);
+        }
+
+        StateListDrawable stateListDrawable = new StateListDrawable();
+        stateListDrawable.addState(StateSet.WILD_CARD, background);
+        return stateListDrawable;
     }
 
     @Override

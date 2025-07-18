@@ -264,7 +264,7 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
                     case BKACTIVITY_BAR_GRAPH:
                         colorsList.clear();
 
-                        JSONArray jsonArray = buttonJsonObject.getJSONArray("barcolors");
+                        JSONArray jsonArray = buttonJsonObject.getJSONArray("bar");
 
                         for (int i = 0; i < jsonArray.length(); i++) {
                             colorsList.add(Color.parseColor(jsonArray.getString(i)));
@@ -272,7 +272,7 @@ public class UpshotOpinionPollCustomization extends UpshotCustomization {
                         break;
                     case BKACTIVITY_PIE_GRAPH:
                         colorsList.clear();
-                        JSONArray piecolors = buttonJsonObject.getJSONArray("piecolors");
+                        JSONArray piecolors = buttonJsonObject.getJSONArray("pie");
                         for (int i = 0; i < piecolors.length(); i++) {
                             colorsList.add(Color.parseColor(piecolors.getString(i)));
                         }

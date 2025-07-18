@@ -138,16 +138,26 @@ public class UpshotCustomization {
 
         String border_color = validateJsonString(submitButtonJsonObject, "border_color");
         String bgColor = validateJsonString(submitButtonJsonObject, "bgcolor");
+        String bgImage = getImageName(submitButtonJsonObject, "image");
+
         if (border_color != null && !border_color.isEmpty()) {
             applyBorderColorForButtons(button, border_color, bgColor);
         } else {
             applyBgColorAttribute(context, button, submitButtonJsonObject);
-            applyBgImageAttribute(context, button, submitButtonJsonObject);
         }
+        setImageToView(context, bgImage, button);
         applyTextSizeAttribute(context, button, submitButtonJsonObject);
         applyTextColorAttribute(context, button, submitButtonJsonObject);
     }
 
+    public void setImageToView(Context context, String imageName, View view) {
+        if (!TextUtils.isEmpty(imageName)) {
+            int resourceId = getIdentifier(context, imageName);
+            if (resourceId > 0) {
+                view.setBackgroundResource(resourceId);
+            }
+        }
+    }
     public void applyBorderColorForButtons(Button button, String border_color, String bg_color) {
         GradientDrawable borderDrawable = new GradientDrawable();
         borderDrawable.setCornerRadius(15);
@@ -208,8 +218,6 @@ public class UpshotCustomization {
         applyFontAttribute(context, textView, jsonObject);
         applyTextSizeAttribute(context, textView, jsonObject);
         applyTextColorAttribute(context, textView, jsonObject);
-        // applyBgColorAttribute(context, textView, jsonObject);
-        // applyBgImageAttribute(context, textView, jsonObject);
     }
 
     private void applyBgImageAttribute(Context context, View view, JSONObject jsonObject) {
@@ -302,6 +310,11 @@ public class UpshotCustomization {
             try {
                 if (view instanceof Button) {
                     ((Button) view).setTextColor(Color.parseColor(text_color));
+                } else if (view instanceof EditText) {
+                    EditText editText = (EditText) view;
+                    int textColor = Color.parseColor(text_color);
+                    editText.setTextColor(textColor);
+                    editText.setHintTextColor(adjustAlpha(textColor, 0.2f));
                 } else if (view instanceof TextView) {
                     ((TextView) view).setTextColor(Color.parseColor(text_color));
                 }
@@ -309,6 +322,14 @@ public class UpshotCustomization {
                 UpshotModule.logException(e);
             }
         }
+    }
+
+    public static int adjustAlpha(int color, float factor) {
+        int alpha = Math.round(Color.alpha(color) * factor);
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+        return Color.argb(alpha, red, green, blue);
     }
 
     private void applyTextSizeAttribute(Context context, View view, JSONObject jsonObject) {

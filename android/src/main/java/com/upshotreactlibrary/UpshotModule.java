@@ -20,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
-import netscape.javascript.JSObject;
 
 import com.brandkinesis.BKProperties;
 import com.brandkinesis.BKUserInfo;

@@ -76,7 +76,7 @@
         
         NSData *data = [NSJSONSerialization dataWithJSONObject:json options:NSJSONWritingPrettyPrinted error:&error];
         if (error == nil) {
-            NSString *jsonString = [[NSString alloc] initWithData:data encoding:kCFStringEncodingUTF8];
+            NSString *jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
             return jsonString;
         }
     }

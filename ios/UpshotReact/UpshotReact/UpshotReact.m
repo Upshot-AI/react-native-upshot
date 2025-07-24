@@ -244,7 +244,7 @@ RCT_EXPORT_METHOD(showInteractiveTutorial:(NSString *)tag) {
     [[BKUIPreferences preferences] setDelegate:customization];
   }
     
-    BKActivityType activityType = BKActivityTypeTutorial;
+    BKActivityType activityType = BKActivityTypeTutorials;
     [[BrandKinesis sharedInstance] setDelegate:self];
     [[BrandKinesis sharedInstance] showActivityWithType:activityType andTag:tag];
 }

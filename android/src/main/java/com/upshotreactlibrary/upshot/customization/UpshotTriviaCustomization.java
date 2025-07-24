@@ -220,7 +220,6 @@ public class UpshotTriviaCustomization extends UpshotCustomization {
                         break;
 
                     case BKACTIVITY_TRIVIA_HEADER_COLOR:
-                    case BKACTIVITY_TRIVIA_TITLE_COLOR:
                         String headerBG = validateJsonString(jsonObject, "headerBG");
                         if (headerBG != null && !headerBG.isEmpty()) {
                             color.setColor(Color.parseColor(headerBG));

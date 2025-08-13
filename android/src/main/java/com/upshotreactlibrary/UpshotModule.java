@@ -736,10 +736,10 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    private void getNotificationList(final int limit, final Boolean loadMore, final Callback successCallback,
+    private void getNotificationList(final int limit, final Boolean loadMore, final int fromLastDays, final Callback successCallback,
                                      final Callback errorCallback) {
 
-        BrandKinesis.getBKInstance().getNotifications(reactContext.getApplicationContext(), !loadMore, limit,
+        BrandKinesis.getBKInstance().getNotifications(reactContext.getApplicationContext(), !loadMore, limit,fromLastDays,
                 new BKNotificationsResponseListener() {
                     @Override
                     public void notificationsResponse(Object response) {
@@ -754,9 +754,9 @@ public class UpshotModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    private void getUnreadNotificationsCount(final int inboxType, final Callback callback) {
+    private void getUnreadNotificationsCount(final int inboxType, final int fromLastDays, final Callback callback) {
 
-        BrandKinesis.getBKInstance().getUnreadNotificationsCount(reactContext.getApplicationContext(), inboxType,
+        BrandKinesis.getBKInstance().getUnreadNotificationsCount(reactContext.getApplicationContext(), inboxType,fromLastDays,
                 new BKNotificationsCountResponseListener() {
                     @Override
                     public void notificationsCount(int i) {
@@ -796,6 +796,7 @@ public class UpshotModule extends ReactContextBaseJavaModule {
             jsonObject.put("BKPushFetchLimit", jsonObject.getInt("BKPushFetchLimit"));
             jsonObject.put("BKDisplayMsgCount", jsonObject.getBoolean("BKDisplayMsgCount"));
             jsonObject.put("BKDisplayTime", jsonObject.getBoolean("BKDisplayTime"));
+            jsonObject.put("BKPushFetchDays", jsonObject.getInt("BKPushDaysLimit"));
 
             BrandKinesis.getBKInstance().showInboxActivity(reactContext.getApplicationContext(),
                     jsonToBundle(jsonObject), new BKInboxActivityCallback() {

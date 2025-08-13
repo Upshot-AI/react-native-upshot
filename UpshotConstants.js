@@ -61,6 +61,7 @@ const UpshotInboxConfigOptions = {
   PushLimit: "BKPushFetchLimit",
   DisplayMsgCount: "BKDisplayMsgCount",
   DisplayTime: "BKDisplayTime",
+  DaysLimit: "BKPushDaysLimit",
 };
 
 export {

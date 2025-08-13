@@ -344,12 +344,14 @@ var Upshot = {
   getNotificationList: function (
     limit,
     loadMore,
+    fromLastDays,
     successCallback,
     failurecallback
   ) {
     UpshotReact.getNotificationList(
       limit,
       loadMore,
+      fromLastDays,
       successCallback,
       failurecallback
     );
@@ -358,10 +360,11 @@ var Upshot = {
   /**
    * Fetch Unread Notification Count
    * @param {number} InboxType - Only PushNotifications / Only InApp / Both the notifications
+   * @param {number} fromLastDays - Fetch notifications from last X days
    * @param {function(number)} callback - Will get Unread notification count.
    */
-  getUnreadNotificationsCount: function (inboxType, callback) {
-    UpshotReact.getUnreadNotificationsCount(inboxType, callback);
+  getUnreadNotificationsCount: function (inboxType, fromLastDays, callback) {
+    UpshotReact.getUnreadNotificationsCount(inboxType, fromLastDays, callback);
   },
 
   /**

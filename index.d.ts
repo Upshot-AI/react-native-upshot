@@ -37,8 +37,8 @@ declare namespace Upshot {
     function getRewardRulesforProgram(programId: string, successCallback: (arg0: string) => any, failurecallback: any): void;
     function redeemRewardsForProgram(programId: string, transactionValue: Int, redeemValue: Int, tag: string, successCallback: (arg0: string) => any, failurecallback: any): void;
     function getPushClickPayload(callback: any): void;
-    function getNotificationList(limit: number, loadMore: boolean, successCallback: (arg0: string) => any, failurecallback: any): void;
-    function getUnreadNotificationsCount(inboxType: any, callback: (arg0: number) => any): void;
+    function getNotificationList(limit: number, loadMore: boolean, fromLastDays: any, successCallback: (arg0: string) => any, failurecallback: any): void;
+    function getUnreadNotificationsCount(inboxType: any, fromLastDays: number, callback: (arg0: number) => any): void;
     function updateNotificationReadStatus(notificationId: string, callback: (arg0: response) => any): void;
     function showInboxNotificationScreen(options: any): void;
     function getStreaksData(successCallback: (arg0: string) => any, failurecallback: any): void;

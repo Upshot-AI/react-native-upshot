@@ -55,4 +55,5 @@ export namespace UpshotInboxConfigOptions {
     let PushLimit: string;
     let DisplayMsgCount: string;
     let DisplayTime: string;
+    let DaysLimit: string;
 }

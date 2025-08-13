@@ -326,9 +326,9 @@ RCT_EXPORT_METHOD(sendPushDataToUpshot:(NSString *)pushDetails) {
     [self updatePushResponse:payload];
 }
 
-RCT_EXPORT_METHOD(getNotificationList:(NSInteger)limit enable:(BOOL)loadMore response:(RCTResponseSenderBlock)successCallback error:(RCTResponseSenderBlock)failureCallback) {
+RCT_EXPORT_METHOD(getNotificationList:(NSInteger)limit enable:(BOOL)loadMore fromLastDays:(NSInteger)days response:(RCTResponseSenderBlock)successCallback error:(RCTResponseSenderBlock)failureCallback) {
     
-   [[BrandKinesis sharedInstance] getNotificationsWith:limit loadmore:loadMore onCompletion:^(NSDictionary * _Nullable response, NSString * _Nullable errorMessage) {
+    [[BrandKinesis sharedInstance] getNotificationsWith:limit loadmore:loadMore fromLastDays:days onCompletion:^(NSDictionary * _Nullable response, NSString * _Nullable errorMessage) {
         
         if(errorMessage == nil) {
             NSArray *data = response[@"data"];
@@ -348,10 +348,11 @@ RCT_EXPORT_METHOD(getNotificationList:(NSInteger)limit enable:(BOOL)loadMore res
     }];
 }
 
-RCT_EXPORT_METHOD(getUnreadNotificationsCount:(NSInteger)inboxType response:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(getUnreadNotificationsCount:(NSInteger)inboxType fromLastDays:(NSInteger)days response:(RCTResponseSenderBlock)callback) {
     
     BKInboxMessageType type = (BKInboxMessageType)inboxType;
-    [[BrandKinesis sharedInstance] getUnreadNotificationsCountWithType:type onCompletion:^(NSInteger pushCount) {
+      
+    [[BrandKinesis sharedInstance] getUnreadNotificationsCountWithType:inboxType fromLastDays:days onCompletion:^(NSInteger pushCount) {
         callback(@[[NSNumber numberWithInteger:pushCount]]);
     }];
 }

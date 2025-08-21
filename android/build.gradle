@@ -75,7 +75,8 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'  // From node_modules
     implementation "com.google.firebase:firebase-messaging:${safeExtGet('firebaseMessagingVersion', '21.1.0')}"
-    implementation 'com.github.upshot-git:upshottestrepo:v1.7.100x'
+    implementation 'com.github.Upshot-AI:upshot-android-sdk:v1.8.0x'
+
 }
 
 def configureReactNativePom(def pom) {

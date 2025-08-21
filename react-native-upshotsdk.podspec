@@ -14,15 +14,15 @@ Pod::Spec.new do |s|
   s.social_media_url = "https://twitter.com/upshot_ai"
   s.license    = { :type => "MIT", :file => "LICENSE" }
   s.authors      = { "Upshot" => "developer@upshot.ai" }
-  s.platforms    = { :ios => "11.0" }
+  s.platforms    = { :ios => "12.0" }
   s.source       = { :git => "https://github.com/github_account/react-native-upshot.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,swift}"
   s.requires_arc = true
   
   s.dependency "React"
-  s.dependency "Upshot"
-  s.dependency "UpshotPush"
+  s.dependency "Upshot", "1.7"
+  s.dependency "UpshotPush", "1.0.0"
   s.pod_target_xcconfig = {
       'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
   }

@@ -247,11 +247,13 @@ public class UpshotModule extends ReactContextBaseJavaModule {
         }
     }
 
-    /* Profile Module */
     @ReactMethod
     private void setUserProfile(final String userData, final Callback callback) {
 
         if (userData == null) {
+            if (callback != null) {
+                callback.invoke(false);
+            }
             return;
         }
 
@@ -290,37 +292,74 @@ public class UpshotModule extends ReactContextBaseJavaModule {
         predefinedKeys.put("ip_opt", BKUserInfo.BKUserData.IP_OPT_OUT);
         try {
             JSONObject providedJson = new JSONObject(userData);
-            JSONObject othersJson = new JSONObject();
+            if (providedJson == null) {
+                if (callback != null) {
+                    callback.invoke(false);
+                }
+                return;
+            }
 
+            JSONObject othersJson = new JSONObject();
             Bundle bundle = new Bundle();
 
             final Iterator<String> keys = providedJson.keys();
-            while (keys.hasNext()) {
-
-                final String key = keys.next();
-                final Object value = providedJson.get(key);
-                if (key == null || value == null) {
-                    continue;
+            if (keys == null) {
+                if (callback != null) {
+                    callback.invoke(false);
                 }
-                if (predefinedKeys.containsKey(key)) {
-                    // predefined
-                    String bkKey = predefinedKeys.get(key);
-                    if (value instanceof Integer) {
-                        bundle.putInt(bkKey, providedJson.optInt(key));
-                    } else if (value instanceof Float || value instanceof Double) {
-                        bundle.putFloat(bkKey, (float) providedJson.optDouble(key));
-                    } else {
-                        bundle.putString(bkKey, providedJson.optString(key));
+                return;
+            }
+
+            while (keys.hasNext()) {
+                try {
+                    final String key = keys.next();
+                    if (key == null) {
+                        continue;
                     }
-                } else { // other
-                    othersJson.put(key, value);
+
+                    final Object value = providedJson.get(key);
+                    if (value == null) {
+                        continue;
+                    }
+
+                    if (predefinedKeys.containsKey(key)) {
+                        // predefined
+                        String bkKey = predefinedKeys.get(key);
+                        if (bkKey == null) {
+                            continue;
+                        }
+
+                        if (value instanceof Integer) {
+                            bundle.putInt(bkKey, providedJson.optInt(key));
+                        } else if (value instanceof Float || value instanceof Double) {
+                            bundle.putFloat(bkKey, (float) providedJson.optDouble(key));
+                        } else {
+                            bundle.putString(bkKey, providedJson.optString(key));
+                        }
+                    } else { // other
+                        othersJson.put(key, value);
+                    }
+                } catch (JSONException innerException) {
+                    logException(innerException);
+                    // Continue processing other keys
                 }
             }
-            if (othersJson.length() != 0) {
-                bundle.putSerializable("others", (HashMap) jsonToHashMap(othersJson));
+
+            if (othersJson != null && othersJson.length() != 0) {
+                HashMap<String, Object> othersMap = jsonToHashMap(othersJson);
+                if (othersMap != null) {
+                    bundle.putSerializable("others", othersMap);
+                }
             }
 
             final BrandKinesis bkInstance = BrandKinesis.getBKInstance();
+            if (bkInstance == null) {
+                if (callback != null) {
+                    callback.invoke(false);
+                }
+                return;
+            }
+
             bkInstance.setUserInfoBundle(bundle, new BKUserInfoCallback() {
                 @Override
                 public void onUserInfoUploaded(final boolean uploadSuccess) {
@@ -336,6 +375,14 @@ public class UpshotModule extends ReactContextBaseJavaModule {
             });
         } catch (final JSONException e) {
             logException(e);
+            if (callback != null) {
+                callback.invoke(false);
+            }
+        } catch (final Exception e) {
+            logException(e);
+            if (callback != null) {
+                callback.invoke(false);
+            }
         }
     }
 
